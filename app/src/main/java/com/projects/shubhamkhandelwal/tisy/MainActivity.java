@@ -50,10 +50,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // Firebase Object reference
     Firebase firebase;
     CoordinatorLayout coordinatorLayoutMainActivity;
-    //    Button createEventButton;
-//    Button joinEventButton;
-//    Button allActiveEventsButton;
-//    Button allRequestsButton;
     CircleImageView centerFAB;
 
     /*
@@ -92,68 +88,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity);
 
-//        createEventButton = (Button) findViewById(R.id.create_event_button);
-//        joinEventButton = (Button) findViewById(R.id.join_event_button);
-//        allActiveEventsButton = (Button) findViewById(R.id.all_active_events_button);
-//        allRequestsButton = (Button) findViewById(R.id.all_requests_button);
-//
-//
-//        allActiveEventsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
-//            }
-//        });
-//        allRequestsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_REQUESTS);
-//            }
-//        });
-//        joinEventButton.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                switch (motionEvent.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        joinEventButton.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                        joinEventButton.setBackgroundColor(Color.parseColor("#0DFFFFFF"));
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
-//        joinEventButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                joinEventDialog();
-//            }
-//        });
-//        createEventButton.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                switch (motionEvent.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        createEventButton.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                        createEventButton.setBackgroundColor(Color.parseColor("#0DFFFFFF"));
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
-//        createEventButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                stopService(new Intent(getBaseContext(), InternetConnectionService.class));
-//
-//                intent = new Intent(MainActivity.this, CreateEvent.class);
-//                startActivity(intent);
-//
-//            }
-//        });
         centerFAB = (CircleImageView) findViewById(R.id.center_fab);
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         itemBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
@@ -196,48 +130,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addSubActionView(requestsSubActionButton)
                 .attachTo(centerFAB)
                 .build();
-    }
-
-
-    /*
-        Constants.currentEventId
-        sets the currently ongoing event id, so that it can be accessed throughtout the application
-     */
-    void setEventId() {
-       /* firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent");
-        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Constants.currentEventId = dataSnapshot.getValue().toString();
-                setAdminState(Constants.currentEventId);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });*/
-    }
-
-    void setAdminState(String id) {
-        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + id + "/admin");
-        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null).equals(dataSnapshot.getValue())) {
-                    Constants.eventAdmin = true;
-                } else {
-                    Constants.eventAdmin = false;
-                }
-                setDIconId();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
     }
 
     void setDIconId() {
