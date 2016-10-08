@@ -5,7 +5,6 @@
     android:id="@+id/coordinatorLayoutMainActivity"
     android:layout_width="match_parent"
 
-    android:padding="16dp"
 
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -89,13 +88,13 @@
         <!--</LinearLayout>-->
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/center_fab"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:id="@+id/center_fab"
-        android:padding="16dp"
         android:layout_gravity="center"
-        android:src="@drawable/more_option_horizontal_icon"
-        android:background="@drawable/floating_action_button_selector"/>
+        android:background="@drawable/floating_action_button_selector"
+        android:padding="16dp"
+        android:src="@drawable/more_option_horizontal_icon" />
     <!--</ScrollView>-->
 
 </android.support.design.widget.CoordinatorLayout>
