@@ -2,9 +2,13 @@ package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,7 +18,9 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +50,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class CreateEvent extends Activity {
 
     public static final int REQUEST_ACCESS_FINE_LOCATION = 0;
@@ -60,13 +67,15 @@ public class CreateEvent extends Activity {
     Button dIconButton;
     EditText sLocationDescEditText;
     EditText dLocationDescEditText;
-    ImageButton dIconImageButton;
+    EditText descriptionEditText;
     TextView userIdTextView;
     ImageButton sLocationEditImageButton;
     ImageButton dLocationEditImageButton;
+    ImageButton dLocationIconImageButton;
     Intent intent;
     CoordinatorLayout coordinatorLayout;
     Map<String, Object> members;
+
     // number of events created by this user
     int eventCount;
     // intialization for place picker dialog
@@ -80,6 +89,23 @@ public class CreateEvent extends Activity {
     int iconResourceId;
     LinearLayout sLocationLinearLayout;
     LinearLayout dLocationLinearLayout;
+    LinearLayout dLocationIconLinearLayout;
+    Bitmap destinationIconBitmap;
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(42,
+                42, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, 42, 42);
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,21 +129,21 @@ public class CreateEvent extends Activity {
         createEventButton = (Button) findViewById(R.id.createEventButton);
         dIconButton = (Button) findViewById(R.id.dIconButton);
 
-        dIconImageButton = (ImageButton) findViewById(R.id.dIconImageButton);
-
         sLocationDescEditText = (EditText) findViewById(R.id.sLocationDescEditText);
         dLocationDescEditText = (EditText) findViewById(R.id.dLocationDescEditText);
-
+        descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
         userIdTextView = (TextView) findViewById(R.id.userId);
         sLocationEditImageButton = (ImageButton) findViewById(R.id.editSLocationImageButton);
         dLocationEditImageButton = (ImageButton) findViewById(R.id.editDLocationImageButton);
+        dLocationIconImageButton = (ImageButton) findViewById(R.id.dLocationIconImageButton);
         sLocationLinearLayout = (LinearLayout) findViewById(R.id.sLocationLinearLayout);
         dLocationLinearLayout = (LinearLayout) findViewById(R.id.dLocationLinearLayout);
+        dLocationIconLinearLayout = (LinearLayout) findViewById(R.id.dLocationIconLinearLayout);
 
 
-        dIconImageButton.setVisibility(View.INVISIBLE);
         sLocationLinearLayout.setVisibility(View.INVISIBLE);
         dLocationLinearLayout.setVisibility(View.INVISIBLE);
+        dLocationIconLinearLayout.setVisibility(View.INVISIBLE);
 
         // inaitalizing eventId
         eventId = new String();
@@ -241,11 +267,12 @@ public class CreateEvent extends Activity {
                 String destLocationDesc = eventInfo.getdLocationDesc();
                 String startLocation = eventInfo.getsLocation();
                 String startLocationDesc = eventInfo.getsLocationDesc();
+                String eventDescription = descriptionEditText.getText().toString();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     checkPermissions();
                 } else {
                     if (!eventId.isEmpty()) {
-                        if (destLocation == null || startLocation == null || startLocationDesc == null || destLocationDesc == null || destLocation.isEmpty() || startLocation.isEmpty() || startLocationDesc.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1) {
+                        if (destLocation == null || startLocation == null || startLocationDesc == null || destLocationDesc == null || destLocation.isEmpty() || startLocation.isEmpty() || startLocationDesc.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty()) {
                             Toast.makeText(CreateEvent.this, "please mention all the event details", Toast.LENGTH_SHORT).show();
                         } else {
 
@@ -269,6 +296,7 @@ public class CreateEvent extends Activity {
                                 newEvent.put("info", eventInfo);
                                 newEvent.put("members", members);
                                 newEvent.put("dIcon", iconResourceId);
+                                newEvent.put("desc", eventDescription);
 
                                 firebase.setValue(newEvent, new Firebase.CompletionListener() {
                                     @Override
@@ -307,7 +335,6 @@ public class CreateEvent extends Activity {
             }
         });
     }
-
 
     void showDestinationIconDialog() {
         ImageButton destinationWalking, destinationSwimming, destinationSpa, destinationGym, destinationFootBall, destinationBicycle, destinationRunning;
@@ -756,6 +783,330 @@ public class CreateEvent extends Activity {
 
     }
 
+    public void loadDestinationIcon() {
+        if (iconResourceId != -1) {
+            switch (Constants.dIconResourceId) {
+                case 1: {
+
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_walking);
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 2: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_swimming);
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 3: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_spa);
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 4: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_gym);
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 5: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_drinks);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 6: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_casino);
+
+
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 7: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination__zoo);
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 8: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_amusement_park);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 9: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bowling_alley);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 10: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_aquarium);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 11: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_night_club);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 12: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_running);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+
+                }
+                case 13: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_football);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 14: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_gaming);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 15: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_bicycle);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 16: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_cafe);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 17: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_restaurant);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 18: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_dinning);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 19: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pizza);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 20: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hotel);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 21: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_university);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 23: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_library);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 24: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_museum);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 25: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_beauty_salon);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 26: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_school);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 27: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_home);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 28: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_stadium);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 29: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_park);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 30: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pharmacy);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+
+                }
+
+                case 31: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hospital);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+
+                }
+                case 32: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_worship);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 33: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_mall);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 34: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_book_store);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 35: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_convenience_store);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 36: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_liquor_store);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 37: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_laundry);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 38: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_print_shop);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+                case 39: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_grocery_store);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 40: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_parking);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 41: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_airport);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 42: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_train_station);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 43: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bus_station);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 44: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_subway_station);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+                case 45: {
+                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_tram);
+
+
+                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    break;
+                }
+
+
+            }
+        }
+
+    }
+
     public void destinationIconClickListener(View v) {
 
         switch (v.getId()) {
@@ -769,22 +1120,27 @@ public class CreateEvent extends Activity {
             }
             case R.id.destination_spa: {
                 iconResourceId = 3;
+
                 break;
             }
             case R.id.destination_gym: {
                 iconResourceId = 4;
+
                 break;
             }
             case R.id.destination_drinks: {
                 iconResourceId = 5;
+
                 break;
             }
             case R.id.destination_casino: {
                 iconResourceId = 6;
+
                 break;
             }
             case R.id.destination_zoo: {
                 iconResourceId = 7;
+
                 break;
             }
             case R.id.destination_amusement_park: {
@@ -948,7 +1304,22 @@ public class CreateEvent extends Activity {
                 break;
             }
 
+        }
+        showDLocationView();
+    }
 
+    void showDLocationView() {
+        if (iconResourceId != -1) {
+            loadDestinationIcon();
+            dIconButton.setVisibility(View.INVISIBLE);
+            dLocationIconLinearLayout.setVisibility(View.VISIBLE);
+            dLocationIconImageButton.setVisibility(View.VISIBLE);
+            dLocationIconImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDestinationIconDialog();
+                }
+            });
         }
     }
 

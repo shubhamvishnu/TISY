@@ -76,6 +76,8 @@ import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +116,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     CoordinatorLayout coordinatorLayout;
     String startLocationTextView;
     String destLocationTextView;
+    String eventDescription;
     Map<String, Object> memberLocationMarkers;
     Dialog requestsDialog;
     ChildEventListener chatsChildEventListener;
@@ -641,6 +644,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         startLocationTextView = snapshot.getValue().toString();
                     }
                 }
+                eventDescription = dataSnapshot.child("desc").getValue().toString();
                 for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
                     membersList.add(snapshot.getKey());
                     memberCoordinate.add(snapshot.getValue().toString());
@@ -695,6 +699,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView eventIdDialogTextView;
         TextView startLocationDialogTextView;
         TextView destLocationDialogTextView;
+        TextView eventDescriptionTextView;
         RecyclerView eventInfoMembersRecyclerView;
 
 
@@ -704,11 +709,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventIdDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.event_id_info_text_view);
         startLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.start_location_desc_text_view);
         destLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.dest_location_desc_text_view);
+        eventDescriptionTextView = (TextView) eventInfoDialog.findViewById(R.id.event_desc_text_view);
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
         eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         eventIdDialogTextView.setText(Constants.currentEventId);
         startLocationDialogTextView.setText(startLocationTextView);
         destLocationDialogTextView.setText(destLocationTextView);
+        eventDescriptionTextView.setText(eventDescription);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
         EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls);
