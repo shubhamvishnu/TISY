@@ -2,7 +2,6 @@ package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,10 +32,12 @@ public class EventDialogs{
 
 
     }
-    void showAllRequestsDialog(Context context, Dialog dialog){
+
+    void showAllRequestsDialog(Context context, final Dialog dialog) {
+        ImageButton exitImageButton;
         RecyclerView joinEventRequestsRecyclerView;
         JoinEventRequestsRecyclerViewAdapter joinEventRequestsRecyclerViewAdapter;
-
+        exitImageButton = (ImageButton) dialog.findViewById(R.id.all_requests_back_arrow_image_button);
         joinEventRequestsRecyclerView= (RecyclerView) dialog.findViewById(R.id.user_requests_recycler_view);
         joinEventRequestsRecyclerView.setHasFixedSize(true);
 
@@ -45,6 +46,12 @@ public class EventDialogs{
 
         joinEventRequestsRecyclerViewAdapter = new JoinEventRequestsRecyclerViewAdapter(context);
         joinEventRequestsRecyclerView.setAdapter(joinEventRequestsRecyclerViewAdapter);
+        exitImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
     }
     void showAllEventsDialog(Context context, final Dialog dialog){
