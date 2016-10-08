@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Event-id"
+        android:textSize="20dp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/event_id_info_text_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="italic"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:textColor="@android:color/white" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="start location:"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"
+            />
+
+
+
+    <TextView
+        android:id="@+id/start_location_desc_text_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="left"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+
+        android:paddingBottom="20dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="destination location:"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            />
+
+    <TextView
+        android:id="@+id/dest_location_desc_text_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="left"
+
+        android:paddingBottom="20dp"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
+    <TextView
+        android:id="@+id/member_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="members"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/members_recycler_view"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical" />
+</LinearLayout>

@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is checked for updates daily by the Metrics Collection service and refreshed -->
+<!-- locally if changed. If this file is not found or has not been downloaded due to the    -->
+<!-- lack of a network connection, defaults are assumed (reportMetrics="true").             -->
+<QualityStatsSubscription DateCreated="2015-11-04">
+	<Settings>
+	    <Setting Key="ReportUsageStatistics">true</Setting>
+	    <Setting Key="Cache_MaxFileSize">10000000</Setting>
+	    <Setting Key="Session_MaxMinutesBetweenPosts">30</Setting>
+	    <Setting Key="Session_MaxMinutesForSession">1440</Setting>
+		<Setting Key="LogToLUDP">false</Setting>
+		<Setting Key="LogToAdobe">true</Setting>
+	</Settings>
+	<AppList>
+    <App ReportSuiteId="lenovoappswindockprod" ReportUsageStatistics="false">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovoappsshareitprod" ReportUsageStatistics="false">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovoappssettingsprod" ReportUsageStatistics="true">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovoappssystemupdateprod" ReportUsageStatistics="false">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovoappsfusionprod" ReportUsageStatistics="true">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovoappswriteitprod" ReportUsageStatistics="false">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovoappsdppluginsprod" ReportUsageStatistics="true">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovotvtlenovosolutionscenterprod2" ReportUsageStatistics="true">
+      <SettingList>
+        <Setting Key="LogToLUDP">false</Setting>
+        <Setting Key="LogToAdobe">true</Setting>
+        <Setting Key="OlympiaAppID"></Setting>
+      </SettingList>
+    </App>
+    <App ReportSuiteId="lenovoinnovappsprod" ReportUsageStatistics="true">
+      <SettingList> 
+		<Setting Key="LogToLUDP">false</Setting>
+		<Setting Key="LogToAdobe">true</Setting>
+		<Setting Key="OlympiaAppID">0A19-85B5-2DAB-2C9C-84E1-000F-0478-2A86-5C03-1CE3-557F</Setting>	
+	  </SettingList>
+    </App>    
+    <App ReportSuiteId="lenovoappsdevicemetricsprod" ReportUsageStatistics="true">
+      <SettingList>
+		<Setting Key="LogToLUDP">false</Setting>
+		<Setting Key="LogToAdobe">true</Setting>
+		<Setting Key="OlympiaAppID">1428-4262-9D46-5A1F-545C-0B0B-5F77-C0A1-000F-0C6F-1C9E</Setting>
+      </SettingList>
+    </App>    
+ </AppList>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>tGAT0Y2FgG/uWQyRUpSEmeYLX4A=</DigestValue></Reference></SignedInfo><SignatureValue>Y1CSpfH2dIPkW5TqMOpGXXzJJenkdGlCqueA/1bZ0Xt410y0QorxLhVUIKhdevzalNJPZ0/EmgZypa5ZNV7JXjgXb2DM/oHpJorbHd9n6b4n9Iy2DA0LT6jCGiB5+wR0JBiTCMjemvvrumSQYXYfk91YMEBtpKHeMDqR4q5m4fUAty9hQqw025NeYp5Oie+BoXJuifcBpDwbVPG4B0tB8zKcn8nAHbHcS0hzTtabtSy+zc2RVYua9r5pgcLA1/E5ASwOLv/Ty9BCn4ZOaeKdL21qm22nw8jO2qj+hna3kmCEX+tD0+v7+fYQriMG/4jpX2KNDxsdqjgwiHY3qGGSfg==</SignatureValue></Signature></QualityStatsSubscription>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/dialog_join_event_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:padding="24dp"
+        android:paddingBottom="20dp"
+        android:hint="Enter an event ID" />
+
+    <EditText
+        android:id="@+id/dialog_join_event_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:paddingRight="24dp"
+        android:paddingLeft="24dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Count me inn!"
+        android:paddingBottom="24dp"
+        android:hint="Write a message" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="36dp"
+        android:text="SEND REQUEST"
+        android:background="#1AFFFFFF"
+        android:elevation="20dp"
+        android:textAllCaps="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:id="@+id/joinEventButton"/>
+
+</LinearLayout>

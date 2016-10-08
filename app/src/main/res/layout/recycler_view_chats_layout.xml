@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/chat_title_layout">
+    <ImageButton
+        android:id="@+id/back_arrow_image_button_chat_dialog"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/back_arrow_icon"
+        android:background="@android:color/transparent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:elevation="20dp"/>
+    <TextView
+        android:id="@+id/chatsEventIdTextView"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="Conversations"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+</LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/event_chats_recycler_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_below="@+id/chat_title_layout"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/chatsMessageEditText"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:textCursorDrawable="@drawable/edit_text_curson_color_style"
+            android:hint="enter a message"
+            android:textSize="16dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical"
+            android:inputType="textMultiLine"
+            android:textColor="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/chatsSendButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/message_send_icon" />
+    </LinearLayout>
+</RelativeLayout>

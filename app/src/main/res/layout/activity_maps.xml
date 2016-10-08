@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context="com.projects.shubhamkhandelwal.tisy.MapsActivity" >
+    
+</fragment>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <ImageButton
+            android:id="@+id/eventInfoImageButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/event_info_icon"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:adjustViewBounds="true"
+            android:layout_margin="10dp"
+            android:elevation="6dp"
+            />
+        <ImageButton
+            android:id="@+id/allInOneIcon"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/all_icons_in_one"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:adjustViewBounds="true"
+            android:layout_margin="10dp"
+            android:elevation="6dp"
+            />
+    <ImageButton
+        android:id="@+id/zoomFitImageButton"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:src="@drawable/view_members_icon"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:adjustViewBounds="true"
+        android:layout_margin="10dp"
+        android:elevation="6dp"
+        />
+    </LinearLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is checked for updates daily by the Metrics Collection service and refreshed -->
+<!-- locally if changed. If this file is not found or has not been downloaded due to the    -->
+<!-- lack of a network connection, defaults are assumed (reportMetrics="true").             -->
+<QualityStatsConversion dateCreated="2015-10-21">
+    <ConversionList>
+		<Conversion TableName="OlympiaEventMapping">1,OptInStatusChange</Conversion>
+		<Conversion TableName="OlympiaEvarMapping">33,ApplicationName;40,ExtraInfo</Conversion>
+    </ConversionList>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>aGZ76taxVm5ys5DEWmSlHITJsw8=</DigestValue></Reference></SignedInfo><SignatureValue>kqEFITGsz8tdO1FGu3NIkDtaNgxvRuoow2W85AaIXEsSWVlx188yIySsK+Lz3kEeZaSTShYTOmIwAEYyxIkb6gPWXVWZ7K3LdqhIA9UsICjl+UI5scT7hC+4lUNaS00qWcjxwinvX4yxyKSp6nWQhcYcqJqEEbyAGtChVHgtP7lR+KMp2WQ6QLcni2Qh6JLNj5G/K75rLPib57sdgaRTnxYGwi/Aoeq3l5p2txG/3VRZVNBVm5VZm0EXf7ThXj37yJkZwsDhjbwH7KkJfo7S/1lWeKqaZt1FP8Gmme6QOxIrHUXVb6KfsS2qfPrgaa18gco0pr+UzFHXqj1eyinWnw==</SignatureValue></Signature></QualityStatsConversion>

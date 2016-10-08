@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayoutMainActivity"
+    android:layout_width="match_parent"
+
+    android:padding="16dp"
+
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!--<ScrollView-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent">-->
+
+        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--xmlns:tools="http://schemas.android.com/tools"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+
+            <!--android:orientation="vertical"-->
+            <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
+            <!--tools:context="com.projects.shubhamkhandelwal.tisy.MainActivity">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:gravity="center"-->
+                <!--android:text="TISY(logo)"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:textSize="40dp"-->
+                <!--android:textStyle="bold|italic" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/create_event_button"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginBottom="16dp"-->
+                <!--android:background="#0DFFFFFF"-->
+                <!--android:elevation="20dp"-->
+                <!--android:text="CREATE"-->
+                <!--android:layout_margin="16dp"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="20dp"-->
+                <!--android:textStyle="bold" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/join_event_button"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="16dp"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:background="#0DFFFFFF"-->
+                <!--android:elevation="20dp"-->
+                <!--android:text="JOIN"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="20dp"-->
+                <!--android:textStyle="bold" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/all_active_events_button"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:background="#0DFFFFFF"-->
+                <!--android:elevation="20dp"-->
+                <!--android:layout_margin="16dp"-->
+                <!--android:text="ALL EVENTS"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="20dp"-->
+                <!--android:textStyle="bold" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/all_requests_button"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:background="#0DFFFFFF"-->
+                <!--android:elevation="20dp"-->
+                <!--android:layout_margin="16dp"-->
+                <!--android:text="REQUESTS"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="20dp"-->
+                <!--android:textStyle="bold" />-->
+        <!--</LinearLayout>-->
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:id="@+id/center_fab"
+        android:padding="16dp"
+        android:layout_gravity="center"
+        android:src="@drawable/more_option_horizontal_icon"
+        android:background="@drawable/floating_action_button_selector"/>
+    <!--</ScrollView>-->
+
+</android.support.design.widget.CoordinatorLayout>

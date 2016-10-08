@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<libraryDescription xmlns="http://schemas.microsoft.com/windows/2009/library">
+  <ownerSID>S-1-5-21-924455685-344166790-1183234955-1001</ownerSID>
+  <version>10</version>
+  <isLibraryPinned>true</isLibraryPinned>
+  <iconReference>C:\Program Files (x86)\Bluestacks\folder.ico</iconReference>
+  <templateInfo>
+    <folderType>{00000000-0000-0000-0000-000000000000}</folderType>
+  </templateInfo>
+  <propertyStore>
+    <property name="HasModifiedLocations" type="boolean"><![CDATA[true]]></property>
+  </propertyStore>
+  <searchConnectorDescriptionList>
+    <searchConnectorDescription>
+      <isDefaultSaveLocation>true</isDefaultSaveLocation>
+      <isDefaultNonOwnerSaveLocation>true</isDefaultNonOwnerSaveLocation>
+      <isSupported>true</isSupported>
+      <simpleLocation>
+        <url>E:\Bluestacks\Bluestacks\UserData\Library\My Apps</url>
+        <serialized>MBAAAEAFCAAAAAAAADAAAAAAAY0gAAQDQAAAA0pAw19lpHdAdKAcdfZ6RHQnCAX3Xme0BAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAUgAUAwHQB+TQDi66kGEiiNCAsCMw0ZKAECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUwhTzAAAAAAAAAxnkAAAAAGAxAAAAAAAAAAAAABACxWdlNHdhN2azBAAGBQCAQAAv7LAAAAAAAAAA4CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEAsBQdAUGAzBAdAEGAjBwaAMHAAAgGAAGAxAAAAAAAAAAAAABACxWdlNHdhN2azBAAGBQCAQAAv7LAAAAAAAAAA4CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEAsBQdAUGAzBAdAEGAjBwaAMHAAAgGAoFAxAAAAAAAAAAAAABAVNXZyRUY0FGAAIEAJAABA8uvAAAAAAAAAAgLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQVAMHAlBgcAQEAhBAdAEGAAAAGAYFAxAAAAAAAAAAAAABAMlmYyFmc5BAQAkAAEAw7+CAAAAAAAAAAuAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBQaAIGAyBQYAIHA5BAAAYBAWBQMAAAAAAQ/IJmZQAQT5BSQwB3cAAEAJAABA8uv9jkYm1PSiZmLAAAAQ2KAAAAAEAAAAAAAAAAAAAAAAAAAAMW6NBQTAkHAgAQQAAHAwBwcAAAAWAAAAAGAAAAHAAAABAAAAwBAAAQLAAAAAAAAA8FAAAQEAAAADAAAAMqg7xJEAAAAAUkOcJEb1V2c0F2YrNHXCxWdlNHdhN2azxVVzVmcEFGdhxFTpJmchJXec1UegEEcwNHAAAGAAAwAAAAoYBAAAAAAAAAZlN3a09GctQDc5oGcrNHAc98TyxMzlkUo7SWfu3BarBE7K4xiVZeE6SNH+QY56hAXP/kcMzcJJF6uk1n7dg2aAxuCesYVmHhuUzhPEWueIUEAAAQCAAAo5AAAAEzUQNVsW0GRt2IcIdKSA5Cp9gHjdAAAAgGAAAAAIBAAAQBHONDAAAAAAAAEfSCAAAAAAAAAAAAAAAAAAAA</serialized>
+      </simpleLocation>
+    </searchConnectorDescription>
+  </searchConnectorDescriptionList>
+</libraryDescription>

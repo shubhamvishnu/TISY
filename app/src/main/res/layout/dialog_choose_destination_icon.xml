@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Choose an icon:"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <!--activities-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Activities"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_walking"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_walking" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Walking"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_swimming"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_swimming" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Swimming"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_spa"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+
+                    app:srcCompat="@drawable/destination_spa" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Spa"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_gym"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_gym" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Gym"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_football"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/destination_icon_football" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Football"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_bicycler"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/destination_icon_bicycle" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Bicycle"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_running"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/destination_icon_running" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Running"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <!--entertainment-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Entertainment"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_drinks"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_drinks" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Drinks"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_casino"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_casino" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Casino"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_zoo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination__zoo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Zoo"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_amusement_park"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_icon_amusement_park" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Park"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_bowling_alley"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_bowling_alley" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Bowling"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_aquarium"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_aquarium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Aquarium"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_night_club"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_night_club" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Night Club"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_gaming"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_icon_gaming" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Gaming"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <!--food-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Food"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_cafe"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_cafe" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Cafe"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_restaurant"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_icon_restaurant" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Restaurant"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_dinning"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_dinning" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Dinning"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_pizza"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_pizza" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Pizza"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <!-- General -->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="General"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_hotel"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_hotel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Hotel"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_university"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_university" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="University"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_library"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_library" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Library"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_museum"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_museum" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Museum"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_stadium"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_stadium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Stadium"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_school"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_school" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="School"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_beauty_salon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_beauty_salon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Beauty Salon"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_home"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/destination_icon_home" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Home"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_park"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/destination_icon_park" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Park"
+
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <!--Health-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Health"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_pharmacy"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_pharmacy" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Pharmacy"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_hospital"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_hospital" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Hospital"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <!--religion-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Religion"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_worship"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_worship" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="House of Worship"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <!--stores-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Store"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_mall"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_mall" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Mall"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_book_store"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_book_store" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Book Store"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_liquor_store"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_liquor_store" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Liquor Store"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_convenience_store"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_convenience_store" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Convenience Store"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_laundry"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_laundry" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Laundry"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_grocery_store"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_grocery_store" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Grocery Store"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_print_shop"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_print_shop" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Print"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <!--Transport-->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Transport"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold|italic" />
+
+        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_parking"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_parking" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Transport"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_airport"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_airport" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Airport"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_train_station"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_train_station" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Train Station"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_bus_station"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_bus_station" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Bus Station"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_subway_station"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/destination_subway_station" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Subway Station"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/destination_tram"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/destination_icon_tram" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Tram Station"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </org.apmem.tools.layouts.FlowLayout>
+
+        <Button
+            android:id="@+id/close_destination_icon_dialog_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="#1AFFFFFF"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:text="CLOSE"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</ScrollView>

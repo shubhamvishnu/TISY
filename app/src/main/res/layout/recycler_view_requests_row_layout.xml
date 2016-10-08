@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/username_recycler_view_text_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="24dp"
+        android:paddingBottom="20dp"
+        android:textSize="20dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/description_recycler_view_text_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="16dp"
+        android:paddingBottom="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:textColor="@android:color/white" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_user_recycler_view_button"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:background="#1AFFFFFF"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:text="ACCEPT"
+            android:textAllCaps="true"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/delete_user_recycler_view_button"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_margin="4dp"
+            android:background="#1AFFFFFF"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:text="DECLINE"
+            android:textAllCaps="true"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
