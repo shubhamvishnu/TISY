@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -50,7 +51,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // Firebase Object reference
     Firebase firebase;
     CoordinatorLayout coordinatorLayoutMainActivity;
-    CircleImageView centerFAB;
+    ImageButton centerFAB;
 
     /*
          listener for user status (active; inactive; pending)
@@ -88,7 +89,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity);
 
-        centerFAB = (CircleImageView) findViewById(R.id.center_fab);
+        centerFAB = (ImageButton) findViewById(R.id.center_fab);
+        centerFAB.setColorFilter(getResources().getColor(R.color.colorAccent));
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         itemBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
 
@@ -100,7 +102,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         createEventSubActionButton.setOnClickListener(this);
 
         CircleImageView sendRequestCircleButton = new CircleImageView(this);
-        sendRequestCircleButton.setImageResource(R.drawable.join_event_icon);
+        sendRequestCircleButton.setImageResource(R.drawable.requests_icon);
 
         SubActionButton sendRequestSubActionButton = itemBuilder.setContentView(sendRequestCircleButton).build();
         sendRequestSubActionButton.setTag(JOIN_EVENT_TAG);
@@ -114,7 +116,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allEventsSubActionButton.setOnClickListener(this);
 
         CircleImageView requestsCircleButton = new CircleImageView(this);
-        requestsCircleButton.setImageResource(R.drawable.requests_icon);
+        requestsCircleButton.setImageResource(R.drawable.join_event_icon);
 
         SubActionButton requestsSubActionButton = itemBuilder.setContentView(requestsCircleButton).build();
         requestsSubActionButton.setTag(REQUESTS_TAG);

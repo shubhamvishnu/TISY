@@ -97,6 +97,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // TODO: could make this a class later
     String admin;
+    String username;
     Map<String, Object> members;
     List<RequestsDetails> joinRequests;
     RecyclerView eventRequestRecyclerView;
@@ -152,6 +153,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MapsInitializer.initialize(getApplicationContext());
         chatNotificationCount = 0;
 
+        username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         // intializing admin variable
         admin = new String();
         adminValue = new String();
@@ -625,14 +627,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
         sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
 
-        EditText sendJoinRequestEventIdEditText;
-        Button sendJoinRequestButton;
+        final EditText sendJoinRequestEventIdEditText;
+        final Button sendJoinRequestButton;
         RecyclerView eventJoinRequestSendRecyclerView;
         sendJoinRequestEventIdEditText = (EditText) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_edit_text);
         sendJoinRequestButton = (Button) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_button);
+        sendJoinRequestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String userId = sendJoinRequestEventIdEditText.getText().toString();
+                if(userId == null || userId.isEmpty()){
+                    //TODO: show snackbar here
+                }else{
+                    if(userId.equals(username)){
+                        //TODO: show snackbar here
+                        sendJoinRequestEventIdEditText.setText("");
+                    }else{
+                        Firebase userIdCheckFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + userId);
+                        userIdCheckFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+                                    Firebase sendRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS);
+                                    HashMap<String, Object> sendRequestUsername = new HashMap<String, Object>();
+                                    sendRequestUsername.put(userId, Constants.currentEventId);
+                                    sendRequestFirebase.updateChildren(sendRequestUsername, new Firebase.CompletionListener() {
+                                        @Override
+                                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                            sendJoinRequestEventIdEditText.setText("");
+                                            //TODO: showsnackbar here
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
 
         eventJoinRequestSendRecyclerView = (RecyclerView) sendMemberRequestDialog.findViewById(R.id.dialog_event_join_request_sent_recycler_view);
-        eventJoinRequestSendRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        eventJoinRequestSendRecyclerView.setLayoutManager(new LinearLayoutManager(sendMemberRequestDialog.getContext()));
         eventJoinRequestSendRecyclerView.setHasFixedSize(true);
         SentEventJoinRequestRecyclerViewAdapter adapter = new SentEventJoinRequestRecyclerViewAdapter(this);
         eventJoinRequestSendRecyclerView.setAdapter(adapter);
@@ -650,6 +691,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
 
     void backToMain() {
         Intent intent = new Intent(MapsActivity.this, MainActivity.class);

@@ -1,6 +1,7 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,11 +15,14 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.model.Circle;
 import com.projects.shubhamkhandelwal.tisy.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Shubham Khandelwal on 10/9/2016.
@@ -43,6 +47,7 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
 
     void loadRequestsSent() {
         firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS);
+        firebase.keepSynced(true);
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -123,17 +128,20 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
     void removeRequest(final int position) {
-
+        Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + sentRequestsList.get(position));
+        removeRequest.removeValue();
     }
+
 
     public class SentEventJoinRequestRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView usernameTitleTextView;
-        ImageButton userRequestProfileImageButton, removeSentRequestImageButton;
+        CircleImageView userRequestProfileImageButton;
+        ImageButton removeSentRequestImageButton;
 
         public SentEventJoinRequestRecyclerViewHolder(View itemView) {
             super(itemView);
             usernameTitleTextView = (TextView) itemView.findViewById(R.id.username_title_text_view);
-            userRequestProfileImageButton = (ImageButton) itemView.findViewById(R.id.user_request_profile_image_button);
+            userRequestProfileImageButton = (CircleImageView) itemView.findViewById(R.id.user_request_profile_image_button);
             removeSentRequestImageButton = (ImageButton) itemView.findViewById(R.id.remove_sent_request_image_button);
             removeSentRequestImageButton.setOnClickListener(this);
         }

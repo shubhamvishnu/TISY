@@ -31,7 +31,9 @@
         android:id="@+id/remove_request_image_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:background="@android:color/transparent"
-        android:tint="@android:color/holo_red_light"
-        app:srcCompat="@drawable/remove_request_icon" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:padding="8dp"
+        android:background="@drawable/floating_action_button_selector"
+        app:srcCompat="@drawable/remove_sent_request_icon" />
 </LinearLayout>

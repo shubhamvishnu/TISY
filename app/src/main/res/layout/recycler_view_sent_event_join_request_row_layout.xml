@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="8dp">
+
 
     <TextView
         android:id="@+id/username_title_text_view"
@@ -14,13 +16,10 @@
         android:textSize="16dp"
         android:textStyle="bold" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_request_profile_image_button"
         android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:background="@android:color/transparent"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:layout_height="32dp" />
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/remove_sent_request_image_button"
@@ -28,6 +27,6 @@
         android:layout_height="32dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
+        android:layout_marginLeft="4dp"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/remove_member_icon" />
-</LinearLayout>
+        app:srcCompat="@drawable/remove_member_icon" /></LinearLayout>

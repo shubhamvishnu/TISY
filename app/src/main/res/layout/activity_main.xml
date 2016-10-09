@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayoutMainActivity"
     android:layout_width="match_parent"
-
-
-    android:layout_height="match_parent"
+     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <!--<ScrollView-->
@@ -87,14 +85,16 @@
                 <!--android:textStyle="bold" />-->
         <!--</LinearLayout>-->
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageButton
         android:id="@+id/center_fab"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_gravity="center"
-        android:background="@drawable/floating_action_button_selector"
-        android:padding="16dp"
-        android:src="@drawable/more_option_horizontal_icon" />
+        android:elevation="20dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:background="@android:color/transparent"
+        android:src="@drawable/fab_expand_option" />
     <!--</ScrollView>-->
 
 </android.support.design.widget.CoordinatorLayout>
