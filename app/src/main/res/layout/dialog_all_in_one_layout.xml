@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,23 +12,35 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/dialog_request_icon"
-            android:src="@drawable/requests_icon"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:elevation="20dp"
-            android:scaleType="fitCenter"/>
-        <ImageButton
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/requests_icon" />
+
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/dialog_chat_icon"
-            android:src="@drawable/chat_icon"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:elevation="20dp"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:src="@drawable/chat_icon" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/dialog_zoom_fit_icon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/view_members_icon"
+            android:tint="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

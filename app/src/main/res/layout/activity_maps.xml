@@ -51,17 +51,7 @@
             android:layout_margin="10dp"
             android:elevation="6dp"
             />
-    <ImageButton
-        android:id="@+id/zoomFitImageButton"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:src="@drawable/view_members_icon"
-        android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
-        android:adjustViewBounds="true"
-        android:layout_margin="10dp"
-        android:elevation="6dp"
-        />
+
     </LinearLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

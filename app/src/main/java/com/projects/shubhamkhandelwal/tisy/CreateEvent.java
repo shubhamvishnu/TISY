@@ -90,23 +90,6 @@ public class CreateEvent extends Activity {
     LinearLayout sLocationLinearLayout;
     LinearLayout dLocationLinearLayout;
     LinearLayout dLocationIconLinearLayout;
-    Bitmap destinationIconBitmap;
-
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(42,
-                42, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, 42, 42);
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -785,326 +768,206 @@ public class CreateEvent extends Activity {
 
     public void loadDestinationIcon() {
         if (iconResourceId != -1) {
-            switch (Constants.dIconResourceId) {
+            switch (iconResourceId) {
                 case 1: {
 
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_walking);
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_walking);
+
                     break;
                 }
                 case 2: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_swimming);
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_swimming);
+
                     break;
                 }
                 case 3: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_spa);
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_spa);
+
                     break;
                 }
                 case 4: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_gym);
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_gym);
+
                     break;
                 }
                 case 5: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_drinks);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_drinks);
 
 
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
                     break;
                 }
                 case 6: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_casino);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_casino);
 
 
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
                     break;
                 }
                 case 7: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination__zoo);
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination__zoo);
                     break;
                 }
                 case 8: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_amusement_park);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_amusement_park);
                     break;
                 }
                 case 9: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bowling_alley);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_bowling_alley);
                     break;
                 }
                 case 10: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_aquarium);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_aquarium);
                     break;
                 }
                 case 11: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_night_club);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_night_club);
                     break;
                 }
                 case 12: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_running);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_running);
                     break;
 
                 }
                 case 13: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_football);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_football);
                     break;
                 }
                 case 14: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_gaming);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_gaming);
                     break;
                 }
                 case 15: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_bicycle);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_bicycle);
                     break;
                 }
                 case 16: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_cafe);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_cafe);
                     break;
                 }
                 case 17: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_restaurant);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_restaurant);
                     break;
                 }
                 case 18: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_dinning);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_dinning);
                     break;
                 }
                 case 19: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pizza);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_pizza);
                     break;
                 }
 
                 case 20: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hotel);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_hotel);
                     break;
                 }
                 case 21: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_university);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_university);
                     break;
                 }
                 case 23: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_library);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_library);
                     break;
                 }
                 case 24: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_museum);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_museum);
                     break;
                 }
                 case 25: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_beauty_salon);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_beauty_salon);
                     break;
                 }
                 case 26: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_school);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_school);
                     break;
                 }
                 case 27: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_home);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_home);
                     break;
                 }
                 case 28: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_stadium);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_stadium);
                     break;
                 }
                 case 29: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_park);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_park);
                     break;
                 }
                 case 30: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pharmacy);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_pharmacy);
                     break;
 
                 }
 
                 case 31: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hospital);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_hospital);
                     break;
 
                 }
                 case 32: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_worship);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_worship);
                     break;
                 }
                 case 33: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_mall);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_mall);
                     break;
                 }
 
                 case 34: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_book_store);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_book_store);
                     break;
                 }
                 case 35: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_convenience_store);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_convenience_store);
                     break;
                 }
                 case 36: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_liquor_store);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_liquor_store);
                     break;
                 }
                 case 37: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_laundry);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_laundry);
                     break;
                 }
                 case 38: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_print_shop);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_print_shop);
                     break;
                 }
                 case 39: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_grocery_store);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_grocery_store);
                     break;
                 }
 
                 case 40: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_parking);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_parking);
                     break;
                 }
 
                 case 41: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_airport);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_airport);
                     break;
                 }
 
                 case 42: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_train_station);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_train_station);
                     break;
                 }
 
                 case 43: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bus_station);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_bus_station);
                     break;
                 }
 
                 case 44: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_subway_station);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_subway_station);
                     break;
                 }
 
                 case 45: {
-                    destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_tram);
-
-
-                    dLocationIconImageButton.setImageBitmap(destinationIconBitmap);
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_icon_tram);
                     break;
                 }
-
-
             }
         }
-
     }
 
     public void destinationIconClickListener(View v) {

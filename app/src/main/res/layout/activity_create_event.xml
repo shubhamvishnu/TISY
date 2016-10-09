@@ -181,24 +181,27 @@
                         android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingRight="@dimen/activity_horizontal_margin"
                         android:paddingTop="@dimen/activity_vertical_margin">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:textSize="16dp"
                             android:layout_gravity="center"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="Destination Icon:"
                             android:textColor="@android:color/white"
-                            android:textStyle="bold"
-                            android:layout_weight="1"/>
-                        <ImageButton
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
+                        <android.support.v7.widget.AppCompatImageButton
                             android:id="@+id/dLocationIconImageButton"
                             android:layout_width="42dp"
                             android:layout_height="42dp"
-                            android:scaleType="fitCenter"
                             android:adjustViewBounds="true"
                             android:background="@android:color/transparent"
-                            />
+                            android:elevation="20dp"
+                            android:scaleType="fitCenter"
+                            android:tint="@android:color/white" />
 
                     </LinearLayout>
 
@@ -221,22 +224,21 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dLocationIconLinearLayout"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold"
                         android:layout_marginBottom="8dp"
+                        android:text="Description:"
+                        android:textColor="@android:color/white"
                         android:textSize="16dp"
-                        android:text="Description:"/>
+                        android:textStyle="bold" />
+
                     <EditText
                         android:id="@+id/descriptionEditText"
-                        android:layout_below="@+id/descriptionTextView"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:hint="Write something about the event..."
-                        android:textColorHint="#bcbcbc"
+                        android:layout_below="@+id/descriptionTextView"
                         android:layout_marginBottom="24dp"
-                        />
-
+                        android:hint="Write something about the event..."
+                        android:textColor="@android:color/white"
+                        android:textColorHint="#bcbcbc" />
 
 
                 </RelativeLayout>

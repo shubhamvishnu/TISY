@@ -105,7 +105,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     EventInfo eventInfo;
     GoogleMap mMap;
     Firebase firebase;
-    ImageButton zoomFitImageButton;
     ImageButton eventInfoImageButton;
     ImageButton allIconsInOneImageButton;
     List<String> membersList;
@@ -132,8 +131,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(32,
+                32, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
@@ -170,7 +169,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         memberCoordinate = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
 
-        zoomFitImageButton = (ImageButton) findViewById(R.id.zoomFitImageButton);
         eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
         allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
         memberLocationMarkers = new HashMap<>();
@@ -193,24 +191,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //TODO: change them later
         // previous color #666666
 
-        zoomFitImageButton.setVisibility(View.INVISIBLE);
-        zoomFitImageButton.setColorFilter(Color.parseColor("#666666"));
+
         eventInfoImageButton.setColorFilter(Color.parseColor("#0C70A5"));
         allIconsInOneImageButton.setColorFilter(Color.parseColor("#666666"));
-        zoomFitImageButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        zoomFitImageButton.setColorFilter(Color.parseColor("#535353"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        zoomFitImageButton.setColorFilter(Color.parseColor("#666666"));
-                        break;
-                }
-                return false;
-            }
-        });
+
         eventInfoImageButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -232,12 +216,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 showAllInOneDialog();
             }
         });
-        zoomFitImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zoomFitMembers();
-            }
-        });
+
         eventInfoImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -601,6 +580,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ImageButton requestIconImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_request_icon);
         ImageButton chatIconImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_chat_icon);
+        ImageButton zoomFitImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_zoom_fit_icon);
 
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -614,6 +594,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 allInOneDialog.dismiss();
                 showChatsDialog();
+            }
+        });
+        zoomFitImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                zoomFitMembers();
+
             }
         });
         Window window = allInOneDialog.getWindow();
@@ -1298,7 +1286,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void changeInLocation() {
-        zoomFitImageButton.setVisibility(View.VISIBLE);
         Firebase changeInLocationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
         changeInLocationFirebase.addChildEventListener(new ChildEventListener() {
             @Override
