@@ -19,6 +19,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.Image;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -74,6 +75,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
+import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 
 import org.w3c.dom.Text;
@@ -121,7 +123,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ChildEventListener chatsChildEventListener;
     Firebase unreadChatsFirebase;
     int chatNotificationCount;
-    BitmapDescriptor destinationIconDescriptor;
     Bitmap destinationIconBitmap;
     int memberUriCount;
 
@@ -581,7 +582,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton requestIconImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_request_icon);
         ImageButton chatIconImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_chat_icon);
         ImageButton zoomFitImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_zoom_fit_icon);
-
+        ImageButton addNewMemberImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_member);
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -604,11 +605,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+        addNewMemberImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                sendMemberRequest();
+            }
+        });
         Window window = allInOneDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
         allInOneDialog.setCanceledOnTouchOutside(true);
         allInOneDialog.show();
+
+
+    }
+    void sendMemberRequest(){
+
+        Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
+        sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
+
+        EditText sendJoinRequestEventIdEditText;
+        Button sendJoinRequestButton;
+        RecyclerView eventJoinRequestSendRecyclerView;
+        sendJoinRequestEventIdEditText = (EditText) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_edit_text);
+        sendJoinRequestButton = (Button) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_button);
+
+        eventJoinRequestSendRecyclerView = (RecyclerView) sendMemberRequestDialog.findViewById(R.id.dialog_event_join_request_sent_recycler_view);
+        eventJoinRequestSendRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        eventJoinRequestSendRecyclerView.setHasFixedSize(true);
+        SentEventJoinRequestRecyclerViewAdapter adapter = new SentEventJoinRequestRecyclerViewAdapter(this);
+        eventJoinRequestSendRecyclerView.setAdapter(adapter);
+
+        Window window = sendMemberRequestDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        sendMemberRequestDialog.setCanceledOnTouchOutside(true);
+        sendMemberRequestDialog.show();
+
+
+
+
+
 
 
     }
@@ -698,8 +736,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.start_location_desc_text_view);
         destLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.dest_location_desc_text_view);
         eventDescriptionTextView = (TextView) eventInfoDialog.findViewById(R.id.event_desc_text_view);
+
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
         eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
         eventIdDialogTextView.setText(Constants.currentEventId);
         startLocationDialogTextView.setText(startLocationTextView);
         destLocationDialogTextView.setText(destLocationTextView);

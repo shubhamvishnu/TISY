@@ -30,7 +30,7 @@
             android:background="@android:color/transparent"
             android:elevation="20dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/chat_icon" />
+            app:srcCompat="@drawable/chat_icon" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/dialog_zoom_fit_icon"
@@ -40,7 +40,17 @@
             android:background="@android:color/transparent"
             android:elevation="20dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/view_members_icon"
+            app:srcCompat="@drawable/view_members_icon"
+            android:tint="@android:color/white" />
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/dialog_add_new_member"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/add_event_member"
             android:tint="@android:color/white" />
     </LinearLayout>
 </LinearLayout>
