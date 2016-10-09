@@ -84,6 +84,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -648,14 +649,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.exists()){
-                                    Firebase sendRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS);
+                                    Firebase sendRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
                                     HashMap<String, Object> sendRequestUsername = new HashMap<String, Object>();
-                                    sendRequestUsername.put(userId, Constants.currentEventId);
+                                    sendRequestUsername.put(userId, username);
                                     sendRequestFirebase.updateChildren(sendRequestUsername, new Firebase.CompletionListener() {
                                         @Override
                                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                            sendJoinRequestEventIdEditText.setText("");
-                                            //TODO: showsnackbar here
+                                            Firebase userSentRequestUpdateFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + userId);
+                                            HashMap<String, Object> userSentRequestUpdate = new HashMap<String, Object>();
+                                            userSentRequestUpdate.put(Constants.currentEventId, username);
+                                            userSentRequestUpdateFirebase.updateChildren(userSentRequestUpdate, new Firebase.CompletionListener() {
+                                                @Override
+                                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                                    sendJoinRequestEventIdEditText.setText("");
+                                                    //TODO: showsnackbar here
+                                                }
+                                            });
                                         }
                                     });
                                 }

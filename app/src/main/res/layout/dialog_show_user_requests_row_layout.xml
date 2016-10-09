@@ -25,7 +25,6 @@
             android:textSize="16dp"
             />
 
-
     </LinearLayout>
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/remove_request_image_button"

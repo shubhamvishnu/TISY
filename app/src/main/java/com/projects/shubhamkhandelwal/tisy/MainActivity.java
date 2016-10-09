@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final static String JOIN_EVENT_TAG = "send_requests";
     public final static String ALL_EVENTS_TAG = "all_events";
     public final static String REQUESTS_TAG = "requests";
+    public final static String RECEIVED_REQUEST_TAG = "received_requests";
 
 
     Intent intent;
@@ -122,6 +123,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         requestsSubActionButton.setTag(REQUESTS_TAG);
         requestsSubActionButton.setOnClickListener(this);
 
+
+
+        CircleImageView receivedRequestsCircleButton = new CircleImageView(this);
+        receivedRequestsCircleButton.setImageResource(R.drawable.received_requests_icon);
+
+        SubActionButton receivedRequestSubActionButton = itemBuilder.setContentView(receivedRequestsCircleButton).build();
+        receivedRequestSubActionButton.setTag(RECEIVED_REQUEST_TAG);
+        receivedRequestSubActionButton.setOnClickListener(this);
+
+
+
+
         FloatingActionMenu circleMenu = new FloatingActionMenu.Builder(this)
                 .setStartAngle(0) // A whole circle!
                 .setEndAngle(360)
@@ -130,6 +143,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addSubActionView(sendRequestSubActionButton)
                 .addSubActionView(allEventsSubActionButton)
                 .addSubActionView(requestsSubActionButton)
+                .addSubActionView(receivedRequestSubActionButton)
                 .attachTo(centerFAB)
                 .build();
     }
@@ -325,6 +339,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         if (view.getTag().equals(REQUESTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_REQUESTS);
+        }
+        if(view.getTag().equals(RECEIVED_REQUEST_TAG)){
+            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
         }
     }
 

@@ -29,7 +29,6 @@
         android:paddingLeft="24dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Count me inn!"
         android:paddingBottom="24dp"
         android:hint="Write a message" />
 

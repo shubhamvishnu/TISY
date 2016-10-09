@@ -1,7 +1,6 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.content.Context;
-import android.media.Image;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.maps.model.Circle;
 import com.projects.shubhamkhandelwal.tisy.R;
 import com.squareup.picasso.Picasso;
 
@@ -46,17 +44,14 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
     void loadRequestsSent() {
-        firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS);
+        firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
         firebase.keepSynced(true);
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String eventId = dataSnapshot.getValue().toString();
-                if (eventId.equals(Constants.currentEventId)) {
-                    String user = dataSnapshot.getKey();
-                    sentRequestsList.add(user);
-                    loadImage(user);
-                }
+                String userId = dataSnapshot.getKey();
+                sentRequestsList.add(userId);
+                loadImage(userId);
             }
 
             @Override
@@ -92,7 +87,7 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
         imageUrlFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     int position = imageUrlList.size();
                     imageUrlList.add(dataSnapshot.getValue().toString());
                     notifyItemInserted(position);
@@ -128,7 +123,7 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
     void removeRequest(final int position) {
-        Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + sentRequestsList.get(position));
+        Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId +"/"+ sentRequestsList.get(position));
         removeRequest.removeValue();
     }
 
