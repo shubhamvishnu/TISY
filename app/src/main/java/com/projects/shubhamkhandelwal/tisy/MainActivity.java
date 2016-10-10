@@ -14,10 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -92,48 +96,120 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         centerFAB = (ImageButton) findViewById(R.id.center_fab);
         centerFAB.setColorFilter(getResources().getColor(R.color.colorAccent));
+
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         itemBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
 
+
+        // create event
+        LinearLayout subActionFABLinearLayout = new LinearLayout(this);
+        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
+
+
         CircleImageView createEventCircleButton = new CircleImageView(this);
         createEventCircleButton.setImageResource(R.drawable.add_icon);
+        createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
 
-        SubActionButton createEventSubActionButton = itemBuilder.setContentView(createEventCircleButton).build();
+        TextView createEventTextView = new TextView(this);
+        createEventTextView.setText("Create");
+        createEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        createEventTextView.setTextSize(10);
+
+        subActionFABLinearLayout.addView(createEventCircleButton);
+        subActionFABLinearLayout.addView(createEventTextView);
+
+
+        SubActionButton createEventSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         createEventSubActionButton.setTag(CREATE_EVENT_TAG);
         createEventSubActionButton.setOnClickListener(this);
 
+        // requests
+        LinearLayout sendsubActionFABLinearLayout = new LinearLayout(this);
+        sendsubActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        sendsubActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
+
         CircleImageView sendRequestCircleButton = new CircleImageView(this);
         sendRequestCircleButton.setImageResource(R.drawable.requests_icon);
+        sendRequestCircleButton.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
 
-        SubActionButton sendRequestSubActionButton = itemBuilder.setContentView(sendRequestCircleButton).build();
+        TextView joinEventTextView = new TextView(this);
+        joinEventTextView.setText("Join");
+        joinEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        joinEventTextView.setTextSize(10);
+
+        sendsubActionFABLinearLayout.addView(sendRequestCircleButton);
+        sendsubActionFABLinearLayout.addView(joinEventTextView);
+
+        SubActionButton sendRequestSubActionButton = itemBuilder.setContentView(sendsubActionFABLinearLayout).build();
         sendRequestSubActionButton.setTag(JOIN_EVENT_TAG);
         sendRequestSubActionButton.setOnClickListener(this);
 
+
+        // all event requests
+        subActionFABLinearLayout = new LinearLayout(this);
+        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
+
         CircleImageView allActiveEventsCircleButton = new CircleImageView(this);
         allActiveEventsCircleButton.setImageResource(R.drawable.all_events_active_icon);
+        allActiveEventsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
+        TextView allEventsTextView = new TextView(this);
+        allEventsTextView.setText("All");
+        allEventsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        allEventsTextView.setTextSize(10);
+        subActionFABLinearLayout.addView(allActiveEventsCircleButton);
+        subActionFABLinearLayout.addView(allEventsTextView);
 
-        SubActionButton allEventsSubActionButton = itemBuilder.setContentView(allActiveEventsCircleButton).build();
+        SubActionButton allEventsSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         allEventsSubActionButton.setTag(ALL_EVENTS_TAG);
         allEventsSubActionButton.setOnClickListener(this);
 
+
+        // all sent requests
+        subActionFABLinearLayout = new LinearLayout(this);
+        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
+
         CircleImageView requestsCircleButton = new CircleImageView(this);
         requestsCircleButton.setImageResource(R.drawable.join_event_icon);
+        requestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
+        TextView requestsTextView = new TextView(this);
+        requestsTextView.setText("Requests");
+        requestsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        requestsTextView.setTextSize(10);
+        subActionFABLinearLayout.addView(requestsCircleButton);
+        subActionFABLinearLayout.addView(requestsTextView);
 
-        SubActionButton requestsSubActionButton = itemBuilder.setContentView(requestsCircleButton).build();
+        SubActionButton requestsSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         requestsSubActionButton.setTag(REQUESTS_TAG);
         requestsSubActionButton.setOnClickListener(this);
 
 
+        // all received requests
+        subActionFABLinearLayout = new LinearLayout(this);
+        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
 
         CircleImageView receivedRequestsCircleButton = new CircleImageView(this);
         receivedRequestsCircleButton.setImageResource(R.drawable.received_requests_icon);
+        receivedRequestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
 
-        SubActionButton receivedRequestSubActionButton = itemBuilder.setContentView(receivedRequestsCircleButton).build();
+        TextView recevivedTextView = new TextView(this);
+        recevivedTextView.setText("Received");
+        recevivedTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        recevivedTextView.setTextSize(10);
+
+        subActionFABLinearLayout.addView(receivedRequestsCircleButton);
+        subActionFABLinearLayout.addView(recevivedTextView);
+
+        SubActionButton receivedRequestSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         receivedRequestSubActionButton.setTag(RECEIVED_REQUEST_TAG);
         receivedRequestSubActionButton.setOnClickListener(this);
 
-
-
+        // set fab layout
+        FrameLayout.LayoutParams subActionButtonParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        createEventSubActionButton.setLayoutParams(subActionButtonParams);
 
         FloatingActionMenu circleMenu = new FloatingActionMenu.Builder(this)
                 .setStartAngle(0) // A whole circle!
@@ -340,7 +416,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (view.getTag().equals(REQUESTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_REQUESTS);
         }
-        if(view.getTag().equals(RECEIVED_REQUEST_TAG)){
+        if (view.getTag().equals(RECEIVED_REQUEST_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
         }
     }

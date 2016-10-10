@@ -139,4 +139,13 @@ public class ChatsRecyclerViewAdpater extends RecyclerView.Adapter<ChatsRecycler
 
 
     }
+    class ChatsOtherMemberMessageRecyclerViewHolder extends RecyclerView.ViewHolder{
+        TextView usernameOtherMemberMessageTextView;
+        TextView messageOtherMemberMessageTextView;
+        public ChatsOtherMemberMessageRecyclerViewHolder(View itemView) {
+            super(itemView);
+            usernameOtherMemberMessageTextView = (TextView) itemView.findViewById(R.id.username_other_member_message_text_view);
+            messageOtherMemberMessageTextView  = (TextView) itemView.findViewById(R.id.message_other_member_message_text_view);
+        }
+    }
 }
