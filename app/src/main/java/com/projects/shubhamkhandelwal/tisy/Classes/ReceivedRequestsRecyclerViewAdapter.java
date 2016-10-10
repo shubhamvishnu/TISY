@@ -15,7 +15,9 @@ import com.firebase.client.FirebaseError;
 import com.projects.shubhamkhandelwal.tisy.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Shubham Khandelwal on 10/9/2016.
@@ -96,6 +98,26 @@ void removeRequest(final int position){
         }
     });
 }
+    void addUser(final int position){
+        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventIdList.get(position) + "/members");
+        final Map<String, Object> updateMember = new HashMap<String, Object>();
+        updateMember.put(username, "0.0,0.0");
+        firebase.updateChildren(updateMember, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent");
+                Map<String, Object> updateUserDetails = new HashMap<>();
+                updateUserDetails.put(eventIdList.get(position), "joined");
+                firebase.updateChildren(updateUserDetails, new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                      removeRequest(position);
+
+                    }
+                });
+            }
+        });
+    }
     public class ReceivedRequestsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView eventIdTextView;
         ImageButton acceptRequestImageButton, declineRequestImageButton;
@@ -113,7 +135,7 @@ void removeRequest(final int position){
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.accept_request_image_button: {
-
+                    addUser(getPosition());
                     break;
                 }
                 case R.id.decline_request_image_button: {

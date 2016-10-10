@@ -29,6 +29,7 @@
             android:textSize="20dp"
             android:textStyle="bold|italic" />
     </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/user_requests_recycler_view"
         android:layout_width="fill_parent"

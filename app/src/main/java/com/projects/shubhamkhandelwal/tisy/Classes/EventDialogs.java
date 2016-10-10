@@ -35,8 +35,10 @@ public class EventDialogs{
 
     }
     void showReceviedRequests(Context context, final Dialog dialog){
+        ImageButton exitButton;
         RecyclerView receivedRequestRecyclerView;
         ReceivedRequestsRecyclerViewAdapter receivedRequestsRecyclerViewAdapter;
+        exitButton = (ImageButton) dialog.findViewById(R.id.received_requests_back_arrow_image_button);
         receivedRequestRecyclerView= (RecyclerView) dialog.findViewById(R.id.dialog_received_request_recycler_view);
         receivedRequestRecyclerView.setHasFixedSize(true);
 
@@ -45,6 +47,12 @@ public class EventDialogs{
 
         receivedRequestsRecyclerViewAdapter = new ReceivedRequestsRecyclerViewAdapter(context);
         receivedRequestRecyclerView.setAdapter(receivedRequestsRecyclerViewAdapter);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
     }
     void showAllRequestsDialog(Context context, final Dialog dialog) {
         ImageButton exitImageButton;
