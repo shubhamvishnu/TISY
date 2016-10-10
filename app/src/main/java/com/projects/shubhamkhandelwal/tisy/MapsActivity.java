@@ -19,7 +19,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.Image;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -60,7 +59,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -78,13 +76,10 @@ import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -114,6 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> membersList;
     List<String> memberCoordinate;
     List<String> memberProfileImageUrls;
+    String timeStamp;
     String adminValue;
     int movement = 1;
     CoordinatorLayout coordinatorLayout;
@@ -176,7 +172,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
         allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
         memberLocationMarkers = new HashMap<>();
-
         startService(new Intent(getBaseContext(), InternetConnectionService.class));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -623,7 +618,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
-    void sendMemberRequest(){
+
+    void sendMemberRequest() {
 
         Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
         sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
@@ -637,18 +633,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 final String userId = sendJoinRequestEventIdEditText.getText().toString();
-                if(userId == null || userId.isEmpty()){
+                if (userId == null || userId.isEmpty()) {
                     //TODO: show snackbar here
-                }else{
-                    if(userId.equals(username)){
+                } else {
+                    if (userId.equals(username)) {
                         //TODO: show snackbar here
                         sendJoinRequestEventIdEditText.setText("");
-                    }else{
+                    } else {
                         Firebase userIdCheckFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + userId);
                         userIdCheckFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()){
+                                if (dataSnapshot.exists()) {
                                     Firebase sendRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
                                     HashMap<String, Object> sendRequestUsername = new HashMap<String, Object>();
                                     sendRequestUsername.put(userId, username);
@@ -694,11 +690,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sendMemberRequestDialog.show();
 
 
-
-
-
-
-
     }
 
 
@@ -710,6 +701,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void eventInfoDialog() {
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
+        timeStamp = new String();
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -722,6 +714,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
                 eventDescription = dataSnapshot.child("desc").getValue().toString();
+                timeStamp = dataSnapshot.child("time").getValue().toString();
                 for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
                     membersList.add(snapshot.getKey());
                     memberCoordinate.add(snapshot.getValue().toString());
@@ -777,6 +770,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView startLocationDialogTextView;
         TextView destLocationDialogTextView;
         TextView eventDescriptionTextView;
+        TextView timeStampTextView;
         RecyclerView eventInfoMembersRecyclerView;
 
 
@@ -787,6 +781,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.start_location_desc_text_view);
         destLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.dest_location_desc_text_view);
         eventDescriptionTextView = (TextView) eventInfoDialog.findViewById(R.id.event_desc_text_view);
+        timeStampTextView = (TextView) eventInfoDialog.findViewById(R.id.time_stamp_text_view);
 
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
         eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -795,7 +790,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startLocationDialogTextView.setText(startLocationTextView);
         destLocationDialogTextView.setText(destLocationTextView);
         eventDescriptionTextView.setText(eventDescription);
-
+        timeStampTextView.setText(timeStamp);
         eventInfoMembersRecyclerView.setHasFixedSize(true);
         EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls);
         eventInfoMembersRecyclerView.setAdapter(adapter);

@@ -46,6 +46,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -280,7 +281,7 @@ public class CreateEvent extends Activity {
                                 newEvent.put("members", members);
                                 newEvent.put("dIcon", iconResourceId);
                                 newEvent.put("desc", eventDescription);
-
+                                newEvent.put("time", TimeStamp.getTime());
                                 firebase.setValue(newEvent, new Firebase.CompletionListener() {
                                     @Override
                                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
