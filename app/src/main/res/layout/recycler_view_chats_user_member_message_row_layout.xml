@@ -6,15 +6,11 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/username_other_member_message_text_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#bcbcbc" />
-    <TextView
-        android:id="@+id/message_other_member_message_text_view"
+        android:id="@+id/message_user_member_message_text_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:textSize="16dp"
+        android:gravity="right"
         android:layout_marginBottom="4dp"/>
 </LinearLayout>
