@@ -227,7 +227,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     /*  void loadEventInfo(){
           FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
           StorageReference imageStorageReference = firebaseStorage.getReferenceFromUrl("gs://fir-trio.appspot.com/" + Constants.currentEventId + "/dIcon");
-
+`
           final long ONE_MEGABYTE = 1024 * 1024;
           imageStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
               @Override

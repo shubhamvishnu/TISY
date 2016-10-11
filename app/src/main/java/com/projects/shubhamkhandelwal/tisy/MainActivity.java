@@ -114,7 +114,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView createEventTextView = new TextView(this);
         createEventTextView.setText("Create");
         createEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        createEventTextView.setTextSize(10);
+        createEventTextView.setTextSize(8);
+        createEventTextView.setGravity(Gravity.CENTER);
 
         subActionFABLinearLayout.addView(createEventCircleButton);
         subActionFABLinearLayout.addView(createEventTextView);
@@ -136,8 +137,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView joinEventTextView = new TextView(this);
         joinEventTextView.setText("Join");
         joinEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        joinEventTextView.setTextSize(10);
-
+        joinEventTextView.setTextSize(8);
+        joinEventTextView.setGravity(Gravity.CENTER);
         sendsubActionFABLinearLayout.addView(sendRequestCircleButton);
         sendsubActionFABLinearLayout.addView(joinEventTextView);
 
@@ -155,9 +156,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allActiveEventsCircleButton.setImageResource(R.drawable.all_events_active_icon);
         allActiveEventsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
         TextView allEventsTextView = new TextView(this);
-        allEventsTextView.setText("All");
+        allEventsTextView.setText("Events");
         allEventsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        allEventsTextView.setTextSize(10);
+        allEventsTextView.setTextSize(8);
+        allEventsTextView.setGravity(Gravity.CENTER);
         subActionFABLinearLayout.addView(allActiveEventsCircleButton);
         subActionFABLinearLayout.addView(allEventsTextView);
 
@@ -177,7 +179,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView requestsTextView = new TextView(this);
         requestsTextView.setText("Requests");
         requestsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        requestsTextView.setTextSize(10);
+        requestsTextView.setTextSize(8);
+        requestsTextView.setGravity(Gravity.CENTER);
         subActionFABLinearLayout.addView(requestsCircleButton);
         subActionFABLinearLayout.addView(requestsTextView);
 
@@ -192,14 +195,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
 
         CircleImageView receivedRequestsCircleButton = new CircleImageView(this);
-        receivedRequestsCircleButton.setImageResource(R.drawable.received_requests_icon);
+        receivedRequestsCircleButton.setImageResource(R.drawable.request_received_icon);
         receivedRequestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
 
         TextView recevivedTextView = new TextView(this);
         recevivedTextView.setText("Received");
         recevivedTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        recevivedTextView.setTextSize(10);
-
+        recevivedTextView.setTextSize(8);
+        recevivedTextView.setGravity(Gravity.CENTER);
         subActionFABLinearLayout.addView(receivedRequestsCircleButton);
         subActionFABLinearLayout.addView(recevivedTextView);
 
@@ -210,6 +213,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         // set fab layout
         FrameLayout.LayoutParams subActionButtonParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         createEventSubActionButton.setLayoutParams(subActionButtonParams);
+        sendRequestSubActionButton.setLayoutParams(subActionButtonParams);
+        allEventsSubActionButton.setLayoutParams(subActionButtonParams);
+        requestsSubActionButton.setLayoutParams(subActionButtonParams);
+        receivedRequestSubActionButton.setLayoutParams(subActionButtonParams);
 
         FloatingActionMenu circleMenu = new FloatingActionMenu.Builder(this)
                 .setStartAngle(0) // A whole circle!
