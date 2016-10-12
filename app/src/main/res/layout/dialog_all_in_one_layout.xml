@@ -52,5 +52,15 @@
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/add_event_member"
             android:tint="@android:color/white" />
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/dialog_add_new_checkpoint"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/add_checkpoint_icon"
+            android:tint="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

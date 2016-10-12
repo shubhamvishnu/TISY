@@ -83,7 +83,7 @@ import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    public static final String MAPS_ACTIVITY_TAG = "MapsActivity";
+
     public static final int REQUEST_PERMISSION_SETTINGS = 1;
     public static boolean zoomFit;
     public static Dialog chatsDialog;
@@ -123,6 +123,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     int chatNotificationCount;
     Bitmap destinationIconBitmap;
     int memberUriCount;
+    Map<String, Object> checkPointCoordinateMap;
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
@@ -130,8 +131,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(48,
-                48, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(120,
+                102, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
@@ -185,6 +186,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             requestOptionOnClick();
             unreadChats();
             loadDestinationIcon();
+            loadCheckPoints();
         }
 
         //TODO: change them later
@@ -224,6 +226,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    void loadCheckPoints(){
+        checkPointCoordinateMap = new HashMap<>();
+        Firebase loadCheckPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
+        loadCheckPointsFirebase.keepSynced(true);
+        loadCheckPointsFirebase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                checkPointCoordinateMap.put(dataSnapshot.getKey(), dataSnapshot.getValue());
+                updateMapMembers();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                checkPointCoordinateMap.remove(dataSnapshot.getKey());
+                updateMapMembers();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
     /*  void loadEventInfo(){
           FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
           StorageReference imageStorageReference = firebaseStorage.getReferenceFromUrl("gs://fir-trio.appspot.com/" + Constants.currentEventId + "/dIcon");
@@ -557,8 +593,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String da = dataSnapshot.child("sLocation").toString();
-                Log.d("mapsssssssss", da);
                 eventInfo.setsLocation(dataSnapshot.child("sLocation").getValue().toString());
                 eventInfo.setsLocationDesc(dataSnapshot.child("sLocationDesc").getValue().toString());
                 eventInfo.setdLocation(dataSnapshot.child("dLocation").getValue().toString());
@@ -581,6 +615,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton chatIconImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_chat_icon);
         ImageButton zoomFitImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_zoom_fit_icon);
         ImageButton addNewMemberImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_member);
+        ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -610,6 +645,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 sendMemberRequest();
             }
         });
+
         Window window = allInOneDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
@@ -1089,8 +1125,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 RequestsDetails requestItem = new RequestsDetails(dataSnapshot.getKey().toString(), dataSnapshot.getValue().toString());
                 joinRequests.add(requestItem);
                 ++numberOfRequests;
-                Log.d("requests", joinRequests.toString());
-                Log.d("requests", "" + numberOfRequests);
                 showRequestNotification(numberOfRequests, true);
 
             }
@@ -1331,11 +1365,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (!checkInternetConnection()) {
                         String message = "No internet connection";
                         showIneternetConnectionSnackBar(message);
-
                     } else {
                         updateUserCurrentLocation(location);
                     }
-
                 }
             });
             changeInLocation();
@@ -1438,6 +1470,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker startMarker = null;
         Marker destinationMarker = null;
         mMap.clear();
+
+        if(!checkPointCoordinateMap.isEmpty()){
+           for( Map.Entry<String, Object> point : checkPointCoordinateMap.entrySet()){
+               String[] coordinate = point.getValue().toString().split(",");
+
+           }
+        }
 
         if (destinationIconBitmap != null) {
             String[] destCoordinates = eventInfo.getdLocation().split(",");
