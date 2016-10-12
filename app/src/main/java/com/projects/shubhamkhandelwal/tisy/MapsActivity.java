@@ -53,6 +53,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -90,7 +94,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static int numberOfRequests = 0;
     public static int numberOfUnreadChats = 0;
     public static int numberOfReadChats = 0;
-
+    int PLACE_PICKER_REQUEST = 1;
     // TODO: could make this a class later
     String admin;
     String username;
@@ -124,6 +128,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Bitmap destinationIconBitmap;
     int memberUriCount;
     Map<String, Object> checkPointCoordinateMap;
+    PlacePicker.IntentBuilder builder;
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
@@ -226,7 +231,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    void loadCheckPoints(){
+    void loadCheckPoints() {
         checkPointCoordinateMap = new HashMap<>();
         Firebase loadCheckPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
         loadCheckPointsFirebase.keepSynced(true);
@@ -234,8 +239,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 checkPointCoordinateMap.put(dataSnapshot.getKey(), dataSnapshot.getValue());
-                updateMapMembers();
-
             }
 
             @Override
@@ -246,7 +249,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 checkPointCoordinateMap.remove(dataSnapshot.getKey());
-                updateMapMembers();
             }
 
             @Override
@@ -260,6 +262,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
     /*  void loadEventInfo(){
           FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
           StorageReference imageStorageReference = firebaseStorage.getReferenceFromUrl("gs://fir-trio.appspot.com/" + Constants.currentEventId + "/dIcon");
@@ -587,6 +590,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         destinationIconBitmap = myBit;
         initializeEventInfo();
     }
+    Bitmap changeCheckPointBitMapColor(Bitmap myBitmap) {
+
+        Paint pnt = new Paint();
+        Bitmap myBit = myBitmap;
+
+        Canvas myCanvas = new Canvas(myBit);
+        int myColor = myBit.getPixel(0, 0);
+
+        // Set the colour to replace.
+        // TODO: change color later
+        ColorFilter filter = new LightingColorFilter(myColor, Color.parseColor("#900C3F"));
+
+        pnt.setColorFilter(filter);
+
+        // Draw onto new bitmap. result Bitmap is newBit
+        myCanvas.drawBitmap(myBit, 0, 0, pnt);
+
+        return myBit;
+    }
 
     void initializeEventInfo() {
         Firebase eventInfoFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/info");
@@ -645,7 +667,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 sendMemberRequest();
             }
         });
-
+        addNewCheckPointImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                addCheckPointDialog();
+            }
+        });
         Window window = allInOneDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
@@ -654,6 +682,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
+
+    void addCheckPointDialog() {
+        placePickerDialog();
+    }
+
+    void placePickerDialog() {
+        builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+
+            }
+        }
+    }
+void saveCheckPoint(Double latitude, Double longitude){
+    Firebase saveCheckPoint = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
+    HashMap<String,Object> checkPointFirebaseMap = new HashMap<>();
+    checkPointFirebaseMap.put(String.valueOf(checkPointCoordinateMap.size()), latitude+","+longitude);
+    saveCheckPoint.updateChildren(checkPointFirebaseMap);
+}
 
     void sendMemberRequest() {
 
@@ -1470,12 +1531,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker startMarker = null;
         Marker destinationMarker = null;
         mMap.clear();
+        List<Marker> zoomFitCheckPointCoordinates = new ArrayList<>();
+        if (!checkPointCoordinateMap.isEmpty()) {
+            int checkPointCounter = 1;
+            for (Map.Entry<String, Object> point : checkPointCoordinateMap.entrySet()) {
+                checkPointCounter++;
+                String[] coordinate = point.getValue().toString().split(",");
+                Bitmap checkPointBitmap = changeCheckPointBitMapColor(getBitmapFromVectorDrawable(this, R.drawable.add_checkpoint_icon));
+                Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]))).title("checkpoint-" + checkPointCounter).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
+                zoomFitCheckPointCoordinates.add(checkPointMarker);
 
-        if(!checkPointCoordinateMap.isEmpty()){
-           for( Map.Entry<String, Object> point : checkPointCoordinateMap.entrySet()){
-               String[] coordinate = point.getValue().toString().split(",");
-
-           }
+            }
         }
 
         if (destinationIconBitmap != null) {
@@ -1507,6 +1573,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (destinationIconBitmap != null) {
                 builder.include(startMarker.getPosition());
                 builder.include(destinationMarker.getPosition());
+            }
+            if (!zoomFitCheckPointCoordinates.isEmpty()) {
+                for (Marker checkPointMarkers : zoomFitCheckPointCoordinates) {
+                    builder.include(checkPointMarkers.getPosition());
+                }
             }
             LatLngBounds bounds = builder.build();
             int width = getResources().getDisplayMetrics().widthPixels;
