@@ -25,6 +25,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -84,7 +85,6 @@ import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -134,6 +134,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     PlacePicker.IntentBuilder builder;
     boolean isCheckPointEdit;
     int checkPointMakrerEditPosition;
+    List<String> checkPointsReached;
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
@@ -179,6 +180,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
+        checkPointsReached = new ArrayList<>();
 
         eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
         allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
@@ -1467,15 +1469,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
-    void checkNearCheckPoint(Location location){
-        for(Map.Entry<String, Object> checkpoint:  checkPointCoordinateMap.entrySet()){
-            float[] distance = new float[2];
-            String [] coordinate = checkpoint.getValue().toString().split(",");
-            Location.distanceBetween(location.getLatitude(), location.getLongitude(),Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]), distance);
-            Toast.makeText(MapsActivity.this, "distance" + distance.toString(), Toast.LENGTH_SHORT).show();
+
+    void checkNearCheckPoint(Location location) {
+        if (checkPointCoordinateMap == null || checkPointCoordinateMap.isEmpty()) {
+        } else {
+            for (Map.Entry<String, Object> checkpoint : checkPointCoordinateMap.entrySet()) {
+                float[] distance = new float[2];
+                String[] coordinate = checkpoint.getValue().toString().split(",");
+                Location.distanceBetween(location.getLatitude(), location.getLongitude(), Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]), distance);
+                if (distance[0] <= 20) {
+                    Toast.makeText(MapsActivity.this, " distance0:" + distance[0] + " distance1:" + distance[1], Toast.LENGTH_SHORT).show();
+
+                    if (!checkPointsReached.contains(checkpoint.getKey())) {
+                        checkPointsReached.add(checkpoint.getKey());
+                        vibrateDevice();
+                    }
+
+                }
+            }
         }
 
     }
+
+    void vibrateDevice() {
+        Toast.makeText(MapsActivity.this, "checkpoint reached" + checkPointsReached, Toast.LENGTH_SHORT).show();
+        Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
+        // Vibrate for 500 milliseconds
+        v.vibrate(500);
+    }
+
     void showIneternetConnectionSnackBar(String message) {
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
@@ -1683,13 +1706,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Integer clickCount = (Integer) marker.getTag();
         if (clickCount != null) {
 
-        for (int i = 1; i <=checkPointCoordinateMap.size(); i++) {
-            if (clickCount == i) {
-                Toast.makeText(MapsActivity.this, "i:"+i, Toast.LENGTH_SHORT).show();
-                showCheckPointEditOption(i);
-            }
+            for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
+                if (clickCount == i) {
+                    Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
+                    showCheckPointEditOption(i);
+                }
 
-        }
+            }
 
         }
         return false;
