@@ -1124,6 +1124,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void initializeMap() {
         userlocationAction();
+        mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setIndoorLevelPickerEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
@@ -1147,7 +1148,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onDismissed(Snackbar snackbar, int event) {
                 if (mMap != null) {
                     mMap.setPadding(0, 0, 0, 0);
-
                 }
             }
 
@@ -1568,7 +1568,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String[] coordinate = point.getValue().toString().split(",");
                 Bitmap checkPointBitmap = changeCheckPointBitMapColor(getBitmapFromVectorDrawable(this, R.drawable.add_checkpoint_icon));
                 Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]))).title("checkpoint-" + checkPointCounter).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
-                checkPointMarker.setTag("checkpoint-" + checkPointCounter);
+                checkPointMarker.setTag(checkPointCounter);
                 zoomFitCheckPointCoordinates.add(checkPointMarker);
 
 
@@ -1670,11 +1670,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        String markerClicked = marker.getTag().toString();
-        for (int i = 1; i < checkPointCoordinateMap.size(); i++) {
-            if (markerClicked.equals("checkpoint-" + i)) {
+        Integer clickCount = (Integer) marker.getTag();
+        if (clickCount != null) {
+
+        for (int i = 1; i <=checkPointCoordinateMap.size(); i++) {
+            if (clickCount == i) {
+                Toast.makeText(MapsActivity.this, "i:"+i, Toast.LENGTH_SHORT).show();
                 showCheckPointEditOption(i);
             }
+
+        }
 
         }
         return false;
