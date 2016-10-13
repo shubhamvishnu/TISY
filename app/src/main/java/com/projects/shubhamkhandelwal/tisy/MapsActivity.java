@@ -1613,6 +1613,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String[] startCoordinates = eventInfo.getsLocation().split(",");
             startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.start_location_icon)).snippet(eventInfo.getsLocationDesc()));
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));
+            startMarker.setTag(Constants.START_LOCATION_TAG);
+            destinationMarker.setTag(Constants.DESTINATION_LOCATION_TAG);
         }
         memberLocationMarkers = new HashMap<>();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -1705,13 +1707,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onMarkerClick(Marker marker) {
         Integer clickCount = (Integer) marker.getTag();
         if (clickCount != null) {
+            if (clickCount == Constants.START_LOCATION_TAG) {
+                Toast.makeText(MapsActivity.this, "start lcoation clicked", Toast.LENGTH_SHORT).show();
+            } else if (clickCount == Constants.DESTINATION_LOCATION_TAG) {
+                Toast.makeText(MapsActivity.this, "destination lcoation clicked", Toast.LENGTH_SHORT).show();
 
-            for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
-                if (clickCount == i) {
-                    Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
-                    showCheckPointEditOption(i);
+            } else {
+                Toast.makeText(MapsActivity.this, "else part", Toast.LENGTH_SHORT).show();
+                for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
+                    if (clickCount == i) {
+                        Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
+                        showCheckPointEditOption(i);
+                    }
+
                 }
-
             }
 
         }

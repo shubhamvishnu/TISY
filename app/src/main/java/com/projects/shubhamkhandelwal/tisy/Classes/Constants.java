@@ -32,5 +32,10 @@ public class Constants {
     public static int TYPE_ALL_REQUESTS = 1002;
     public static int TYPE_RECEIVED_REQUESTS = 1003;
 
+    public static int START_LOCATION_TAG = 7000;
+    public static int DESTINATION_LOCATION_TAG = 7001;
+
+
+
 
 }
