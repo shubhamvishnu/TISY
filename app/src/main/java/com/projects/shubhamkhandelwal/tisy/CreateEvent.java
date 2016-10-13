@@ -69,6 +69,8 @@ public class CreateEvent extends Activity {
     EditText sLocationDescEditText;
     EditText dLocationDescEditText;
     EditText descriptionEditText;
+    EditText titleEditText;
+
     TextView userIdTextView;
     ImageButton sLocationEditImageButton;
     ImageButton dLocationEditImageButton;
@@ -116,6 +118,8 @@ public class CreateEvent extends Activity {
         sLocationDescEditText = (EditText) findViewById(R.id.sLocationDescEditText);
         dLocationDescEditText = (EditText) findViewById(R.id.dLocationDescEditText);
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
+        titleEditText = (EditText) findViewById(R.id.title_edit_text);
+
         userIdTextView = (TextView) findViewById(R.id.userId);
         sLocationEditImageButton = (ImageButton) findViewById(R.id.editSLocationImageButton);
         dLocationEditImageButton = (ImageButton) findViewById(R.id.editDLocationImageButton);
@@ -252,11 +256,12 @@ public class CreateEvent extends Activity {
                 String startLocation = eventInfo.getsLocation();
                 String startLocationDesc = eventInfo.getsLocationDesc();
                 String eventDescription = descriptionEditText.getText().toString();
+                String eventTitle = titleEditText.getText().toString();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     checkPermissions();
                 } else {
                     if (!eventId.isEmpty()) {
-                        if (destLocation == null || startLocation == null || startLocationDesc == null || destLocationDesc == null || destLocation.isEmpty() || startLocation.isEmpty() || startLocationDesc.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty()) {
+                        if (destLocation == null || startLocation == null || startLocationDesc == null || destLocationDesc == null || destLocation.isEmpty() || startLocation.isEmpty() || startLocationDesc.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
                             Toast.makeText(CreateEvent.this, "please mention all the event details", Toast.LENGTH_SHORT).show();
                         } else {
 
@@ -281,6 +286,7 @@ public class CreateEvent extends Activity {
                                 newEvent.put("members", members);
                                 newEvent.put("dIcon", iconResourceId);
                                 newEvent.put("desc", eventDescription);
+                                newEvent.put("title",eventTitle);
                                 newEvent.put("time", TimeStamp.getTime());
                                 firebase.setValue(newEvent, new Firebase.CompletionListener() {
                                     @Override

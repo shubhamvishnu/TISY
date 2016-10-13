@@ -3,7 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <TextView
+        android:padding="8dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_title_text_view"
+        android:textSize="20dp"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold|italic"/>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -19,7 +35,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textStyle="italic"
+        android:textStyle="italic|normal"
         android:textSize="20dp"
         android:gravity="center"
         android:layout_marginBottom="8dp"
@@ -118,5 +134,6 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical" /></LinearLayout>
+</ScrollView>
 </LinearLayout>

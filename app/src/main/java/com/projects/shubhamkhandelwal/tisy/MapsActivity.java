@@ -114,6 +114,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> memberCoordinate;
     List<String> memberProfileImageUrls;
     String timeStamp;
+    String eventTitle;
     String adminValue;
     int movement = 1;
     CoordinatorLayout coordinatorLayout;
@@ -799,6 +800,7 @@ void saveCheckPoint(Double latitude, Double longitude){
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
         timeStamp = new String();
+        eventTitle = new String();
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -812,6 +814,8 @@ void saveCheckPoint(Double latitude, Double longitude){
                 }
                 eventDescription = dataSnapshot.child("desc").getValue().toString();
                 timeStamp = dataSnapshot.child("time").getValue().toString();
+                eventTitle = dataSnapshot.child("title").getValue().toString();
+
                 for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
                     membersList.add(snapshot.getKey());
                     memberCoordinate.add(snapshot.getValue().toString());
@@ -868,6 +872,7 @@ void saveCheckPoint(Double latitude, Double longitude){
         TextView destLocationDialogTextView;
         TextView eventDescriptionTextView;
         TextView timeStampTextView;
+        TextView titleTextView;
         RecyclerView eventInfoMembersRecyclerView;
 
 
@@ -879,15 +884,18 @@ void saveCheckPoint(Double latitude, Double longitude){
         destLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.dest_location_desc_text_view);
         eventDescriptionTextView = (TextView) eventInfoDialog.findViewById(R.id.event_desc_text_view);
         timeStampTextView = (TextView) eventInfoDialog.findViewById(R.id.time_stamp_text_view);
+        titleTextView = (TextView) eventInfoDialog.findViewById(R.id.event_title_text_view);
 
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
         eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
+        titleTextView.setText(eventTitle);
         eventIdDialogTextView.setText(Constants.currentEventId);
         startLocationDialogTextView.setText(startLocationTextView);
         destLocationDialogTextView.setText(destLocationTextView);
         eventDescriptionTextView.setText(eventDescription);
         timeStampTextView.setText(timeStamp);
+
         eventInfoMembersRecyclerView.setHasFixedSize(true);
         EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls);
         eventInfoMembersRecyclerView.setAdapter(adapter);
