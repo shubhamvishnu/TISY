@@ -84,6 +84,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -1456,6 +1457,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String message = "No internet connection";
                         showIneternetConnectionSnackBar(message);
                     } else {
+                        checkNearCheckPoint(location);
                         updateUserCurrentLocation(location);
                     }
                 }
@@ -1465,7 +1467,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+    void checkNearCheckPoint(Location location){
+        for(Map.Entry<String, Object> checkpoint:  checkPointCoordinateMap.entrySet()){
+            float[] distance = new float[2];
+            String [] coordinate = checkpoint.getValue().toString().split(",");
+            Location.distanceBetween(location.getLatitude(), location.getLongitude(),Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]), distance);
+            Toast.makeText(MapsActivity.this, "distance" + distance.toString(), Toast.LENGTH_SHORT).show();
+        }
 
+    }
     void showIneternetConnectionSnackBar(String message) {
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
