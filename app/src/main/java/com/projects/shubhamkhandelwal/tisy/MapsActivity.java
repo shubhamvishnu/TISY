@@ -43,6 +43,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,6 +71,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
@@ -81,11 +83,14 @@ import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -101,6 +106,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String admin;
     String username;
     Map<String, Object> members;
+    List<String> memberProfileImageURL;
+
     List<RequestsDetails> joinRequests;
     RecyclerView eventRequestRecyclerView;
     RequestsRecyclerAdapter requestsRecyclerAdapter;
@@ -1564,12 +1571,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 members = new HashMap<>();
+                memberProfileImageUrls = new ArrayList<String>();
                 if (dataSnapshot.child("members").exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
                         members.put(snapshot.getKey().toString(), snapshot.getValue().toString());
+                        updateUserProfileImage(snapshot.getKey().toString());
                     }
                     zoomFit = true;
-                    updateMapMembers();
                 }
             }
 
@@ -1580,6 +1588,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
+    }
+
+    void updateUserProfileImage(String username) {
+        Firebase imageURLFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/userPhotoUri");
+        imageURLFirebase.keepSynced(true);
+        imageURLFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                memberProfileImageUrls.add(dataSnapshot.getValue().toString());
+                if (members.size() == memberProfileImageUrls.size()) {
+                    updateMapMembers();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     void zoomFitMembers() {
@@ -1620,16 +1647,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         memberLocationMarkers = new HashMap<>();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         int i = -1;
-
+        int memberPositionTracker = -1;
         for (Map.Entry<String, Object> member : members.entrySet()) {
+            Bitmap markerIconBitmap = null;
+            ++memberPositionTracker;
+            markerIconBitmap = generateIconfromProfileImage(memberPositionTracker);
             String[] coordinates = member.getValue().toString().split(",");
             // generate random number
             int color = Color.parseColor(Constants.colorPalette[++i]);
             float[] hsv = new float[3];
             Color.colorToHSV(color, hsv);
-
+            Marker marker = null;
             // TODO: create new variable for storing the latlng values
-            Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+            if (markerIconBitmap != null) {
+                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerIconBitmap)));
+            } else {
+                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+            }
             builder.include(marker.getPosition());
             memberLocationMarkers.put(member.getKey(), marker);
             if (i > 12) {
@@ -1656,6 +1690,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    Bitmap generateIconfromProfileImage(int position) {
+        Bitmap bitmap = null;
+        IconGenerator iconGenerator = new IconGenerator(this);
+        CircleImageView circleImageView = new CircleImageView(this);
+        circleImageView.setLayoutParams(new ViewGroup.LayoutParams(240,240));
+        Picasso.with(this).load(Uri.parse(memberProfileImageUrls.get(position))).error(R.drawable.start_location_icon).into(circleImageView);
+        iconGenerator.setContentView(circleImageView);
+        iconGenerator.setBackground(null);
+        bitmap = iconGenerator.makeIcon();
+        return bitmap;
+    }
 
     void updateMemberLocation(DataSnapshot dataSnapshot) {
 
@@ -1716,20 +1761,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                showStreetViewSnackBar(marker);
 //
 //            }
-                else{
-                    Toast.makeText(MapsActivity.this, "else part", Toast.LENGTH_SHORT).show();
-                    for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
-                        if (clickCount == i) {
-                            Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
-                            showCheckPointEditOption(i);
-                        }
-
+            else {
+                Toast.makeText(MapsActivity.this, "else part", Toast.LENGTH_SHORT).show();
+                for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
+                    if (clickCount == i) {
+                        Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
+                        showCheckPointEditOption(i);
                     }
-                }
 
+                }
             }
-            return false;
+
         }
+        return false;
+    }
 
     void showStreetViewSnackBar(final Marker marker) {
         if (mMap != null) {
