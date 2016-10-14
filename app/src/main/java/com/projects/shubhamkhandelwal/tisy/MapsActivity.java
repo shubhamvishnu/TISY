@@ -1646,28 +1646,62 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         memberLocationMarkers = new HashMap<>();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        int i = -1;
-        int memberPositionTracker = -1;
+        int i = 1;
+        //  int memberPositionTracker = -1;
         for (Map.Entry<String, Object> member : members.entrySet()) {
-            Bitmap markerIconBitmap = null;
-            ++memberPositionTracker;
-            markerIconBitmap = generateIconfromProfileImage(memberPositionTracker);
+            Bitmap markerBubbleBitmap = null;
+            //   ++memberPositionTracker;
+            //  markerIconBitmap = generateIconfromProfileImage(memberPositionTracker);
             String[] coordinates = member.getValue().toString().split(",");
             // generate random number
-            int color = Color.parseColor(Constants.colorPalette[++i]);
-            float[] hsv = new float[3];
-            Color.colorToHSV(color, hsv);
+//            int color = Color.parseColor(Constants.colorPalette[++i]);
+//            float[] hsv = new float[3];
+//            Color.colorToHSV(color, hsv);
             Marker marker = null;
             // TODO: create new variable for storing the latlng values
-            if (markerIconBitmap != null) {
-                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerIconBitmap)));
-            } else {
-                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+//            if (markerIconBitmap != null) {
+//                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerIconBitmap)));
+//            } else {
+
+            IconGenerator iconGenerator = new IconGenerator(this);
+
+
+
+            switch (i) {
+                case 1: {
+                    iconGenerator.setStyle(IconGenerator.STYLE_RED);
+                    break;
+                }
+                case 2: {
+                    iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+                    break;
+                }
+                case 3: {
+                    iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
+                    break;
+                }
+                case 4: {
+                    iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
+                    break;
+                }
+                case 5: {
+                    iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
+                    break;
+                }
             }
+
+            markerBubbleBitmap = iconGenerator.makeIcon(member.getKey());
+            //if(markerBubbleBitmap != null){
+            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerBubbleBitmap)));
+            ++i;
+            //    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+
+
+            //   }
             builder.include(marker.getPosition());
             memberLocationMarkers.put(member.getKey(), marker);
-            if (i > 12) {
-                i = -1;
+            if (i > 5) {
+                i = 1;
             }
         }
         if (zoomFit) {
@@ -1694,7 +1728,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bitmap bitmap = null;
         IconGenerator iconGenerator = new IconGenerator(this);
         CircleImageView circleImageView = new CircleImageView(this);
-        circleImageView.setLayoutParams(new ViewGroup.LayoutParams(240,240));
+        circleImageView.setLayoutParams(new ViewGroup.LayoutParams(170, 170));
         Picasso.with(this).load(Uri.parse(memberProfileImageUrls.get(position))).error(R.drawable.start_location_icon).into(circleImageView);
         iconGenerator.setContentView(circleImageView);
         iconGenerator.setBackground(null);
