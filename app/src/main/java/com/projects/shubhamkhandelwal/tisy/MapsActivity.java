@@ -1707,27 +1707,63 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onMarkerClick(Marker marker) {
         Integer clickCount = (Integer) marker.getTag();
         if (clickCount != null) {
-            if (clickCount == Constants.START_LOCATION_TAG) {
-                Toast.makeText(MapsActivity.this, "start lcoation clicked", Toast.LENGTH_SHORT).show();
-            } else if (clickCount == Constants.DESTINATION_LOCATION_TAG) {
-                Toast.makeText(MapsActivity.this, "destination lcoation clicked", Toast.LENGTH_SHORT).show();
+            if (clickCount == Constants.START_LOCATION_TAG | clickCount == Constants.DESTINATION_LOCATION_TAG) {
+                showStreetViewSnackBar(marker);
+            }
+//            } else if (clickCount == Constants.DESTINATION_LOCATION_TAG) {
+//                Toast.makeText(MapsActivity.this, "destination lcoation clicked", Toast.LENGTH_SHORT).show();
+//                showStreetViewSnackBar(marker);
+//
+//            }
+                else{
+                    Toast.makeText(MapsActivity.this, "else part", Toast.LENGTH_SHORT).show();
+                    for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
+                        if (clickCount == i) {
+                            Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
+                            showCheckPointEditOption(i);
+                        }
 
-            } else {
-                Toast.makeText(MapsActivity.this, "else part", Toast.LENGTH_SHORT).show();
-                for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
-                    if (clickCount == i) {
-                        Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
-                        showCheckPointEditOption(i);
                     }
+                }
 
+            }
+            return false;
+        }
+
+    void showStreetViewSnackBar(final Marker marker) {
+        if (mMap != null) {
+            mMap.setPadding(0, 0, 0, 200);
+        }
+        final Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, "Have a look at it? BETA NOW", Snackbar.LENGTH_LONG)
+                .setAction("SEE IT", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+                        intent.putExtra("latitude", marker.getPosition().latitude);
+                        intent.putExtra("longitude", marker.getPosition().longitude);
+                        startActivity(intent);
+                    }
+                });
+        snackbar.setCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (mMap != null) {
+                    mMap.setPadding(0, 0, 0, 0);
                 }
             }
 
-        }
-        return false;
+            @Override
+            public void onShown(Snackbar snackbar) {
+
+
+            }
+        });
+        snackbar.setActionTextColor(Color.parseColor("#009688"));
+        snackbar.show();
+
     }
-
-
     // version 2: ENDS HERE
 
 }
