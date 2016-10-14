@@ -23,6 +23,7 @@ public class StreetViewActivity extends FragmentActivity
         StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getFragmentManager()
                         .findFragmentById(R.id.streetviewpanorama);
+
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 

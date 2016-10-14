@@ -1528,6 +1528,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void changeInLocation() {
         Firebase changeInLocationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+        changeInLocationFirebase.keepSynced(true);
         changeInLocationFirebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
