@@ -1666,7 +1666,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             IconGenerator iconGenerator = new IconGenerator(this);
 
 
-
             switch (i) {
                 case 1: {
                     iconGenerator.setStyle(IconGenerator.STYLE_RED);
