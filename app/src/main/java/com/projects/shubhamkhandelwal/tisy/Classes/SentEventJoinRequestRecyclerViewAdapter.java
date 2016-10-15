@@ -111,7 +111,7 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
     @Override
     public void onBindViewHolder(SentEventJoinRequestRecyclerViewHolder holder, int position) {
         holder.usernameTitleTextView.setText(sentRequestsList.get(position));
-        Picasso.with(context).load(Uri.parse(imageUrlList.get(position))).error(R.drawable.start_location_icon).into(holder.userRequestProfileImageButton);
+        Picasso.with(context).load(Uri.parse(imageUrlList.get(position))).error(R.drawable.default_profile_image_icon).into(holder.userRequestProfileImageButton);
     }
 
     @Override

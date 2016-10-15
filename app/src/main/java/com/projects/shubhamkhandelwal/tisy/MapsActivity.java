@@ -1728,7 +1728,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         IconGenerator iconGenerator = new IconGenerator(this);
         CircleImageView circleImageView = new CircleImageView(this);
         circleImageView.setLayoutParams(new ViewGroup.LayoutParams(170, 170));
-        Picasso.with(this).load(Uri.parse(memberProfileImageUrls.get(position))).error(R.drawable.start_location_icon).into(circleImageView);
+        Picasso.with(this).load(Uri.parse(memberProfileImageUrls.get(position))).error(R.drawable.default_profile_image_icon).into(circleImageView);
         iconGenerator.setContentView(circleImageView);
         iconGenerator.setBackground(null);
         bitmap = iconGenerator.makeIcon();

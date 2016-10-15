@@ -45,7 +45,7 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
 
         holder.memberTextView.setText(memberList.get(position));
         holder.coordinateSnapShotTextView.setText(memberCoordinate.get(position));
-        Picasso.with(context).load(Uri.parse(memberProfileImageUrl.get(position))).error(R.drawable.start_location_icon).into(holder.profileImage);
+        Picasso.with(context).load(Uri.parse(memberProfileImageUrl.get(position))).error(R.drawable.default_profile_image_icon).into(holder.profileImage);
     }
 
     @Override
