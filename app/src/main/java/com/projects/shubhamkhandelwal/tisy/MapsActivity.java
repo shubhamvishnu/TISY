@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -69,6 +70,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
@@ -1115,6 +1117,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+
+            if (!success) {
+                Log.e("MapsActivityRaw", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapsActivityRaw", "Can't find style.", e);
+        }
         GPSEnabledCheck();
 
     }
@@ -1647,21 +1662,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         memberLocationMarkers = new HashMap<>();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         int i = 1;
-        //  int memberPositionTracker = -1;
         for (Map.Entry<String, Object> member : members.entrySet()) {
             Bitmap markerBubbleBitmap = null;
-            //   ++memberPositionTracker;
-            //  markerIconBitmap = generateIconfromProfileImage(memberPositionTracker);
             String[] coordinates = member.getValue().toString().split(",");
-            // generate random number
-//            int color = Color.parseColor(Constants.colorPalette[++i]);
-//            float[] hsv = new float[3];
-//            Color.colorToHSV(color, hsv);
+
             Marker marker = null;
-            // TODO: create new variable for storing the latlng values
-//            if (markerIconBitmap != null) {
-//                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerIconBitmap)));
-//            } else {
+
 
             IconGenerator iconGenerator = new IconGenerator(this);
 
@@ -1690,13 +1696,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             markerBubbleBitmap = iconGenerator.makeIcon(member.getKey());
-            //if(markerBubbleBitmap != null){
+
             marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerBubbleBitmap)));
             ++i;
-            //    marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
-
-
-            //   }
             builder.include(marker.getPosition());
             memberLocationMarkers.put(member.getKey(), marker);
             if (i > 5) {
@@ -1789,13 +1791,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (clickCount == Constants.START_LOCATION_TAG | clickCount == Constants.DESTINATION_LOCATION_TAG) {
                 showStreetViewSnackBar(marker);
             }
-//            } else if (clickCount == Constants.DESTINATION_LOCATION_TAG) {
-//                Toast.makeText(MapsActivity.this, "destination lcoation clicked", Toast.LENGTH_SHORT).show();
-//                showStreetViewSnackBar(marker);
-//
-//            }
             else {
-                Toast.makeText(MapsActivity.this, "else part", Toast.LENGTH_SHORT).show();
                 for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
                     if (clickCount == i) {
                         Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
@@ -1814,7 +1810,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setPadding(0, 0, 0, 200);
         }
         final Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Have a look at it? BETA NOW", Snackbar.LENGTH_LONG)
+                .make(coordinatorLayout, "See how it looks?", Snackbar.LENGTH_LONG)
                 .setAction("SEE IT", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
