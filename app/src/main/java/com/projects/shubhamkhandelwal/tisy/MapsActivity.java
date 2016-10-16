@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -69,6 +70,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
@@ -762,16 +764,59 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-
         Window window = mapStyleDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
         mapStyleDialog.setCanceledOnTouchOutside(true);
         mapStyleDialog.show();
     }
-    void setMapStyle(int type){
+
+    void setMapStyle(int type) {
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = false;
+            if (type == Constants.TYPE_MAP_STYLE_DEFAULT) {
+                success = mMap.setMapStyle(null);
+            } else if (type == Constants.TYPE_MAP_STYLE_AUBERGINE) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.aubergine_style_json));
+            } else if (type == Constants.TYPE_MAP_STYLE_NIGHT) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.night_style_json));
+
+            } else if (type == Constants.TYPE_MAP_STYLE_RETRO) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.retro_style_json));
+
+            } else if (type == Constants.TYPE_MAP_STYLE_DARK) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.dark_style_json));
+
+            }
+            if (!success) {
+                Log.e("MapsActivityRaw", "Style parsing failed.");
+            } else {
+                storeMapStyle(type);
+            }
+
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapsActivityRaw", "Can't find style.", e);
+        }
 
 
+    }
+
+    void storeMapStyle(int type) {
+        SharedPreferences mapStylePreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+        SharedPreferences.Editor mapStyleEditor = mapStylePreference.edit();
+        mapStyleEditor.putInt("style", type);
+        mapStyleEditor.apply();
     }
 
     void addCheckPointDialog() {
@@ -1189,23 +1234,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        try {
-//            // Customise the styling of the base map using a JSON object defined
-//            // in a raw resource file.
-//            boolean success = mMap.setMapStyle(
-//                    MapStyleOptions.loadRawResourceStyle(
-//                            this, R.raw.style_json));
-//
-//            if (!success) {
-//                Log.e("MapsActivityRaw", "Style parsing failed.");
-//            }
-//        } catch (Resources.NotFoundException e) {
-//            Log.e("MapsActivityRaw", "Can't find style.", e);
-//        }
+        initializeMapStyle();
         GPSEnabledCheck();
 
     }
-
+void initializeMapStyle(){
+    SharedPreferences mapSharedPreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+    int styleType = mapSharedPreference.getInt("style", 0);
+    if(!(styleType == 0)){
+        setMapStyle(styleType);
+    }
+}
     void GPSEnabledCheck() {
         // check for GPS is enabled, if not show snackbar, else just call the location Action
         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
