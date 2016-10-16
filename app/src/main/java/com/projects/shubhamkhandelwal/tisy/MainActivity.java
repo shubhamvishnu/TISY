@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
@@ -96,6 +98,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         centerFAB = (ImageButton) findViewById(R.id.center_fab);
         centerFAB.setColorFilter(getResources().getColor(R.color.colorAccent));
+
+
+
+        ImageView userAccountImageIcon = new ImageView(this); // Create an icon
+        userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        userAccountImageIcon.setImageResource(R.drawable.default_profile_image_icon);
+        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this)
+                .setContentView(userAccountImageIcon)
+                .setBackgroundDrawable(R.drawable.floating_action_button_selector)
+                .build();
+        userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUserAccountDialog();
+            }
+        });
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+                .attachTo(floatingActionButton)
+                .build();
+
+
+
+
+
 
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         itemBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
@@ -229,6 +255,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addSubActionView(receivedRequestSubActionButton)
                 .attachTo(centerFAB)
                 .build();
+    }
+    void showUserAccountDialog(){
+        final Dialog userAccountDialog = new Dialog(this, R.style.event_info_dialog_style);
+        userAccountDialog.setContentView(R.layout.dialog_user_account_layout);
+        EditText nameEditText = (EditText) userAccountDialog.findViewById(R.id.name_edit_text);
+        String name = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("name", null);
+        nameEditText.setText(name);
+        Window window = userAccountDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        userAccountDialog.setCanceledOnTouchOutside(true);
+        userAccountDialog.show();
     }
 
     void setDIconId() {

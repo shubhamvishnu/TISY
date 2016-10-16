@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.projects.shubhamkhandelwal.tisy.R;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -23,14 +25,17 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     List<String> memberList;
     List<String> memberCoordinate;
     List<String> memberProfileImageUrl;
+    List<String> memberProfileName;
     private LayoutInflater inflator;
 
-    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList,List<String> memberCoordinate, List<String> memberProfileImageUrl ) {
+    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList,List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName ) {
         this.context = context;
         inflator = LayoutInflater.from(context);
         this.memberList = memberList;
         this.memberCoordinate = memberCoordinate;
         this.memberProfileImageUrl = memberProfileImageUrl;
+        this.memberProfileName = memberProfileName;
+
     }
 
     @Override
@@ -45,6 +50,7 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
 
         holder.memberTextView.setText(memberList.get(position));
         holder.coordinateSnapShotTextView.setText(memberCoordinate.get(position));
+        holder.nameTextView.setText(memberProfileName.get(position));
         Picasso.with(context).load(Uri.parse(memberProfileImageUrl.get(position))).error(R.drawable.default_profile_image_icon).into(holder.profileImage);
     }
 
@@ -56,11 +62,13 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     class EventInfoRecyclerViewHolder extends RecyclerView.ViewHolder{
         TextView memberTextView;
         TextView coordinateSnapShotTextView;
+        TextView nameTextView;
         CircleImageView profileImage;
         public EventInfoRecyclerViewHolder(View itemView) {
             super(itemView);
             memberTextView = (TextView) itemView.findViewById(R.id.message_text_view_recycler_view);
             coordinateSnapShotTextView = (TextView) itemView.findViewById(R.id.coordinate_snapshot_text_view_recycler_view);
+            nameTextView = (TextView) itemView.findViewById(R.id.name_text_view_recycler_view);
             profileImage = (CircleImageView) itemView.findViewById(R.id.profileImageCircleImageView);
         }
     }

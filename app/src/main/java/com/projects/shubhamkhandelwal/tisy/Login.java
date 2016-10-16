@@ -40,6 +40,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     Button loginButton;
     EditText usernameEditText, passwordEditText;
     String username, password;
+    String name;
     // firebase reference object
     Firebase firebase;
     Intent intent;
@@ -161,17 +162,21 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Toast.makeText(Login.this, "signed in", Toast.LENGTH_SHORT).show();
-            actionOnSucess(acct.getEmail(), acct.getPhotoUrl());
+            actionOnSucess(acct.getEmail(), acct.getPhotoUrl(), acct.getDisplayName());
         } else {
             // Signed out, show unauthenticated UI.
         }
     }
 
-    void actionOnSucess(String email, Uri photoUrl) {
+    void actionOnSucess(String email, Uri photoUrl, String name) {
         String[] dotSplit = email.split("\\.");
         String tempUsername = dotSplit[0] + "-" + dotSplit[1];
 
         username = tempUsername.split("@")[0];
+
+        if(name!= null){
+            this.name = name;
+        }
         if (photoUrl == null) {
             noPhoto = true;
         } else {
@@ -216,6 +221,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         // has the password and the count (No. of events created)
         Map<String, Object> details = new HashMap<>();
         details.put("eventCount", 0);
+        details.put("name", name);
         if (noPhoto) {
             details.put("userPhotoUri", noPhoto);
         } else {
@@ -240,6 +246,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         // to remove all the values from the SharedPreference
         //editor.clear();
         editor.putString("username", username);
+        editor.putString("name", name);
         editor.apply();
 
         SharedPreferences loginPreferences = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);

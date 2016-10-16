@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -108,6 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String admin;
     String username;
     Map<String, Object> members;
+    List namesList;
     List<String> memberProfileImageURL;
 
     List<RequestsDetails> joinRequests;
@@ -124,6 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> membersList;
     List<String> memberCoordinate;
     List<String> memberProfileImageUrls;
+    List<String> memberProfileName;
     String timeStamp;
     String eventTitle;
     String adminValue;
@@ -189,6 +192,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
+        memberProfileName = new ArrayList<>();
         checkPointsReached = new ArrayList<>();
 
         eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
@@ -971,7 +975,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     memberCoordinate.add(snapshot.getValue().toString());
                 }
                 //showEventInfoDialog();
-                loadProfileImageUrls();
+                loadProfileInfo();
             }
 
             @Override
@@ -981,24 +985,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    void loadProfileImageUrls() {
+    void loadProfileInfo() {
         memberProfileImageUrls = new ArrayList<>();
+        memberProfileName = new ArrayList<>();
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        progressDialog.setTitle("TISY");
-        progressDialog.setMessage("loading...");
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("fetching event details for you!");
         progressDialog.setCancelable(false);
         progressDialog.show();
         memberUriCount = 0;
         for (String name : membersList) {
-            Log.d("memberList", membersList.size() + " : " + name);
             firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + name);
             firebase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d("memberList", dataSnapshot.getValue().toString());
                     ++memberUriCount;
                     memberProfileImageUrls.add(dataSnapshot.child("userPhotoUri").getValue().toString());
+                    memberProfileName.add(dataSnapshot.child("name").getValue().toString());
                     if (membersList.size() == memberUriCount) {
                         progressDialog.dismiss();
                         showEventInfoDialog();
@@ -1047,7 +1051,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         timeStampTextView.setText(timeStamp);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
-        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls);
+        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
         Window window = eventInfoDialog.getWindow();
@@ -1147,7 +1151,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         chatsDialog.setContentView(R.layout.recycler_view_chats_layout);
 
         eventIdTextView = (TextView) chatsDialog.findViewById(R.id.chatsEventIdTextView);
-        eventIdTextView.setText(Constants.currentEventId);
 
         backArrowImageView = (ImageButton) chatsDialog.findViewById(R.id.back_arrow_image_button_chat_dialog);
 
@@ -1238,13 +1241,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GPSEnabledCheck();
 
     }
-void initializeMapStyle(){
-    SharedPreferences mapSharedPreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
-    int styleType = mapSharedPreference.getInt("style", 0);
-    if(!(styleType == 0)){
-        setMapStyle(styleType);
+
+    void initializeMapStyle() {
+        SharedPreferences mapSharedPreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+        int styleType = mapSharedPreference.getInt("style", 0);
+        if (!(styleType == 0)) {
+            setMapStyle(styleType);
+        }
     }
-}
+
     void GPSEnabledCheck() {
         // check for GPS is enabled, if not show snackbar, else just call the location Action
         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
@@ -1701,9 +1706,9 @@ void initializeMapStyle(){
                 if (dataSnapshot.child("members").exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
                         members.put(snapshot.getKey().toString(), snapshot.getValue().toString());
-                        updateUserProfileImage(snapshot.getKey().toString());
                     }
                     zoomFit = true;
+                    fetchUserNames(members);
                 }
             }
 
@@ -1716,24 +1721,46 @@ void initializeMapStyle(){
 
     }
 
-    void updateUserProfileImage(String username) {
-        Firebase imageURLFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/userPhotoUri");
-        imageURLFirebase.keepSynced(true);
-        imageURLFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                memberProfileImageUrls.add(dataSnapshot.getValue().toString());
-                if (members.size() == memberProfileImageUrls.size()) {
-                    updateMapMembers();
+    void fetchUserNames(Map<String, Object> members) {
+        namesList = new ArrayList();
+        for (Map.Entry<String, Object> member : members.entrySet()) {
+            Firebase fetchUserNames = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + member.getKey() + "/name");
+            fetchUserNames.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    namesList.add(dataSnapshot.getValue().toString());
                 }
-            }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
 
-            }
-        });
+                }
+            });
+        }
+        if (namesList.size() == members.size()) {
+            updateMapMembers();
+        }
+
     }
+
+//    void updateUserProfileImage(String username) {
+//        Firebase imageURLFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/userPhotoUri");
+//        imageURLFirebase.keepSynced(true);
+//        imageURLFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                memberProfileImageUrls.add(dataSnapshot.getValue().toString());
+//                if (members.size() == memberProfileImageUrls.size()) {
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        });
+//    }
 
     void zoomFitMembers() {
         if (mMap != null) {
@@ -1753,7 +1780,12 @@ void initializeMapStyle(){
             for (Map.Entry<String, Object> point : checkPointCoordinateMap.entrySet()) {
                 ++checkPointCounter;
                 String[] coordinate = point.getValue().toString().split(",");
-                Bitmap checkPointBitmap = changeCheckPointBitMapColor(getBitmapFromVectorDrawable(this, R.drawable.add_checkpoint_icon));
+
+
+                BitmapDrawable bitmapDrawable=(BitmapDrawable)getResources().getDrawable(R.drawable.checkpoint_marker);
+                Bitmap tempBitmap =bitmapDrawable.getBitmap();
+                Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 120,120, false);
+
                 Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]))).title("checkpoint-" + checkPointCounter).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
                 checkPointMarker.setTag(checkPointCounter);
                 zoomFitCheckPointCoordinates.add(checkPointMarker);
@@ -1765,7 +1797,12 @@ void initializeMapStyle(){
         if (destinationIconBitmap != null) {
             String[] destCoordinates = eventInfo.getdLocation().split(",");
             String[] startCoordinates = eventInfo.getsLocation().split(",");
-            startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.start_location_icon)).snippet(eventInfo.getsLocationDesc()));
+
+            BitmapDrawable bitmapDrawable=(BitmapDrawable)getResources().getDrawable(R.drawable.start_location_icon);
+            Bitmap tempBitmap =bitmapDrawable.getBitmap();
+            Bitmap startLocationBitmap = Bitmap.createScaledBitmap(tempBitmap, 120,120, false);
+
+            startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromBitmap(startLocationBitmap)).snippet(eventInfo.getsLocationDesc()));
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));
             startMarker.setTag(Constants.START_LOCATION_TAG);
             destinationMarker.setTag(Constants.DESTINATION_LOCATION_TAG);
@@ -1773,15 +1810,14 @@ void initializeMapStyle(){
         memberLocationMarkers = new HashMap<>();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         int i = 1;
+        int memberPositionTracker = -1;
         for (Map.Entry<String, Object> member : members.entrySet()) {
+            ++memberPositionTracker;
             Bitmap markerBubbleBitmap = null;
             String[] coordinates = member.getValue().toString().split(",");
 
             Marker marker = null;
-
-
             IconGenerator iconGenerator = new IconGenerator(this);
-
 
             switch (i) {
                 case 1: {
@@ -1806,8 +1842,7 @@ void initializeMapStyle(){
                 }
             }
 
-            markerBubbleBitmap = iconGenerator.makeIcon(member.getKey());
-
+            markerBubbleBitmap = iconGenerator.makeIcon(namesList.get(memberPositionTracker).toString());
             marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerBubbleBitmap)));
             ++i;
             builder.include(marker.getPosition());
