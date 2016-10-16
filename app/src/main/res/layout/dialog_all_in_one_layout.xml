@@ -62,5 +62,15 @@
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/add_checkpoint_icon"
             android:tint="@android:color/white" />
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/dialog_change_mode_icon"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/change_style_icon"
+            android:tint="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

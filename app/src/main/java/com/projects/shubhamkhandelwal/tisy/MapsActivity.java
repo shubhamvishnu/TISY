@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -70,7 +69,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
@@ -656,6 +654,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton zoomFitImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_zoom_fit_icon);
         ImageButton addNewMemberImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_member);
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
+        ImageButton changeMapStyleImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_change_mode_icon);
+
+
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -692,6 +693,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 addCheckPointDialog();
             }
         });
+        changeMapStyleImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                showMapStyleOptionsDialog();
+            }
+        });
         Window window = allInOneDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
@@ -701,6 +709,70 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    void showMapStyleOptionsDialog() {
+
+        final Dialog mapStyleDialog = new Dialog(this, R.style.event_info_dialog_style);
+        mapStyleDialog.setContentView(R.layout.dialog_map_style_option_layout);
+        Button defaultModeButton, aubergineModeButton, retroModeButton, darkModeButton, nightModeButton;
+
+        defaultModeButton = (Button) mapStyleDialog.findViewById(R.id.default_mode);
+        aubergineModeButton = (Button) mapStyleDialog.findViewById(R.id.aubergine_mode);
+        nightModeButton = (Button) mapStyleDialog.findViewById(R.id.night_mode);
+        retroModeButton = (Button) mapStyleDialog.findViewById(R.id.retro_mode);
+        darkModeButton = (Button) mapStyleDialog.findViewById(R.id.dark_mode);
+
+        defaultModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapStyleDialog.dismiss();
+                setMapStyle(Constants.TYPE_MAP_STYLE_DEFAULT);
+            }
+        });
+        aubergineModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapStyleDialog.dismiss();
+
+                setMapStyle(Constants.TYPE_MAP_STYLE_AUBERGINE);
+            }
+        });
+        nightModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapStyleDialog.dismiss();
+
+                setMapStyle(Constants.TYPE_MAP_STYLE_NIGHT);
+            }
+        });
+        retroModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapStyleDialog.dismiss();
+
+                setMapStyle(Constants.TYPE_MAP_STYLE_RETRO);
+            }
+        });
+        darkModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapStyleDialog.dismiss();
+
+                setMapStyle(Constants.TYPE_MAP_STYLE_DARK);
+            }
+        });
+
+
+
+        Window window = mapStyleDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mapStyleDialog.setCanceledOnTouchOutside(true);
+        mapStyleDialog.show();
+    }
+    void setMapStyle(int type){
+
+
+    }
 
     void addCheckPointDialog() {
         isCheckPointEdit = false;
@@ -1117,19 +1189,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            boolean success = mMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
-
-            if (!success) {
-                Log.e("MapsActivityRaw", "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e("MapsActivityRaw", "Can't find style.", e);
-        }
+//        try {
+//            // Customise the styling of the base map using a JSON object defined
+//            // in a raw resource file.
+//            boolean success = mMap.setMapStyle(
+//                    MapStyleOptions.loadRawResourceStyle(
+//                            this, R.raw.style_json));
+//
+//            if (!success) {
+//                Log.e("MapsActivityRaw", "Style parsing failed.");
+//            }
+//        } catch (Resources.NotFoundException e) {
+//            Log.e("MapsActivityRaw", "Can't find style.", e);
+//        }
         GPSEnabledCheck();
 
     }
@@ -1790,8 +1862,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (clickCount != null) {
             if (clickCount == Constants.START_LOCATION_TAG | clickCount == Constants.DESTINATION_LOCATION_TAG) {
                 showStreetViewSnackBar(marker);
-            }
-            else {
+            } else {
                 for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
                     if (clickCount == i) {
                         Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();

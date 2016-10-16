@@ -27,6 +27,7 @@ public class Constants {
     public static int EVENT_REQUEST_NOTIFICATION_ID = 7;
     public static int CHATS_NOTIFICATION_ID = 8;
     public static int dIconResourceId = -1;
+
     public static int TYPE_CREATE_EVENTS = 1000;
     public static int TYPE_ALL_EVENTS = 1001;
     public static int TYPE_ALL_REQUESTS = 1002;
@@ -36,6 +37,11 @@ public class Constants {
     public static int DESTINATION_LOCATION_TAG = 7001;
 
 
+    public static int TYPE_MAP_STYLE_DEFAULT = 8000;
+    public static int TYPE_MAP_STYLE_AUBERGINE = 8001;
+    public static int TYPE_MAP_STYLE_NIGHT = 8002;
+    public static int TYPE_MAP_STYLE_RETRO = 8003;
+    public static int TYPE_MAP_STYLE_DARK = 8004;
 
 
 }
