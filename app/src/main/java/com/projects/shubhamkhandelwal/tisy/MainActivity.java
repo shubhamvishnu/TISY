@@ -269,17 +269,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userPhotoUri = dataSnapshot.child("userPhotoUri").getValue().toString();
                 activeEventCount = dataSnapshot.child("activeEvent").getChildrenCount();
-                if (activeEventCount != 0) {
-                    if (dataSnapshot.getValue().toString().equals("created")) {
+                for (DataSnapshot children : dataSnapshot.child("activeEvent").getChildren()) {
+                    if (children.getValue().toString().equals("created")) {
                         ++createdEventCount;
-                    } else if (dataSnapshot.getValue().toString().equals("joined")) {
+                    } else if (children.getValue().toString().equals("joined")) {
                         ++joinedEventCount;
                     }
                 }
-                if ((createdEventCount + joinedEventCount) == activeEventCount) {
-                    showInformationDialog();
-                }
+                showInformationDialog();
             }
+
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
