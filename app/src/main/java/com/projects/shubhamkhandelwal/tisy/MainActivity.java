@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +52,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final static String ALL_EVENTS_TAG = "all_events";
     public final static String REQUESTS_TAG = "requests";
     public final static String RECEIVED_REQUEST_TAG = "received_requests";
-
+    long activeEventCount;
+    long createdEventCount;
+    long joinedEventCount;
+    String userPhotoUri;
 
     Intent intent;
     // make sure eventListener is not null
@@ -81,7 +86,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         // initialize users state; inactive variable
 
         count = 0;
-
+        userPhotoUri = new String();
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
             if (loginCheck.getBoolean("login", true)) {
@@ -100,7 +105,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         centerFAB.setColorFilter(getResources().getColor(R.color.colorAccent));
 
 
-
         ImageView userAccountImageIcon = new ImageView(this); // Create an icon
         userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         userAccountImageIcon.setImageResource(R.drawable.default_profile_image_icon);
@@ -111,16 +115,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showUserAccountDialog();
+                initializeUserInformation();
             }
         });
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
                 .attachTo(floatingActionButton)
                 .build();
-
-
-
-
 
 
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
@@ -256,14 +256,71 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .attachTo(centerFAB)
                 .build();
     }
-    void showUserAccountDialog(){
+
+    void initializeUserInformation() {
+        activeEventCount = 0;
+        createdEventCount = 0;
+        joinedEventCount = 0;
+        userPhotoUri = new String();
+        Firebase userInfoFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
+        userInfoFirebase.keepSynced(true);
+        userInfoFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userPhotoUri = dataSnapshot.child("userPhotoUri").getValue().toString();
+                activeEventCount = dataSnapshot.child("activeEvent").getChildrenCount();
+                if (activeEventCount != 0) {
+                    if (dataSnapshot.getValue().toString().equals("created")) {
+                        ++createdEventCount;
+                    } else if (dataSnapshot.getValue().toString().equals("joined")) {
+                        ++joinedEventCount;
+                    }
+                }
+                if ((createdEventCount + joinedEventCount) == activeEventCount) {
+                    showInformationDialog();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    void showInformationDialog() {
         final Dialog userAccountDialog = new Dialog(this, R.style.event_info_dialog_style);
         userAccountDialog.setContentView(R.layout.dialog_user_account_layout);
-        EditText nameEditText = (EditText) userAccountDialog.findViewById(R.id.name_edit_text);
-        String name = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("name", null);
+
+        TextView nameEditText = (TextView) userAccountDialog.findViewById(R.id.name_text_view);
+        TextView userIdEditText = (TextView) userAccountDialog.findViewById(R.id.user_id_text_view);
+        TextView activeEventscountTextView, createdEventsCountTextView, joinedEventsCountTextView;
+        TextView statusTextView;
+        CircleImageView profileImageView;
+        activeEventscountTextView = (TextView) userAccountDialog.findViewById(R.id.active_events_count_text_view);
+        createdEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.created_events_count_text_view);
+        joinedEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.joined_events_count_text_view);
+        statusTextView = (TextView) userAccountDialog.findViewById(R.id.status_text_view);
+        profileImageView = (CircleImageView) userAccountDialog.findViewById(R.id.profile_image_circle_image_view);
+
+        Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
+
+        SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
+        String name = userInfoPreference.getString("name", null);
+        String userId = userInfoPreference.getString("username", null);
+
         nameEditText.setText(name);
+        userIdEditText.setText(userId);
+
+
+        activeEventscountTextView.setText(String.valueOf(activeEventCount));
+        createdEventsCountTextView.setText(String.valueOf(createdEventCount));
+        joinedEventsCountTextView.setText(String.valueOf(joinedEventCount));
+
+        statusTextView.setText("available");
+
         Window window = userAccountDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         userAccountDialog.setCanceledOnTouchOutside(true);
         userAccountDialog.show();
