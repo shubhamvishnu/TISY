@@ -123,15 +123,18 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
         TextView activeEventIdTextView;
         TextView activeEventsLocationDesc;
         TextView activeEventdLocationDesc;
+        View view;
 
         public ActiveEventsRecyclerViewHolder(View itemView) {
             super(itemView);
+            view = itemView;
             activeEventIdTextView = (TextView) itemView.findViewById(R.id.active_event_id_text_view);
             activeEventsLocationDesc = (TextView) itemView.findViewById(R.id.active_event_sLocationDesc);
             activeEventdLocationDesc = (TextView) itemView.findViewById(R.id.active_event_dLocationDesc);
             activeEventIdTextView.setOnClickListener(this);
             activeEventsLocationDesc.setOnClickListener(this);
             activeEventdLocationDesc.setOnClickListener(this);
+            view.setOnClickListener(this);
         }
 
         @Override

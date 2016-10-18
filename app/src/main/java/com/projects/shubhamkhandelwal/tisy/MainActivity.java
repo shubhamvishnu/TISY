@@ -104,10 +104,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         centerFAB = (ImageButton) findViewById(R.id.center_fab);
         centerFAB.setColorFilter(getResources().getColor(R.color.colorAccent));
 
-
         ImageView userAccountImageIcon = new ImageView(this); // Create an icon
         userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        userAccountImageIcon.setImageResource(R.drawable.default_profile_image_icon);
+        userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
         FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this)
                 .setContentView(userAccountImageIcon)
                 .setBackgroundDrawable(R.drawable.floating_action_button_selector)
@@ -122,16 +121,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .attachTo(floatingActionButton)
                 .build();
 
-
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         itemBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
-
 
         // create event
         LinearLayout subActionFABLinearLayout = new LinearLayout(this);
         subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
         subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
-
 
         CircleImageView createEventCircleButton = new CircleImageView(this);
         createEventCircleButton.setImageResource(R.drawable.add_icon);
