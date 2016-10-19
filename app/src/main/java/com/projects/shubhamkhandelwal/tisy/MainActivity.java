@@ -140,7 +140,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         createEventCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         createEventCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        createEventCircleButton.setPadding(16, 16, 16, 16);
+        createEventCircleButton.setPadding(50,50,50,50);
 
         TextView createEventTextView = new TextView(this);
         createEventTextView.setText("Create Event");
@@ -170,7 +170,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         sendRequestCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         sendRequestCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         sendRequestCircleButton.setImageResource(R.drawable.requests_icon);
-        sendRequestCircleButton.setPadding(16, 16, 16, 16);
+        sendRequestCircleButton.setPadding(50, 50, 50, 50);
         sendRequestCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
 
 
@@ -201,7 +201,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allActiveEventsCircleButton.setImageResource(R.drawable.all_events_active_icon);
         allActiveEventsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         allActiveEventsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        allActiveEventsCircleButton.setPadding(16, 16, 16, 16);
+        allActiveEventsCircleButton.setPadding(50, 50, 50, 50);
         TextView allEventsTextView = new TextView(this);
         allEventsTextView.setText("All Events");
         allEventsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -228,7 +228,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         requestsCircleButton.setImageResource(R.drawable.join_event_icon);
         requestsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         requestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        requestsCircleButton.setPadding(16, 16, 16, 16);
+        requestsCircleButton.setPadding(50, 50, 50, 50);
 
         TextView requestsTextView = new TextView(this);
         requestsTextView.setText("Sent Requests");
@@ -257,7 +257,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         receivedRequestsCircleButton.setImageResource(R.drawable.request_received_icon);
         receivedRequestsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         receivedRequestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        receivedRequestsCircleButton.setPadding(16, 16, 16, 16);
+        receivedRequestsCircleButton.setPadding(50, 50, 50, 50);
 
         TextView recevivedTextView = new TextView(this);
         recevivedTextView.setText("Received Requests");
@@ -528,7 +528,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
             });
         }
-        snackbar.setActionTextColor(Color.parseColor("#F7BF16E"));
+        snackbar.setActionTextColor(Color.parseColor("#F7BF50E"));
         snackbar.show();
     }
 
