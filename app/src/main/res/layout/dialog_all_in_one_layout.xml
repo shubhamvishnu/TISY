@@ -5,53 +5,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal">-->
+    <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:columnCount="3"
+        android:padding="8dp"
+        android:rowCount="2">
 
-
-        <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="16dp">
 
-            <LinearLayout
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/dialog_request_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@drawable/floating_sub_action_button_selector"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/requests_icon" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Join Requests "
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_request_icon"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
-                    app:srcCompat="@drawable/requests_icon" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-                <TextView android:textColor="@color/colorAccent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Join Requests "
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
+                android:layout_gravity="center">
 
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/dialog_chat_icon"
@@ -59,7 +64,6 @@
                     android:layout_height="42dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
-
                     android:background="@drawable/floating_sub_action_button_selector"
                     android:elevation="20dp"
                     android:padding="8dp"
@@ -67,132 +71,144 @@
                     android:tint="@android:color/white"
                     app:srcCompat="@drawable/chat_icon" />
 
-                <TextView android:textColor="@color/colorAccent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                <TextView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginLeft="55dp"
+                    android:id="@+id/chat_unread_message_count"
+                    android:background="@drawable/floating_action_button_selector"
                     android:gravity="center"
-                    android:text="Conversations "
-                     />
-            </LinearLayout>
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
 
-            <LinearLayout
+            </FrameLayout>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Conversations "
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_zoom_fit_icon"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
-                    app:srcCompat="@drawable/view_members_icon" />
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/dialog_zoom_fit_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
 
-                <TextView android:textColor="@color/colorAccent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Zoom-Fit"
-                     />
-            </LinearLayout>
+                android:background="@drawable/floating_sub_action_button_selector"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/view_members_icon" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Zoom-Fit"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_add_new_member"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
-                    app:srcCompat="@drawable/add_event_member" />
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/dialog_add_new_member"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
 
-                <TextView android:textColor="@color/colorAccent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Send Request"
-                   />
+                android:background="@drawable/floating_sub_action_button_selector"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/add_event_member" />
 
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Send Request"
+                android:textColor="@color/colorAccent" />
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_add_new_checkpoint"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
+        </LinearLayout>
 
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
-                    app:srcCompat="@drawable/add_checkpoint_icon" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-                <TextView android:textColor="@color/colorAccent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Add Checkpoint"
-                   />
-            </LinearLayout>
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/dialog_add_new_checkpoint"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
 
-            <LinearLayout
+                android:background="@drawable/floating_sub_action_button_selector"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/add_checkpoint_icon" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Add Checkpoint"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_change_mode_icon"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
-                    app:srcCompat="@drawable/change_style_icon" />
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/dialog_change_mode_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
 
-                <TextView android:textColor="@color/colorAccent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Map Mode"
-                   />
-            </LinearLayout>
-        </org.apmem.tools.layouts.FlowLayout>
-    </LinearLayout>
+                android:background="@drawable/floating_sub_action_button_selector"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/change_style_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Map Mode"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+    </GridLayout>
+    <!--</LinearLayout>-->
 
 </LinearLayout>

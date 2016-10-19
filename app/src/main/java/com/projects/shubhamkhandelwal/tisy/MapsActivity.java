@@ -109,7 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String admin;
     String username;
     Map<String, Object> members;
-    List namesList;
+    List<String> namesList;
     List<String> memberProfileImageURL;
 
     List<RequestsDetails> joinRequests;
@@ -661,8 +661,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton addNewMemberImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_member);
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
         ImageButton changeMapStyleImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_change_mode_icon);
+        TextView chatUnreadMessageCountTextView = (TextView) allInOneDialog.findViewById(R.id.chat_unread_message_count);
 
-
+        int count = getUreadChatCount();
+        if (count == 0) {
+            chatUnreadMessageCountTextView.setVisibility(View.INVISIBLE);
+        } else {
+            chatUnreadMessageCountTextView.setVisibility(View.VISIBLE);
+            chatUnreadMessageCountTextView.setText(String.valueOf(count));
+        }
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -714,6 +721,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
 
     void showMapStyleOptionsDialog() {
 
@@ -1065,7 +1073,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void unreadChats() {
         numberOfReadChats = 0;
         numberOfUnreadChats = 0;
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesName.CHATS_READ_COUNT, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.currentEventId + SharedPreferencesName.CHATS_READ_COUNT, MODE_PRIVATE);
         if (sharedPreferences.contains("chats_read")) {
             numberOfReadChats = sharedPreferences.getInt("chats_read", 0);
         }
@@ -1102,6 +1110,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+    }
+
+    int getUreadChatCount() {
+        int noOfUnreadChats = 0;
+        if (numberOfUnreadChats > numberOfReadChats) {
+            noOfUnreadChats = numberOfUnreadChats - numberOfReadChats;
+        }
+        return noOfUnreadChats;
     }
 
     void showUnreadChatsNotification(boolean unread) {
@@ -1697,18 +1713,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void eventMembersUpdate() {
-        Firebase membersUpdateFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId);
+        Firebase membersUpdateFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
         membersUpdateFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 members = new HashMap<>();
                 memberProfileImageUrls = new ArrayList<String>();
-                if (dataSnapshot.child("members").exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
-                        members.put(snapshot.getKey().toString(), snapshot.getValue().toString());
+                long numberOfMembers = 0;
+                if (dataSnapshot.exists()) {
+                    numberOfMembers = dataSnapshot.getChildrenCount();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                        members.put(snapshot.getKey(), snapshot.getValue().toString());
                     }
                     zoomFit = true;
-                    fetchUserNames(members);
+                    if (members.size() == numberOfMembers) {
+                        fetchUserNames();
+                    }
                 }
             }
 
@@ -1721,14 +1742,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    void fetchUserNames(Map<String, Object> members) {
-        namesList = new ArrayList();
+    void fetchUserNames() {
+        namesList = new ArrayList<>();
         for (Map.Entry<String, Object> member : members.entrySet()) {
+
             Firebase fetchUserNames = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + member.getKey() + "/name");
             fetchUserNames.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     namesList.add(dataSnapshot.getValue().toString());
+                    if (namesList.size() == members.size()) {
+                        updateMapMembers();
+                    }
                 }
 
                 @Override
@@ -1737,9 +1762,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         }
-        if (namesList.size() == members.size()) {
-            updateMapMembers();
-        }
+
 
     }
 
@@ -1782,9 +1805,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String[] coordinate = point.getValue().toString().split(",");
 
 
-                BitmapDrawable bitmapDrawable=(BitmapDrawable)getResources().getDrawable(R.drawable.checkpoint_marker);
-                Bitmap tempBitmap =bitmapDrawable.getBitmap();
-                Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 120,120, false);
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.checkpoint_marker);
+                Bitmap tempBitmap = bitmapDrawable.getBitmap();
+                Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 120, 120, false);
 
                 Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]))).title("checkpoint-" + checkPointCounter).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
                 checkPointMarker.setTag(checkPointCounter);
@@ -1798,9 +1821,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String[] destCoordinates = eventInfo.getdLocation().split(",");
             String[] startCoordinates = eventInfo.getsLocation().split(",");
 
-            BitmapDrawable bitmapDrawable=(BitmapDrawable)getResources().getDrawable(R.drawable.start_location_icon);
-            Bitmap tempBitmap =bitmapDrawable.getBitmap();
-            Bitmap startLocationBitmap = Bitmap.createScaledBitmap(tempBitmap, 120,120, false);
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
+            Bitmap tempBitmap = bitmapDrawable.getBitmap();
+            Bitmap startLocationBitmap = Bitmap.createScaledBitmap(tempBitmap, 120, 120, false);
 
             startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromBitmap(startLocationBitmap)).snippet(eventInfo.getsLocationDesc()));
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));

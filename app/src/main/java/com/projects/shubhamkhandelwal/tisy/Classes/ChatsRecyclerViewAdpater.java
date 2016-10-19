@@ -48,7 +48,7 @@ public class ChatsRecyclerViewAdpater extends RecyclerView.Adapter<RecyclerView.
     }
 
     void createSharedPreference() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SharedPreferencesName.CHATS_READ_COUNT, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.currentEventId+SharedPreferencesName.CHATS_READ_COUNT, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         // to remove all the values from the SharedPreference
         //editor.clear();
@@ -59,7 +59,7 @@ public class ChatsRecyclerViewAdpater extends RecyclerView.Adapter<RecyclerView.
 
     void updateChatCountSharedPreference(int count) {
         MapsActivity.numberOfReadChats = count;
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SharedPreferencesName.CHATS_READ_COUNT, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.currentEventId+SharedPreferencesName.CHATS_READ_COUNT, Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt("chats_read", count).apply();
     }
 
