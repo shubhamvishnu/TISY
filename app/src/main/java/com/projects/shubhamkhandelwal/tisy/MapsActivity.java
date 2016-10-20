@@ -614,7 +614,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         initializeEventInfo();
     }
 
-    Bitmap changeCheckPointBitMapColor(Bitmap myBitmap) {
+    Bitmap applyCustomBitmapColor(Bitmap myBitmap, String color) {
 
         Paint pnt = new Paint();
         Bitmap myBit = myBitmap;
@@ -624,7 +624,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Set the colour to replace.
         // TODO: change color later
-        ColorFilter filter = new LightingColorFilter(myColor, Color.parseColor("#900C3F"));
+        ColorFilter filter = new LightingColorFilter(myColor, Color.parseColor(color));
 
         pnt.setColorFilter(filter);
 
@@ -1840,8 +1840,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
             Bitmap tempBitmap = bitmapDrawable.getBitmap();
-            Bitmap startLocationBitmap = Bitmap.createScaledBitmap(tempBitmap, 120, 120, false);
-
+            Bitmap startLocationBitmap = applyCustomBitmapColor(Bitmap.createScaledBitmap(tempBitmap, 120, 120, false), "#5d8aa8");
+            destinationIconBitmap = applyCustomBitmapColor(destinationIconBitmap, "#5d8aa8");
             startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromBitmap(startLocationBitmap)).snippet(eventInfo.getsLocationDesc()));
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));
             startMarker.setTag(Constants.START_LOCATION_TAG);
