@@ -15,6 +15,7 @@ import com.firebase.client.ValueEventListener;
 import com.projects.shubhamkhandelwal.tisy.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     LayoutInflater inflator;
     String name;
     List<String> nameList;
+    String username;
     List<String> eventIdList;
 
     public SearchResultsRecyclerViewAdapter(Context context, String name) {
@@ -33,6 +35,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         this.name = name;
         eventIdList = new ArrayList<>();
         nameList = new ArrayList<>();
+        username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);
         populateViewWithResults();
     }
 
@@ -46,7 +49,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if(snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name)){
+                        if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name)) {
                             int position = eventIdList.size();
                             eventIdList.add(snapshot.getKey());
                             nameList.add(snapshot.child("name").getValue().toString());
@@ -73,7 +76,8 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
 
     @Override
     public void onBindViewHolder(SearchResultsRecyclerViewHolder holder, int position) {
-            holder.nameTextView.setText(nameList.get(position));
+        holder.nameTextView.setText(nameList.get(position));
+        holder.eventIdTextView.setText(eventIdList.get(position));
     }
 
     @Override
@@ -81,15 +85,62 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         return eventIdList.size();
     }
 
-    class SearchResultsRecyclerViewHolder extends RecyclerView.ViewHolder {
+    void sendRequest(final int position) {
+        Firebase userIdCheckFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + eventIdList.get(position));
+        userIdCheckFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Firebase sendRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
+                    HashMap<String, Object> sendRequestUsername = new HashMap<String, Object>();
+                    sendRequestUsername.put(eventIdList.get(position), username);
+                    sendRequestFirebase.updateChildren(sendRequestUsername, new Firebase.CompletionListener() {
+                        @Override
+                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                            Firebase userSentRequestUpdateFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + eventIdList.get(position));
+                            HashMap<String, Object> userSentRequestUpdate = new HashMap<String, Object>();
+                            userSentRequestUpdate.put(Constants.currentEventId, username);
+                            userSentRequestUpdateFirebase.updateChildren(userSentRequestUpdate, new Firebase.CompletionListener() {
+                                @Override
+                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                    eventIdList.remove(position);
+                                    nameList.remove(position);
+                                    notifyItemRemoved(position);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    class SearchResultsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView nameTextView;
+        TextView eventIdTextView;
         ImageView addMemberImageView;
+
 
         public SearchResultsRecyclerViewHolder(View itemView) {
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.search_option_choice_name_text_view);
+            eventIdTextView = (TextView) itemView.findViewById(R.id.search_option_choice_event_id_text_view);
             addMemberImageView = (ImageView) itemView.findViewById(R.id.search_option_add_member_image_view);
+        }
 
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.search_option_add_member_image_view: {
+                    sendRequest(getPosition());
+                    break;
+                }
+            }
         }
     }
 }
