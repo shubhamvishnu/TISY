@@ -84,6 +84,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
+import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
@@ -148,7 +149,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean isCheckPointEdit;
     int checkPointMakrerEditPosition;
     List<String> checkPointsReached;
-
+    String nameSearch;
+    RecyclerView searchOptionChoiceRecyclerView;
+    SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter;
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -186,7 +189,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         joinRequests = new ArrayList<>();
         isCheckPointEdit = false;
         zoomFit = false;
-
+        nameSearch = new String();
         movement = 1;
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
@@ -821,7 +824,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         MapStyleOptions.loadRawResourceStyle(
                                 this, R.raw.dark_style_json));
 
-            }else if(type == Constants.TYPE_MAP_STYLE_SILVER){
+            } else if (type == Constants.TYPE_MAP_STYLE_SILVER) {
                 success = mMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
                                 this, R.raw.silver_style_json));
@@ -896,14 +899,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void sendMemberRequest() {
 
-        Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
+        final Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
         sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
 
         final EditText sendJoinRequestEventIdEditText;
         final Button sendJoinRequestButton;
+        final Button searchOptionChoiceButton;
         RecyclerView eventJoinRequestSendRecyclerView;
         sendJoinRequestEventIdEditText = (EditText) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_edit_text);
         sendJoinRequestButton = (Button) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_button);
+        searchOptionChoiceButton = (Button) sendMemberRequestDialog.findViewById(R.id.search_option_choice_button);
+        searchOptionChoiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMemberRequestDialog.dismiss();
+                showSearchOptionDialog();
+            }
+        });
         sendJoinRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -967,6 +979,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    void showSearchOptionDialog() {
+
+        final EditText searchEditText;
+        ImageButton searchButton;
+        final Dialog searchOptionDialog = new Dialog(this, R.style.event_info_dialog_style);
+        searchOptionDialog.setContentView(R.layout.dialog_search_option_layout);
+
+        searchEditText = (EditText) searchOptionDialog.findViewById(R.id.search_option_choice_dialog_edit_text);
+        searchButton = (ImageButton) searchOptionDialog.findViewById(R.id.search_option_choice_dialog_button);
+        searchOptionChoiceRecyclerView = (RecyclerView) searchOptionDialog.findViewById(R.id.dialog_search_results_recycler_view);
+        searchOptionChoiceRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(searchOptionDialog.getContext());
+        searchOptionChoiceRecyclerView.setLayoutManager(linearLayoutManager);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                nameSearch = searchEditText.getText().toString();
+                if(!nameSearch.isEmpty()){
+                    searchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
+                    searchOptionChoiceRecyclerView.setAdapter(searchResultsRecyclerViewAdapter);
+                }
+            }
+        });
+
+
+        Window window = searchOptionDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        searchOptionDialog.setCanceledOnTouchOutside(true);
+        searchOptionDialog.show();
+
+    }
 
     void backToMain() {
         Intent intent = new Intent(MapsActivity.this, MainActivity.class);
