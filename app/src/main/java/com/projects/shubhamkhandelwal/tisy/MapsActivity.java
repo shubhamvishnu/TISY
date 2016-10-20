@@ -727,13 +727,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final Dialog mapStyleDialog = new Dialog(this, R.style.event_info_dialog_style);
         mapStyleDialog.setContentView(R.layout.dialog_map_style_option_layout);
-        Button defaultModeButton, aubergineModeButton, retroModeButton, darkModeButton, nightModeButton;
+        Button defaultModeButton, aubergineModeButton, retroModeButton, darkModeButton, nightModeButton, silverModeButton;
 
         defaultModeButton = (Button) mapStyleDialog.findViewById(R.id.default_mode);
         aubergineModeButton = (Button) mapStyleDialog.findViewById(R.id.aubergine_mode);
         nightModeButton = (Button) mapStyleDialog.findViewById(R.id.night_mode);
         retroModeButton = (Button) mapStyleDialog.findViewById(R.id.retro_mode);
         darkModeButton = (Button) mapStyleDialog.findViewById(R.id.dark_mode);
+        silverModeButton = (Button) mapStyleDialog.findViewById(R.id.silver_mode);
 
         defaultModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -774,6 +775,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 setMapStyle(Constants.TYPE_MAP_STYLE_DARK);
             }
         });
+        silverModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapStyleDialog.dismiss();
+
+                setMapStyle(Constants.TYPE_MAP_STYLE_SILVER);
+            }
+        });
 
 
         Window window = mapStyleDialog.getWindow();
@@ -810,6 +819,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         MapStyleOptions.loadRawResourceStyle(
                                 this, R.raw.dark_style_json));
 
+            }else if(type == Constants.TYPE_MAP_STYLE_SILVER){
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.silver_style_json));
             }
             if (!success) {
                 Log.e("MapsActivityRaw", "Style parsing failed.");

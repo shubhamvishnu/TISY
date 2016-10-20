@@ -61,6 +61,17 @@
         android:textColor="@android:color/white"
         android:textSize="16dp"
         android:textStyle="bold" />
+    <Button
+        android:id="@+id/silver_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="Silver Mode"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
 
 
 </LinearLayout>

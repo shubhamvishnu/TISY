@@ -42,6 +42,8 @@ public class Constants {
     public static int TYPE_MAP_STYLE_NIGHT = 8002;
     public static int TYPE_MAP_STYLE_RETRO = 8003;
     public static int TYPE_MAP_STYLE_DARK = 8004;
+    public static int TYPE_MAP_STYLE_SILVER = 8005;
+
 
 
 }
