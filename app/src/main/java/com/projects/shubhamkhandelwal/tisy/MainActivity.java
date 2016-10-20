@@ -10,6 +10,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,9 +40,12 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.projects.shubhamkhandelwal.tisy.Classes.UserStatusOptionRecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,7 +61,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     long createdEventCount;
     long joinedEventCount;
     String userPhotoUri;
-
+    TextView statusTextView;
+    String username;
     Intent intent;
     // make sure eventListener is not null
     int count = 0;
@@ -84,7 +90,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Firebase.setAndroidContext(this);
 
         // initialize users state; inactive variable
-
+        username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         count = 0;
         userPhotoUri = new String();
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
@@ -101,7 +107,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity);
 
-
+        statusTextView = null;
         ImageView userAccountImageIcon = new ImageView(this); // Create an icon
         userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
@@ -327,11 +333,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     void showInformationDialog() {
         final Dialog userAccountDialog = new Dialog(this, R.style.event_info_dialog_style);
         userAccountDialog.setContentView(R.layout.dialog_user_account_layout);
-
+        List<String> status = new ArrayList<>();
+        RecyclerView userStatusOptionRecyclerView = (RecyclerView) userAccountDialog.findViewById(R.id.user_status_options_recycler_view);
         TextView nameEditText = (TextView) userAccountDialog.findViewById(R.id.name_text_view);
         TextView userIdEditText = (TextView) userAccountDialog.findViewById(R.id.user_id_text_view);
         TextView activeEventscountTextView, createdEventsCountTextView, joinedEventsCountTextView;
-        TextView statusTextView;
+
         CircleImageView profileImageView;
         activeEventscountTextView = (TextView) userAccountDialog.findViewById(R.id.active_events_count_text_view);
         createdEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.created_events_count_text_view);
@@ -339,8 +346,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         statusTextView = (TextView) userAccountDialog.findViewById(R.id.status_text_view);
         profileImageView = (CircleImageView) userAccountDialog.findViewById(R.id.profile_image_circle_image_view);
 
-        Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
+        status.add("Online");
+        status.add("Busy");
+        status.add("Idle");
+        status.add("Offline");
 
+        userStatusOptionRecyclerView.setHasFixedSize(true);
+        UserStatusOptionRecyclerViewAdapter userStatusOptionRecyclerViewAdapter = new UserStatusOptionRecyclerViewAdapter(this, status);
+        userStatusOptionRecyclerView.setAdapter(userStatusOptionRecyclerViewAdapter);
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        userStatusOptionRecyclerView.setLayoutManager(layoutManager);
+
+        userStatusChangedListener();
+        Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
         String name = userInfoPreference.getString("name", null);
         String userId = userInfoPreference.getString("username", null);
@@ -348,18 +367,32 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         nameEditText.setText(name);
         userIdEditText.setText(userId);
 
-
         activeEventscountTextView.setText(String.valueOf(activeEventCount));
         createdEventsCountTextView.setText(String.valueOf(createdEventCount));
         joinedEventsCountTextView.setText(String.valueOf(joinedEventCount));
-
-        statusTextView.setText("available");
 
         Window window = userAccountDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         userAccountDialog.setCanceledOnTouchOutside(true);
         userAccountDialog.show();
+
+    }
+    void userStatusChangedListener(){
+        Firebase userStatusChangeListenerFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/status");
+        userStatusChangeListenerFirebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(statusTextView != null){
+                    statusTextView.setText(dataSnapshot.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     void setDIconId() {

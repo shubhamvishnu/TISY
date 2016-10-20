@@ -127,6 +127,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> memberCoordinate;
     List<String> memberProfileImageUrls;
     List<String> memberProfileName;
+    List<String> memberStatus;
     String timeStamp;
     String eventTitle;
     String adminValue;
@@ -194,6 +195,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         memberProfileImageUrls = new ArrayList<>();
         memberProfileName = new ArrayList<>();
         checkPointsReached = new ArrayList<>();
+        memberStatus = new ArrayList<>();
 
         eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
         allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
@@ -1009,6 +1011,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void loadProfileInfo() {
         memberProfileImageUrls = new ArrayList<>();
         memberProfileName = new ArrayList<>();
+        memberStatus = new ArrayList<>();
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("Loading");
@@ -1024,6 +1027,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     ++memberUriCount;
                     memberProfileImageUrls.add(dataSnapshot.child("userPhotoUri").getValue().toString());
                     memberProfileName.add(dataSnapshot.child("name").getValue().toString());
+                    memberStatus.add(dataSnapshot.child("status").getValue().toString());
                     if (membersList.size() == memberUriCount) {
                         progressDialog.dismiss();
                         showEventInfoDialog();
@@ -1072,7 +1076,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         timeStampTextView.setText(timeStamp);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
-        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
+        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls, memberProfileName, memberStatus);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
         Window window = eventInfoDialog.getWindow();
