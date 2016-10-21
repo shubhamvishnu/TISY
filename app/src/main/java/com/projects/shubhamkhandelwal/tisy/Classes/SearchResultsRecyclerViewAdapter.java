@@ -29,6 +29,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     String username;
     List<String> eventIdList;
 
+
     public SearchResultsRecyclerViewAdapter(Context context, String name) {
         this.context = context;
         inflator = LayoutInflater.from(context);
@@ -115,7 +116,6 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
             }
         });
     }
@@ -124,7 +124,6 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         TextView nameTextView;
         TextView eventIdTextView;
         ImageView addMemberImageView;
-
 
         public SearchResultsRecyclerViewHolder(View itemView) {
             super(itemView);

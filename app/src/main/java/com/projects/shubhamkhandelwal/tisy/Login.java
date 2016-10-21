@@ -264,6 +264,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         intent = new Intent(Login.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
 
     }
 

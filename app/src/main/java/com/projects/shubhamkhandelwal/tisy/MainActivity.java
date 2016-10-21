@@ -157,7 +157,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView createEventTextView = new TextView(this);
         createEventTextView.setText("Create Event");
         createEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        createEventTextView.setTextSize(12);
+        createEventTextView.setTextSize(16);
         createEventTextView.setGravity(Gravity.CENTER);
         createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
@@ -189,7 +189,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView joinEventTextView = new TextView(this);
         joinEventTextView.setText("Join Event");
         joinEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        joinEventTextView.setTextSize(12);
+        joinEventTextView.setTextSize(16);
         joinEventTextView.setGravity(Gravity.CENTER);
         joinEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
 
@@ -217,7 +217,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView allEventsTextView = new TextView(this);
         allEventsTextView.setText("All Events");
         allEventsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        allEventsTextView.setTextSize(12);
+        allEventsTextView.setTextSize(16);
         allEventsTextView.setGravity(Gravity.CENTER);
         allEventsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
         subActionFABLinearLayout.addView(allActiveEventsCircleButton);
@@ -245,7 +245,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView requestsTextView = new TextView(this);
         requestsTextView.setText("Sent Requests");
         requestsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        requestsTextView.setTextSize(12);
+        requestsTextView.setTextSize(16);
         requestsTextView.setGravity(Gravity.CENTER);
         requestsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
 
@@ -274,7 +274,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView recevivedTextView = new TextView(this);
         recevivedTextView.setText("Received Requests");
         recevivedTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        recevivedTextView.setTextSize(12);
+        recevivedTextView.setTextSize(16);
         recevivedTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
         recevivedTextView.setGravity(Gravity.CENTER);
 
