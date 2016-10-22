@@ -83,7 +83,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
      *requests from all the users and to send a new request
      *contains username; and request description
      */
-    Map<String, Object> requestEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +159,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         createEventTextView.setTextSize(16);
         createEventTextView.setGravity(Gravity.CENTER);
         createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
+        createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
 
         subActionFABLinearLayout.addView(createEventCircleButton);
         subActionFABLinearLayout.addView(createEventTextView);
@@ -191,7 +190,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         joinEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
         joinEventTextView.setTextSize(16);
         joinEventTextView.setGravity(Gravity.CENTER);
-        joinEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
+        joinEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
 
         subActionFABLinearLayout.addView(sendRequestCircleButton);
         subActionFABLinearLayout.addView(joinEventTextView);
@@ -219,7 +218,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allEventsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
         allEventsTextView.setTextSize(16);
         allEventsTextView.setGravity(Gravity.CENTER);
-        allEventsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
+        allEventsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
         subActionFABLinearLayout.addView(allActiveEventsCircleButton);
         subActionFABLinearLayout.addView(allEventsTextView);
 
@@ -247,7 +246,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         requestsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
         requestsTextView.setTextSize(16);
         requestsTextView.setGravity(Gravity.CENTER);
-        requestsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
+        requestsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
 
         subActionFABLinearLayout.addView(requestsCircleButton);
         subActionFABLinearLayout.addView(requestsTextView);
@@ -275,7 +274,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         recevivedTextView.setText("Received Requests");
         recevivedTextView.setTextColor(getResources().getColor(R.color.colorAccent));
         recevivedTextView.setTextSize(16);
-        recevivedTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 50));
+        recevivedTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
         recevivedTextView.setGravity(Gravity.CENTER);
 
         receivedRequestLinearLayout.addView(receivedRequestsCircleButton);
@@ -297,11 +296,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .setStartAngle(0) // A whole circle!
                 .setEndAngle(360)
                 .setRadius(getResources().getDimensionPixelSize(R.dimen.radius_large))
-                .addSubActionView(createEventSubActionButton, 500, 300)
-                .addSubActionView(sendRequestSubActionButton, 500, 300)
-                .addSubActionView(allEventsSubActionButton, 500, 300)
-                .addSubActionView(requestsSubActionButton, 500, 300)
-                .addSubActionView(receivedRequestSubActionButton, 500, 300)
+                .addSubActionView(createEventSubActionButton, 500, 400)
+                .addSubActionView(sendRequestSubActionButton, 500, 400)
+                .addSubActionView(allEventsSubActionButton, 500, 400)
+                .addSubActionView(requestsSubActionButton, 500, 400)
+                .addSubActionView(receivedRequestSubActionButton, 500, 400)
                 .attachTo(centerFAB)
                 .build();
     }
@@ -484,7 +483,6 @@ void setStatusChangeListener(){
                     Toast.makeText(MainActivity.this, "enter the details", Toast.LENGTH_SHORT).show();
                 } else {
                     otherUserEventCheck(joinEventId, joinEventDesc);
-
                     dialog.dismiss();
                 }
             }
@@ -497,11 +495,11 @@ void setStatusChangeListener(){
     }
 
     void otherUserEventCheck(final String requestEventId, final String requestEventDesc) {
-        firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent");
+        firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent/" + requestEventId);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(requestEventId).exists()) {
+                if (dataSnapshot.exists()) {
                     String message = "You are already a part of the event";
                     showRequestActionSnackBar(message, false);
                 } else {
@@ -525,10 +523,10 @@ void setStatusChangeListener(){
 
                 // checks if the eventID is valid; i.e if it exists
                 if (dataSnapshot.exists()) {
-                    requestEvent = new HashMap<String, Object>();
-                    requestEvent.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), requestEventDesc);
+                    HashMap<String, Object> updateEvent = new HashMap<String, Object>();
+                    updateEvent.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), requestEventDesc);
                     firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + requestEventId + "/requested");
-                    firebase.updateChildren(requestEvent, new Firebase.CompletionListener() {
+                    firebase.updateChildren(updateEvent, new Firebase.CompletionListener() {
                         @Override
                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                             setValues(requestEventId, requestEventDesc);
@@ -575,7 +573,7 @@ void setStatusChangeListener(){
                 }
             });
         }
-        snackbar.setActionTextColor(Color.parseColor("#F7BF50E"));
+        snackbar.setActionTextColor(Color.parseColor("#FFFFFF"));
         snackbar.show();
     }
 

@@ -130,6 +130,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             nameTextView = (TextView) itemView.findViewById(R.id.search_option_choice_name_text_view);
             eventIdTextView = (TextView) itemView.findViewById(R.id.search_option_choice_event_id_text_view);
             addMemberImageView = (ImageView) itemView.findViewById(R.id.search_option_add_member_image_view);
+            addMemberImageView.setOnClickListener(this);
         }
 
         @Override
