@@ -82,6 +82,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
+import com.projects.shubhamkhandelwal.tisy.Classes.LocationLog;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
@@ -111,8 +112,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String username;
     Map<String, Object> members;
     List<String> namesList;
-    List<String> memberProfileImageURL;
-
     List<RequestsDetails> joinRequests;
     RecyclerView eventRequestRecyclerView;
     RequestsRecyclerAdapter requestsRecyclerAdapter;
@@ -1119,7 +1118,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         timeStampTextView.setText(timeStamp);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
-        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(getApplicationContext(), membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
+        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
         Window window = eventInfoDialog.getWindow();
@@ -1668,6 +1667,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                 @Override
                 public void onMyLocationChange(Location location) {
+                    Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog");
+                    userLocationLogFirebase.keepSynced(true);
+                    LocationLog locationLog =  new LocationLog(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
+                    userLocationLogFirebase.push().setValue(locationLog);
 
                     if (!checkInternetConnection()) {
                         String message = "No internet connection";

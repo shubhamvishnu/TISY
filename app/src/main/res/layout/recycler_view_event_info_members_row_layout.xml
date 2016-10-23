@@ -60,16 +60,6 @@
         android:id="@+id/profileImageCircleImageView"
         android:layout_width="70dp"
         android:layout_height="70dp" />
-    <Button
-        android:id="@+id/track_button_recycler_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:text="TRACKS"
-        android:textColor="#bcbcbc"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="16dp" />
 </LinearLayout>
 
 

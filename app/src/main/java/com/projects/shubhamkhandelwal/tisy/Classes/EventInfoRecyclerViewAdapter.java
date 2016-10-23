@@ -1,6 +1,7 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.projects.shubhamkhandelwal.tisy.R;
+import com.projects.shubhamkhandelwal.tisy.TrackActivity;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Shubham Khandelwal on 9/7/2016.
  */
-public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfoRecyclerViewAdapter.EventInfoRecyclerViewHolder>{
+public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfoRecyclerViewAdapter.EventInfoRecyclerViewHolder> {
     Context context;
     List<String> memberList;
     List<String> memberCoordinate;
@@ -29,7 +29,7 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     private LayoutInflater inflator;
 
 
-    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList,List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName) {
+    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList, List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName) {
         this.context = context;
         inflator = LayoutInflater.from(context);
         this.memberList = memberList;
@@ -59,19 +59,32 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
         return memberList.size();
     }
 
-    class EventInfoRecyclerViewHolder extends RecyclerView.ViewHolder{
+    class EventInfoRecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView memberTextView;
         TextView coordinateSnapShotTextView;
         TextView nameTextView;
 
 
         CircleImageView profileImage;
+
         public EventInfoRecyclerViewHolder(View itemView) {
             super(itemView);
             memberTextView = (TextView) itemView.findViewById(R.id.message_text_view_recycler_view);
             coordinateSnapShotTextView = (TextView) itemView.findViewById(R.id.coordinate_snapshot_text_view_recycler_view);
             nameTextView = (TextView) itemView.findViewById(R.id.name_text_view_recycler_view);
             profileImage = (CircleImageView) itemView.findViewById(R.id.profileImageCircleImageView);
+            profileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (memberCoordinate.get(getPosition()).equals("0.0,0.0")) {
+
+                    }else{
+                        Intent intent = new Intent(context, TrackActivity.class);
+                        intent.putExtra("username", memberList.get(getPosition()));
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
     }
 }
