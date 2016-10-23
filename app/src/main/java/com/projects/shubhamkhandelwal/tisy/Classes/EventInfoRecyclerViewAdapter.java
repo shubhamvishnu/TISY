@@ -26,18 +26,16 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     List<String> memberCoordinate;
     List<String> memberProfileImageUrl;
     List<String> memberProfileName;
-    List<String> memberStatus;
     private LayoutInflater inflator;
 
 
-    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList,List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName, List<String> memberStatus ) {
+    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList,List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName) {
         this.context = context;
         inflator = LayoutInflater.from(context);
         this.memberList = memberList;
         this.memberCoordinate = memberCoordinate;
         this.memberProfileImageUrl = memberProfileImageUrl;
         this.memberProfileName = memberProfileName;
-        this.memberStatus = memberStatus;
     }
 
     @Override
@@ -53,7 +51,6 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
         holder.memberTextView.setText(memberList.get(position));
         holder.coordinateSnapShotTextView.setText(memberCoordinate.get(position));
         holder.nameTextView.setText(memberProfileName.get(position));
-        holder.memberStatusTextView.setText(memberStatus.get(position));
         Picasso.with(context).load(Uri.parse(memberProfileImageUrl.get(position))).error(R.drawable.default_profile_image_icon).into(holder.profileImage);
     }
 
@@ -66,7 +63,7 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
         TextView memberTextView;
         TextView coordinateSnapShotTextView;
         TextView nameTextView;
-        TextView memberStatusTextView;
+
 
         CircleImageView profileImage;
         public EventInfoRecyclerViewHolder(View itemView) {
@@ -75,7 +72,6 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
             coordinateSnapShotTextView = (TextView) itemView.findViewById(R.id.coordinate_snapshot_text_view_recycler_view);
             nameTextView = (TextView) itemView.findViewById(R.id.name_text_view_recycler_view);
             profileImage = (CircleImageView) itemView.findViewById(R.id.profileImageCircleImageView);
-            memberStatusTextView = (TextView) itemView.findViewById(R.id.member_status_text_view_recycler_view);
         }
     }
 }

@@ -42,16 +42,6 @@
                         android:layout_height="170dp"
                         android:padding="8dp" />
 
-                    <TextView
-                        android:id="@+id/status_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="16dp"
-                        android:textStyle="italic" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -181,13 +171,6 @@
                     android:gravity="center"
                     android:textColor="@android:color/white" />
             </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/user_status_options_recycler_view">
-
-            </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
 

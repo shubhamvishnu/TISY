@@ -222,7 +222,6 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         Map<String, Object> details = new HashMap<>();
         details.put("eventCount", 0);
         details.put("name", name);
-        details.put("status", "Online");
         if (noPhoto) {
             details.put("userPhotoUri", noPhoto);
         } else {

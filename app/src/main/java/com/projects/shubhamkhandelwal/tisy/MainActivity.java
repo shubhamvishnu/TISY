@@ -11,7 +11,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
@@ -29,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -42,7 +40,6 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
-import com.projects.shubhamkhandelwal.tisy.Classes.UserStatusOptionRecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -62,11 +59,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     long activeEventCount;
     long createdEventCount;
     long joinedEventCount;
-    String status;
     String userPhotoUri;
     String username;
     Intent intent;
-    TextView statusTextView;
     Dialog userAccountDialog;
     // make sure eventListener is not null
     int count = 0;
@@ -96,7 +91,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         count = 0;
         userPhotoUri = new String();
-        status = new String();
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
             if (loginCheck.getBoolean("login", true)) {
@@ -317,7 +311,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userPhotoUri = dataSnapshot.child("userPhotoUri").getValue().toString();
-                status = dataSnapshot.child("status").getValue().toString();
+
                 activeEventCount = dataSnapshot.child("activeEvent").getChildrenCount();
                 for (DataSnapshot children : dataSnapshot.child("activeEvent").getChildren()) {
                     if (children.getValue().toString().equals("created")) {
@@ -340,8 +334,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     void showInformationDialog() {
         userAccountDialog = new Dialog(this, R.style.event_info_dialog_style);
         userAccountDialog.setContentView(R.layout.dialog_user_account_layout);
-        List<String> status = new ArrayList<>();
-        RecyclerView userStatusOptionRecyclerView = (RecyclerView) userAccountDialog.findViewById(R.id.user_status_options_recycler_view);
         TextView nameEditText = (TextView) userAccountDialog.findViewById(R.id.name_text_view);
         TextView userIdEditText = (TextView) userAccountDialog.findViewById(R.id.user_id_text_view);
         TextView activeEventscountTextView, createdEventsCountTextView, joinedEventsCountTextView;
@@ -350,27 +342,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         activeEventscountTextView = (TextView) userAccountDialog.findViewById(R.id.active_events_count_text_view);
         createdEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.created_events_count_text_view);
         joinedEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.joined_events_count_text_view);
-        statusTextView = (TextView) userAccountDialog.findViewById(R.id.status_text_view);
+
         profileImageView = (CircleImageView) userAccountDialog.findViewById(R.id.profile_image_circle_image_view);
-
-        status.add("Online");
-        status.add("Busy");
-        status.add("Idle");
-        status.add("Offline");
-
-        userStatusOptionRecyclerView.setHasFixedSize(true);
-        UserStatusOptionRecyclerViewAdapter userStatusOptionRecyclerViewAdapter = new UserStatusOptionRecyclerViewAdapter(userAccountDialog.getContext(), status);
-        userStatusOptionRecyclerView.setAdapter(userStatusOptionRecyclerViewAdapter);
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        userStatusOptionRecyclerView.setLayoutManager(layoutManager);
-        setStatusChangeListener();
         Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
         String name = userInfoPreference.getString("name", null);
         String userId = userInfoPreference.getString("username", null);
 
-        statusTextView.setText(this.status);
         nameEditText.setText(name);
         userIdEditText.setText(userId);
 
@@ -390,38 +368,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
 
-    }
-void setStatusChangeListener(){
-    Firebase statusChangeListener = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/status");
-    statusChangeListener.keepSynced(true);
-    statusChangeListener.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            if(userAccountDialog != null){
-                   statusTextView.setText(dataSnapshot.getValue().toString());
-            }
-        }
-
-        @Override
-        public void onCancelled(FirebaseError firebaseError) {
-
-        }
-    });
-}
-    void setDIconId() {
-        Firebase dIconFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/dIcon");
-        dIconFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Constants.dIconResourceId = Integer.parseInt(dataSnapshot.getValue().toString());
-                toMapsActivity();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
     }
 
     void toMapsActivity() {
