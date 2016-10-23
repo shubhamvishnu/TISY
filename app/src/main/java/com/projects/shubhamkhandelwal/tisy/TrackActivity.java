@@ -9,6 +9,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -52,14 +54,14 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
     public void initializePoints() {
         locationPoints = new ArrayList<>();
-        Firebase userLocationPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + trackUsername + "locationLog");
+        Firebase userLocationPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + trackUsername + "/locationLog");
         userLocationPointsFirebase.keepSynced(true);
         userLocationPointsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long childrenCount = dataSnapshot.getChildrenCount();
                 Toast.makeText(TrackActivity.this, "child count : "+ childrenCount, Toast.LENGTH_SHORT).show();
-                if(childrenCount > 0) {
+                if(dataSnapshot.hasChildren()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         LocationLog locationLog = snapshot.getValue(LocationLog.class);
                         Double latitude = Double.parseDouble(locationLog.getLatitude());
@@ -68,6 +70,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                             locationPoints.add(new LatLng(latitude, longitude));
                         }
                     }
+                    locationPoints.add(new LatLng(0.0,0.0));
                     showPolyline();
                 }
 
@@ -86,5 +89,6 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         polylineOptions.color(Color.BLUE);
         polylineOptions.geodesic(true);
         mMap.addPolyline(polylineOptions);
+
     }
 }

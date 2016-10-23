@@ -1,5 +1,6 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,12 +27,14 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     List<String> memberCoordinate;
     List<String> memberProfileImageUrl;
     List<String> memberProfileName;
+    Dialog dialog;
     private LayoutInflater inflator;
 
 
-    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList, List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName) {
+    public EventInfoRecyclerViewAdapter(Context context, Dialog dialog, List<String> memberList, List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName) {
         this.context = context;
         inflator = LayoutInflater.from(context);
+        this.dialog = dialog;
         this.memberList = memberList;
         this.memberCoordinate = memberCoordinate;
         this.memberProfileImageUrl = memberProfileImageUrl;
@@ -58,7 +61,12 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     public int getItemCount() {
         return memberList.size();
     }
-
+void showTracks(int position){
+    dialog.dismiss();
+    Intent intent = new Intent(context, TrackActivity.class);
+    intent.putExtra("username", memberList.get(position));
+    context.startActivity(intent);
+}
     class EventInfoRecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView memberTextView;
         TextView coordinateSnapShotTextView;
@@ -79,9 +87,7 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
                     if (memberCoordinate.get(getPosition()).equals("0.0,0.0")) {
 
                     }else{
-                        Intent intent = new Intent(context, TrackActivity.class);
-                        intent.putExtra("username", memberList.get(getPosition()));
-                        context.startActivity(intent);
+                        showTracks(getPosition());
                     }
                 }
             });

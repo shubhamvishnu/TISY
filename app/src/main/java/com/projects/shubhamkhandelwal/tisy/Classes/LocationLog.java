@@ -7,11 +7,11 @@ public class LocationLog {
 
     String latitude;
     String longitude;
-
-    public LocationLog(String latitude, String longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
+//
+//    public LocationLog(String latitude, String longitude) {
+//        this.latitude = latitude;
+//        this.longitude = longitude;
+//    }
 
     public String getLatitude() {
         return latitude;

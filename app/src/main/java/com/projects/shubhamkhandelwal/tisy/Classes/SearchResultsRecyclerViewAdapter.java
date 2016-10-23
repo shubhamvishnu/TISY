@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -33,7 +34,8 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     public SearchResultsRecyclerViewAdapter(Context context, String name) {
         this.context = context;
         inflator = LayoutInflater.from(context);
-        this.name = name;
+        this.name = name.trim().replaceAll("\\s{2,}", " ");
+        Toast.makeText(context, "name :" + this.name, Toast.LENGTH_SHORT).show();
         eventIdList = new ArrayList<>();
         nameList = new ArrayList<>();
         username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);

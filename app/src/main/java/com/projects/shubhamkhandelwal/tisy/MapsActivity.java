@@ -1118,7 +1118,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         timeStampTextView.setText(timeStamp);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
-        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
+        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog,membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
         Window window = eventInfoDialog.getWindow();
@@ -1669,7 +1669,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onMyLocationChange(Location location) {
                     Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog");
                     userLocationLogFirebase.keepSynced(true);
-                    LocationLog locationLog =  new LocationLog(String.valueOf(location.getLatitude()),String.valueOf(location.getLongitude()));
+                    LocationLog locationLog =  new LocationLog();
+                    locationLog.setLatitude(String.valueOf(location.getLatitude()));
+                    locationLog.setLongitude(String.valueOf(location.getLongitude()));
                     userLocationLogFirebase.push().setValue(locationLog);
 
                     if (!checkInternetConnection()) {
