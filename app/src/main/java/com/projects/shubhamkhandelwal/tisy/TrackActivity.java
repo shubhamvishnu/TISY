@@ -15,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
@@ -28,7 +29,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
     String trackUsername;
     GoogleMap mMap;
     List<LatLng> locationPoints;
-
+    LatLngBounds.Builder cameraLatLngbuilder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +50,10 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
-
     }
 
     public void initializePoints() {
+        cameraLatLngbuilder = new LatLngBounds.Builder();
         locationPoints = new ArrayList<>();
         Firebase userLocationPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + trackUsername + "/locationLog");
         userLocationPointsFirebase.keepSynced(true);
@@ -67,7 +68,9 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                         Double latitude = Double.parseDouble(locationLog.getLatitude());
                         Double longitude = Double.parseDouble(locationLog.getLongitude());
                         if (!((latitude == 0.0) && (longitude == 0.0))) {
-                            locationPoints.add(new LatLng(latitude, longitude));
+                            LatLng latLng = new LatLng(latitude, longitude);
+                            locationPoints.add(latLng);
+                            cameraLatLngbuilder.include(latLng);
                         }
                     }
                     locationPoints.add(new LatLng(0.0,0.0));
@@ -90,5 +93,11 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         polylineOptions.geodesic(true);
         mMap.addPolyline(polylineOptions);
 
+        LatLngBounds bounds = cameraLatLngbuilder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.10); // offset from edges of the map 12% of screen
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        mMap.animateCamera(cameraUpdate);
     }
 }

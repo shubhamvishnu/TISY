@@ -1972,7 +1972,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void updateMemberLocation(DataSnapshot dataSnapshot) {
-
         Marker marker = (Marker) memberLocationMarkers.get(dataSnapshot.getKey().toString());
         String[] coordinates = dataSnapshot.getValue().toString().split(",");
         LatLng latLng = new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]));

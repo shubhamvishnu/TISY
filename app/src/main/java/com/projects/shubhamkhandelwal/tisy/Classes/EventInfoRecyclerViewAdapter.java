@@ -85,7 +85,6 @@ void showTracks(int position){
                 @Override
                 public void onClick(View view) {
                     if (memberCoordinate.get(getPosition()).equals("0.0,0.0")) {
-
                     }else{
                         showTracks(getPosition());
                     }

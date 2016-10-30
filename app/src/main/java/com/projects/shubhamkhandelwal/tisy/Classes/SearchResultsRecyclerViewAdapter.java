@@ -18,6 +18,7 @@ import com.projects.shubhamkhandelwal.tisy.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by Shubham Khandelwal on 10/21/2016.
@@ -52,7 +53,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name)) {
+                        if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name) || Pattern.compile(Pattern.quote(snapshot.getKey()), Pattern.CASE_INSENSITIVE).matcher(name).find() || Pattern.compile(Pattern.quote(snapshot.child("name").getValue().toString()), Pattern.CASE_INSENSITIVE).matcher(name).find() ) {
                             int position = eventIdList.size();
                             eventIdList.add(snapshot.getKey());
                             nameList.add(snapshot.child("name").getValue().toString());
