@@ -11,7 +11,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,55 +41,45 @@ import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
+    // variables
+    // FAB sub-action button tags; to identify which sub-action button was clicked.
     public static final String MAIN_ACITIVITY_TAG = "MainActivity";
     public final static String CREATE_EVENT_TAG = "create_event";
     public final static String JOIN_EVENT_TAG = "send_requests";
     public final static String ALL_EVENTS_TAG = "all_events";
     public final static String REQUESTS_TAG = "requests";
     public final static String RECEIVED_REQUEST_TAG = "received_requests";
-    long activeEventCount;
-    long createdEventCount;
-    long joinedEventCount;
-    String userPhotoUri;
-    String username;
-    Intent intent;
-    Dialog userAccountDialog;
-    // make sure eventListener is not null
-    int count = 0;
-    // Firebase Object reference
-    Firebase firebase;
-    CoordinatorLayout coordinatorLayoutMainActivity;
-    ImageButton centerFAB;
 
-    /*
-         listener for user status (active; inactive; pending)
-         remove the listener on OnDestroy
-      */
-    /*
-     *requests from all the users and to send a new request
-     *contains username; and request description
-     */
+    long activeEventCount; // number of active event of the user.
+    long createdEventCount; // number of events created; count of no. of events the user is the admin of.
+    long joinedEventCount; // number of events user has joined.
+
+    String userPhotoUri; // user profile photo url.
+    String username; // unique username of the user.
+
+    // objects
+    Intent intent; // common intent to perform intent actions.
+    Dialog userAccountDialog; // reference for the user account dialog created; so that their appearance can be manipulated from outside the block.
+    Firebase firebase; // reference for the firebase object.
+    CoordinatorLayout coordinatorLayoutMainActivity; // reference of the coordinator layout view in the activity_main.xml.
+    ImageButton centerFAB; // reference for center main FAB button.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Firebase Context
-        Firebase.setAndroidContext(this);
 
-        // initialize users state; inactive variable
-        username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
-        count = 0;
-        userPhotoUri = new String();
+        /**
+         * checks if the user has logged in or not.
+         * if not, then call the login activity.
+         */
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
             if (loginCheck.getBoolean("login", true)) {
@@ -103,51 +92,70 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             startActivity(intent);
             finish();
         }
-        coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity);
+        // initialize the username variable from the preference
+        username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
 
+        coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity); // initialize the view object.
+        userAccountDialog = null; // initialize the user account information dialog.
 
-        ImageView userAccountImageIcon = new ImageView(this); // Create an icon
+        /**
+         * create two FAB - center main FAB; user account information FAB
+         * Steps to create a FAB:
+         *      create view items
+         *      create menu items
+         *      create the menu with items
+         * center FAB button:
+         *      contains two view items-ImageButton and TextView; These two view are added inside a linear layout.
+         */
+
+        // FAB for user account information view.
+        ImageView userAccountImageIcon = new ImageView(this); // Create an icon imageview.
         userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
-        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this)
+
+        // create menu
+        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this) //builder for the user account information FAB.
                 .setContentView(userAccountImageIcon)
                 .setBackgroundDrawable(R.drawable.floating_action_button_selector)
                 .build();
         userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // initializes user information upon request to view the user information
                 initializeUserInformation();
             }
         });
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+
+        // create menu with items
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this) // attaching the user account information FAB to the builder.
                 .attachTo(floatingActionButton)
                 .build();
 
-        userAccountDialog = null;
-
-        centerFAB = (ImageButton) findViewById(R.id.center_fab);
+        // Custom FAB for showing options.
+        centerFAB = (ImageButton) findViewById(R.id.center_fab); // initialize the center FAB main button.
         centerFAB.setColorFilter(getResources().getColor(R.color.colorAccent));
 
-
+        // Custom FAB menu.
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         itemBuilder.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         itemBuilder.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
 
-        // create event
+        // layout for the menu items.
         LinearLayout subActionFABLinearLayout = new LinearLayout(this);
         subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
         subActionFABLinearLayout.setGravity(Gravity.CENTER);
         subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        ImageView createEventCircleButton = new ImageView(this);
+        // create event menu item
+        ImageView createEventCircleButton = new ImageView(this); // image view for the menu item.
         createEventCircleButton.setImageResource(R.drawable.add_icon);
         createEventCircleButton.setAdjustViewBounds(true);
         createEventCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         createEventCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        createEventCircleButton.setPadding(50,50,50,50);
+        createEventCircleButton.setPadding(50, 50, 50, 50);
 
-        TextView createEventTextView = new TextView(this);
+        TextView createEventTextView = new TextView(this); // text view for the menu item.
         createEventTextView.setText("Create Event");
         createEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
         createEventTextView.setTextSize(16);
@@ -155,15 +163,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
 
+        // add the views to the layout for the menu items.
         subActionFABLinearLayout.addView(createEventCircleButton);
         subActionFABLinearLayout.addView(createEventTextView);
 
-
+        // add the layout as an item having the created views. The linear layout acts as a sub-action menu item.
         SubActionButton createEventSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         createEventSubActionButton.setTag(CREATE_EVENT_TAG);
         createEventSubActionButton.setOnClickListener(this);
 
-        // requests
+        //join event menu item.
         subActionFABLinearLayout = new LinearLayout(this);
         subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
         subActionFABLinearLayout.setGravity(Gravity.CENTER);
@@ -194,7 +203,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         sendRequestSubActionButton.setOnClickListener(this);
 
 
-        // all event requests
+        // all events menu item.
         subActionFABLinearLayout = new LinearLayout(this);
         subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
         subActionFABLinearLayout.setGravity(Gravity.CENTER);
@@ -207,6 +216,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allActiveEventsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         allActiveEventsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
         allActiveEventsCircleButton.setPadding(50, 50, 50, 50);
+
         TextView allEventsTextView = new TextView(this);
         allEventsTextView.setText("All Events");
         allEventsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
@@ -221,7 +231,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         allEventsSubActionButton.setOnClickListener(this);
 
 
-        // all sent requests
+        // all sent requests menu item.
         subActionFABLinearLayout = new LinearLayout(this);
         subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
         subActionFABLinearLayout.setGravity(Gravity.CENTER);
@@ -250,7 +260,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         requestsSubActionButton.setOnClickListener(this);
 
 
-        // all received requests
+        // all received requests menu item.
         LinearLayout receivedRequestLinearLayout = new LinearLayout(this);
         receivedRequestLinearLayout.setOrientation(LinearLayout.VERTICAL);
         receivedRequestLinearLayout.setGravity(Gravity.CENTER);
@@ -278,14 +288,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         receivedRequestSubActionButton.setTag(RECEIVED_REQUEST_TAG);
         receivedRequestSubActionButton.setOnClickListener(this);
 
-//        // set fab layout
-//        FrameLayout.LayoutParams subActionButtonParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-//        createEventSubActionButton.setLayoutParams(subActionButtonParams);
-//        sendRequestSubActionButton.setLayoutParams(subActionButtonParams);
-//        allEventsSubActionButton.setLayoutParams(subActionButtonParams);
-//        requestsSubActionButton.setLayoutParams(subActionButtonParams);
-//        receivedRequestSubActionButton.setLayoutParams(subActionButtonParams);
-
+        // add items to custom FAB menu.
         FloatingActionMenu circleMenu = new FloatingActionMenu.Builder(this)
                 .setStartAngle(0) // A whole circle!
                 .setEndAngle(360)
@@ -299,11 +302,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .build();
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view.getTag().equals(CREATE_EVENT_TAG)) {
+            stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+            intent = new Intent(MainActivity.this, CreateEvent.class);
+            startActivity(intent);
+        }
+        if (view.getTag().equals(JOIN_EVENT_TAG)) {
+            joinEventDialog();
+        }
+        if (view.getTag().equals(ALL_EVENTS_TAG)) {
+            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
+        }
+        if (view.getTag().equals(REQUESTS_TAG)) {
+            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_REQUESTS);
+        }
+        if (view.getTag().equals(RECEIVED_REQUEST_TAG)) {
+            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
+        }
+    }
+
+    /**
+     * fetches information about the user.
+     * after fetching-user information dialog is shown.
+     */
     void initializeUserInformation() {
-        activeEventCount = 0;
-        createdEventCount = 0;
-        joinedEventCount = 0;
-        userPhotoUri = new String();
+        activeEventCount = 0; // total number of events user is a part of currently.
+        createdEventCount = 0; // total number of events user has created.
+        joinedEventCount = 0; // total number of events user has joined.
+        userPhotoUri = new String(); // holds the profile photo image url.
 
         Firebase userInfoFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
         userInfoFirebase.keepSynced(true);
@@ -311,8 +339,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userPhotoUri = dataSnapshot.child("userPhotoUri").getValue().toString();
-
                 activeEventCount = dataSnapshot.child("activeEvent").getChildrenCount();
+
                 for (DataSnapshot children : dataSnapshot.child("activeEvent").getChildren()) {
                     if (children.getValue().toString().equals("created")) {
                         ++createdEventCount;
@@ -320,6 +348,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         ++joinedEventCount;
                     }
                 }
+
+                // call to show the user information dialog after initialization.
                 showInformationDialog();
             }
 
@@ -331,26 +361,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
+
+    // show the user information dialog
     void showInformationDialog() {
-        userAccountDialog = new Dialog(this, R.style.event_info_dialog_style);
-        userAccountDialog.setContentView(R.layout.dialog_user_account_layout);
+        userAccountDialog = new Dialog(this, R.style.event_info_dialog_style); // initialize the dialog object.
+        userAccountDialog.setContentView(R.layout.dialog_user_account_layout); // initialize the dialog layout; xml layout;
+
+        // initialize the view items in the dialog.
         TextView nameEditText = (TextView) userAccountDialog.findViewById(R.id.name_text_view);
         TextView userIdEditText = (TextView) userAccountDialog.findViewById(R.id.user_id_text_view);
-        TextView activeEventscountTextView, createdEventsCountTextView, joinedEventsCountTextView;
+        TextView activeEventscountTextView = (TextView) userAccountDialog.findViewById(R.id.active_events_count_text_view);
+        TextView createdEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.created_events_count_text_view);
+        TextView joinedEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.joined_events_count_text_view);
+        CircleImageView profileImageView = (CircleImageView) userAccountDialog.findViewById(R.id.profile_image_circle_image_view);
 
-        CircleImageView profileImageView;
-        activeEventscountTextView = (TextView) userAccountDialog.findViewById(R.id.active_events_count_text_view);
-        createdEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.created_events_count_text_view);
-        joinedEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.joined_events_count_text_view);
-
-        profileImageView = (CircleImageView) userAccountDialog.findViewById(R.id.profile_image_circle_image_view);
         Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
-        String name = userInfoPreference.getString("name", null);
-        String userId = userInfoPreference.getString("username", null);
-
-        nameEditText.setText(name);
-        userIdEditText.setText(userId);
+        nameEditText.setText(userInfoPreference.getString("name", null));
+        userIdEditText.setText(userInfoPreference.getString("username", null));
 
         activeEventscountTextView.setText(String.valueOf(activeEventCount));
         createdEventsCountTextView.setText(String.valueOf(createdEventCount));
@@ -360,34 +388,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         userAccountDialog.setCanceledOnTouchOutside(true);
-        userAccountDialog.show();
         userAccountDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 userAccountDialog = null;
             }
         });
+        userAccountDialog.show();
 
     }
-
-    void toMapsActivity() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
-        intent = new Intent(MainActivity.this, MapsActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
 
     // custom dialog to send request to join another event
     void joinEventDialog() {
@@ -404,6 +413,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         dialogJoinEventIdEditText = (EditText) dialog.findViewById(R.id.dialog_join_event_id);
         dialogJoinDescEditText = (EditText) dialog.findViewById(R.id.dialog_join_event_desc);
         joinEventButton = (Button) dialog.findViewById(R.id.joinEventButton);
+
+        // onclick listener for the button
+        joinEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String joinEventId = dialogJoinEventIdEditText.getText().toString();
+                final String joinEventDesc = dialogJoinDescEditText.getText().toString();
+
+                // check for empty condition; send request calling sendRequest(String, String)
+                if (joinEventId.isEmpty() || joinEventDesc.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "enter the details", Toast.LENGTH_SHORT).show();
+                } else {
+                    // check if the user is already a part of the event.
+                    otherUserEventCheck(joinEventId, joinEventDesc);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // button touch feed back
         joinEventButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -418,28 +447,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 return false;
             }
         });
-        joinEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String joinEventId = dialogJoinEventIdEditText.getText().toString();
-                final String joinEventDesc = dialogJoinDescEditText.getText().toString();
-
-                // check for empty condition; send request calling sendRequest(String, String)
-                if (joinEventId.isEmpty() || joinEventDesc.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "enter the details", Toast.LENGTH_SHORT).show();
-                } else {
-                    otherUserEventCheck(joinEventId, joinEventDesc);
-                    dialog.dismiss();
-                }
-            }
-        });
         Window window = dialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
-        dialog.show();
         dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
+    /**
+     * checks if the user is already a part of the event.
+     * show snackbar if already a part; else send request to join.
+     */
     void otherUserEventCheck(final String requestEventId, final String requestEventDesc) {
         firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent/" + requestEventId);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -449,6 +467,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     String message = "You are already a part of the event";
                     showRequestActionSnackBar(message, false);
                 } else {
+
+                    // sends request to join the event
                     sendRequest(requestEventId, requestEventDesc);
                 }
             }
@@ -475,6 +495,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     firebase.updateChildren(updateEvent, new Firebase.CompletionListener() {
                         @Override
                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                            // send request for the user to join the event
                             setValues(requestEventId, requestEventDesc);
                         }
                     });
@@ -493,7 +514,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
-    // puts another event request into the event's requested database
+    /**
+     * adds request into the event's requested database
+     * @param rID : holds the event unique id
+     * @param rDesc : holds the description along with the request
+     */
     void setValues(final String rID, final String rDesc) {
 
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
@@ -508,6 +533,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
+    /**
+     * show snackbar
+     * @param message : message to be displayed
+     * @param available : if true, shows the action to join the event; else does not show action button.
+     */
     void showRequestActionSnackBar(String message, boolean available) {
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayoutMainActivity, message, Snackbar.LENGTH_LONG);
@@ -524,30 +554,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public void onBackPressed() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
-        finish();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        return true;
     }
 
     @Override
-    public void onClick(View view) {
-        if (view.getTag().equals(CREATE_EVENT_TAG)) {
-            stopService(new Intent(getBaseContext(), InternetConnectionService.class));
-            intent = new Intent(MainActivity.this, CreateEvent.class);
-            startActivity(intent);
-        }
-        if (view.getTag().equals(JOIN_EVENT_TAG)) {
-            joinEventDialog();
-        }
-        if (view.getTag().equals(ALL_EVENTS_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
-        }
-        if (view.getTag().equals(REQUESTS_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_REQUESTS);
-        }
-        if (view.getTag().equals(RECEIVED_REQUEST_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
-        }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+        finish();
     }
 
 }

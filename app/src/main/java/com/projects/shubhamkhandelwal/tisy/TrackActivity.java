@@ -73,7 +73,6 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                             cameraLatLngbuilder.include(latLng);
                         }
                     }
-                    locationPoints.add(new LatLng(0.0,0.0));
                     showPolyline();
                 }
 
@@ -89,8 +88,8 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.addAll(locationPoints);
         polylineOptions.width(25);
-        polylineOptions.color(Color.BLUE);
-        polylineOptions.geodesic(true);
+        polylineOptions.color(Color.RED);
+        polylineOptions.geodesic(false);
         mMap.addPolyline(polylineOptions);
 
         LatLngBounds bounds = cameraLatLngbuilder.build();

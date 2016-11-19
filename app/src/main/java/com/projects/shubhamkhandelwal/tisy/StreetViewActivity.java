@@ -37,6 +37,7 @@ public class StreetViewActivity extends FragmentActivity
         if (streetViewPanorama.getLocation() != null) {
             Toast.makeText(StreetViewActivity.this, "available", Toast.LENGTH_SHORT).show();
         }else{
+            // TODO: show dialog to say streetview unavailable and finish() on OK
             Toast.makeText(StreetViewActivity.this, "not available", Toast.LENGTH_SHORT).show();
         }
     }

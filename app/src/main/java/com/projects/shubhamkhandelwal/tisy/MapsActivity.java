@@ -99,86 +99,82 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    // chat related variables
+    public static Dialog chatsDialog; // chats dialog object reference
+    public static int numberOfRequests = 0; // number of join event request received
+    public static int numberOfUnreadChats = 0; // count of number of unread chat messages
+    public static int numberOfReadChats = 0; // count of number of chat messages read
+    RecyclerView eventChatsRecyclerView; // chats view recyclerview
+    ChatsRecyclerViewAdpater chatsRecyclerViewAdapter; // chats view recyclerview adapter
+    Firebase unreadChatsFirebase; // Firebase reference to the event chat
+    int chatNotificationCount; // number of unread messages in the event chat
 
-    public static final int REQUEST_PERMISSION_SETTINGS = 1;
-    public static boolean zoomFit;
-    public static Dialog chatsDialog;
-    public static int numberOfRequests = 0;
-    public static int numberOfUnreadChats = 0;
-    public static int numberOfReadChats = 0;
-    int PLACE_PICKER_REQUEST = 1;
-    // TODO: could make this a class later
-    String admin;
-    String username;
-    Map<String, Object> members;
-    List<String> namesList;
-    List<RequestsDetails> joinRequests;
-    RecyclerView eventRequestRecyclerView;
-    RequestsRecyclerAdapter requestsRecyclerAdapter;
-    RecyclerView eventChatsRecyclerView;
-    ChatsRecyclerViewAdpater chatsRecyclerViewAdapter;
-    //Object for eventInfo
-    EventInfo eventInfo;
-    GoogleMap mMap;
-    Firebase firebase;
-    ImageButton eventInfoImageButton;
-    ImageButton allIconsInOneImageButton;
-    List<String> membersList;
-    List<String> memberCoordinate;
-    List<String> memberProfileImageUrls;
-    List<String> memberProfileName;
-    String timeStamp;
-    String eventTitle;
-    String adminValue;
-    int movement = 1;
+    // map event variables
+    Map<String, Object> members; // members (usernames) in the event
+    List<String> namesList; // names of members in the event
+    Map<String, Object> memberLocationMarkers; // contains map of (username, marker object) to reference marker positions (LatLng) for every member
+    Bitmap destinationIconBitmap; // holds the destination icon
+    public static boolean zoomFit; // if true: fits the specified LatLng into the view
+
+    // checkpoint variables
+    Map<String, Object> checkPointCoordinateMap; // contains all the checkpoints in the map; id and it's position (LatLng)
+    boolean isCheckPointEdit; // if true, editing the checkpoint
+    int checkPointMakrerEditPosition; // the unique id for the checkpoint
+    List<String> checkPointsReached; // checkpoints crossed (reached) by the user
+
+    // received request variables
+    Dialog requestsDialog; //  received requests dialog object
+    List<RequestsDetails> joinRequests; // received requests; username list
+    RecyclerView eventRequestRecyclerView; // received requests recyclerview
+    RequestsRecyclerAdapter requestsRecyclerAdapter; // received requests recyclerview adapter
+
+    EventInfo eventInfo; // EventInfo class Object; All the basic event information
+    GoogleMap mMap; // GoogleMap Object
+    Firebase firebase; // Firebase Object
+
+    // View Objects
+    ImageButton eventInfoImageButton; // Event information button
+    ImageButton allIconsInOneImageButton; // other map related option button
     CoordinatorLayout coordinatorLayout;
-    String startLocationTextView;
-    String destLocationTextView;
-    String eventDescription;
-    Map<String, Object> memberLocationMarkers;
-    Dialog requestsDialog;
-    ChildEventListener chatsChildEventListener;
-    Firebase unreadChatsFirebase;
-    int chatNotificationCount;
-    Bitmap destinationIconBitmap;
-    int memberUriCount;
-    Map<String, Object> checkPointCoordinateMap;
-    PlacePicker.IntentBuilder builder;
-    boolean isCheckPointEdit;
-    int checkPointMakrerEditPosition;
-    List<String> checkPointsReached;
-    String nameSearch;
-    RecyclerView searchOptionChoiceRecyclerView;
-    SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter;
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
 
-        Bitmap bitmap = Bitmap.createBitmap(120,
-                102, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
+    // event infomation variables
+    List<String> membersList; // members (username) in the event
+    List<String> memberCoordinate; // coordinates (LatLng) of the members in the event
+    List<String> memberProfileImageUrls; // profile Image URL of every member in the event
+    List<String> memberProfileName; // member name for users in the event
+    String timeStamp; // date and time of when the event was created
+    String eventTitle; // title of the event
+    String adminValue; // username of the admin
+    String startLocationTextView; // start location description of the event
+    String destLocationTextView; // destination location description of the event
+    String eventDescription; // event description
+    int memberUriCount; // number of URL's fetched of the members
 
-        return bitmap;
-    }
+    // search variables
+    String nameSearch; // name/username/eventID searched for by the user
+    RecyclerView searchOptionChoiceRecyclerView; // search option recyclerview
+    SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter; // search option recyclerview adapter
 
+    // PlacePicker variables
+    public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
+    public static final int PLACE_PICKER_REQUEST = 1; // used for the place picker intent
+    PlacePicker.IntentBuilder builder; // PlacePicker Intent builder
+
+    String username; // to access the username variable throughout the activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        // set the title for the ActionBar
         setTitle("TISY");
-        //Firebase context
-        Firebase.setAndroidContext(this);
+
+        // initialize the GoogleMaps with the activity's context. To create custom icons for the markers.
         MapsInitializer.initialize(getApplicationContext());
+
         chatNotificationCount = 0;
 
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
-        // intializing admin variable
-        admin = new String();
         adminValue = new String();
         checkPointMakrerEditPosition = 0;
         // intializing EventInfo Object
@@ -188,7 +184,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         isCheckPointEdit = false;
         zoomFit = false;
         nameSearch = new String();
-        movement = 1;
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
         membersList = new ArrayList<>();
@@ -202,6 +197,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
         memberLocationMarkers = new HashMap<>();
         startService(new Intent(getBaseContext(), InternetConnectionService.class));
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -253,6 +249,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
+
+    /**
+     * converts the vector drawables to bitmap
+     * @param context : to reference to the location of the vector in the res/drawable directory
+     * @param drawableId : the id of the vector drawable in the res/drawable directory
+     * @return : return the bitmap object of the vector drawable
+     */
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(120,
+                102, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
 
     void loadCheckPoints() {
         checkPointCoordinateMap = new HashMap<>();
@@ -307,181 +325,179 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       }
       */
     public void loadDestinationIcon() {
-
         switch (Constants.dIconResourceId) {
             case 1: {
-
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_walking);
-                changeBitMapColor(destinationIconBitmap);
+
                 break;
             }
             case 2: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_swimming);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 3: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_spa);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 4: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_gym);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 5: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_drinks);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 6: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_casino);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 7: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination__zoo);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 8: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_amusement_park);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 9: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bowling_alley);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 10: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_aquarium);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 11: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_night_club);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 12: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_running);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
 
             }
             case 13: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_football);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 14: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_gaming);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 15: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_bicycle);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 16: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_cafe);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 17: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_restaurant);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 18: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_dinning);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 19: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pizza);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
             case 20: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hotel);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 21: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_university);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 23: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_library);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 24: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_museum);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 25: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_beauty_salon);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 26: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_school);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 27: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_home);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 28: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_stadium);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 29: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_park);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 30: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pharmacy);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
 
@@ -489,20 +505,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             case 31: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hospital);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
 
             }
             case 32: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_worship);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 33: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_mall);
-                changeBitMapColor(destinationIconBitmap);
 
 
                 break;
@@ -510,110 +525,90 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             case 34: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_book_store);
-                changeBitMapColor(destinationIconBitmap);
 
 
                 break;
             }
             case 35: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_convenience_store);
-                changeBitMapColor(destinationIconBitmap);
 
 
                 break;
             }
             case 36: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_liquor_store);
-                changeBitMapColor(destinationIconBitmap);
 
 
                 break;
             }
             case 37: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_laundry);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 38: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_print_shop);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
             case 39: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_grocery_store);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
             case 40: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_parking);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
             case 41: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_airport);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
             case 42: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_train_station);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
             case 43: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bus_station);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
             case 44: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_subway_station);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
             case 45: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_tram);
-                changeBitMapColor(destinationIconBitmap);
+
 
                 break;
             }
 
 
         }
+        if (destinationIconBitmap != null) {
+            initializeEventInfo();
+        }
     }
 
-    void changeBitMapColor(Bitmap myBitmap) {
-
-        Paint pnt = new Paint();
-        Bitmap myBit = myBitmap;
-
-        Canvas myCanvas = new Canvas(myBit);
-        int myColor = myBit.getPixel(0, 0);
-
-        // Set the colour to replace.
-        // TODO: change color later
-        ColorFilter filter = new LightingColorFilter(myColor, Color.parseColor("#900C3F"));
-
-        pnt.setColorFilter(filter);
-
-        // Draw onto new bitmap. result Bitmap is newBit
-        myCanvas.drawBitmap(myBit, 0, 0, pnt);
-
-        destinationIconBitmap = myBit;
-        initializeEventInfo();
-    }
 
     Bitmap applyCustomBitmapColor(Bitmap myBitmap, String color) {
 
@@ -995,7 +990,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
 
                 nameSearch = searchEditText.getText().toString();
-                if(!nameSearch.isEmpty()){
+                if (!nameSearch.isEmpty()) {
                     searchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
                     searchOptionChoiceRecyclerView.setAdapter(searchResultsRecyclerViewAdapter);
                 }
@@ -1118,7 +1113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         timeStampTextView.setText(timeStamp);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
-        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog,membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
+        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
         Window window = eventInfoDialog.getWindow();
@@ -1137,7 +1132,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             numberOfReadChats = sharedPreferences.getInt("chats_read", 0);
         }
         unreadChatsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/chats");
-        chatsChildEventListener = unreadChatsFirebase.addChildEventListener(new ChildEventListener() {
+        unreadChatsFirebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("listenerForChats", "onChildAdded for unreadChars()");
@@ -1193,9 +1188,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             Intent notificationIntent = new Intent(this, MainActivity.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-// Adds the back stack for the Intent (but not the Intent itself)
+        // Adds the back stack for the Intent (but not the Intent itself)
             stackBuilder.addParentStack(MainActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
+        // Adds the Intent that starts the Activity to the top of the stack
             stackBuilder.addNextIntent(notificationIntent);
             PendingIntent notificationPendingIntent =
                     stackBuilder.getPendingIntent(
@@ -1504,7 +1499,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void showEventRequestDialog() {
 
-        List<RequestsDetails> request = joinRequests;
+//        List<RequestsDetails> request = joinRequests;
         // TODO: remove all the requests for that event from the requests database
         requestsDialog = new Dialog(this, R.style.dialog_sent_request_detail);
         requestsDialog.setContentView(R.layout.recycler_view_requests_layout);
@@ -1513,7 +1508,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventRequestRecyclerView = (RecyclerView) requestsDialog.findViewById(R.id.event_requests_recycler_view);
         eventRequestRecyclerView.setHasFixedSize(true);
 
-        requestsRecyclerAdapter = new RequestsRecyclerAdapter(getApplicationContext(), request);
+        requestsRecyclerAdapter = new RequestsRecyclerAdapter(getApplicationContext(), joinRequests);
         eventRequestRecyclerView.setAdapter(requestsRecyclerAdapter);
         eventRequestRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
@@ -1669,7 +1664,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onMyLocationChange(Location location) {
                     Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog");
                     userLocationLogFirebase.keepSynced(true);
-                    LocationLog locationLog =  new LocationLog();
+                    LocationLog locationLog = new LocationLog();
                     locationLog.setLatitude(String.valueOf(location.getLatitude()));
                     locationLog.setLongitude(String.valueOf(location.getLongitude()));
                     userLocationLogFirebase.push().setValue(locationLog);
@@ -1803,8 +1798,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
-
-
     }
 
     void fetchUserNames() {
@@ -2050,6 +2043,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         intent.putExtra("latitude", marker.getPosition().latitude);
                         intent.putExtra("longitude", marker.getPosition().longitude);
                         startActivity(intent);
+
                     }
                 });
         snackbar.setCallback(new Snackbar.Callback() {
@@ -2071,6 +2065,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         snackbar.show();
 
     }
+
     // version 2: ENDS HERE
 
 }
