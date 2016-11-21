@@ -99,44 +99,41 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    // PlacePicker variables
+    public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
+    public static final int PLACE_PICKER_REQUEST = 1; // used for the place picker intent
     // chat related variables
     public static Dialog chatsDialog; // chats dialog object reference
     public static int numberOfRequests = 0; // number of join event request received
     public static int numberOfUnreadChats = 0; // count of number of unread chat messages
     public static int numberOfReadChats = 0; // count of number of chat messages read
+    public static boolean zoomFit; // if true: fits the specified LatLng into the view
     RecyclerView eventChatsRecyclerView; // chats view recyclerview
     ChatsRecyclerViewAdpater chatsRecyclerViewAdapter; // chats view recyclerview adapter
     Firebase unreadChatsFirebase; // Firebase reference to the event chat
     int chatNotificationCount; // number of unread messages in the event chat
-
     // map event variables
     Map<String, Object> members; // members (usernames) in the event
     List<String> namesList; // names of members in the event
     Map<String, Object> memberLocationMarkers; // contains map of (username, marker object) to reference marker positions (LatLng) for every member
     Bitmap destinationIconBitmap; // holds the destination icon
-    public static boolean zoomFit; // if true: fits the specified LatLng into the view
-
     // checkpoint variables
     Map<String, Object> checkPointCoordinateMap; // contains all the checkpoints in the map; id and it's position (LatLng)
     boolean isCheckPointEdit; // if true, editing the checkpoint
     int checkPointMakrerEditPosition; // the unique id for the checkpoint
     List<String> checkPointsReached; // checkpoints crossed (reached) by the user
-
     // received request variables
     Dialog requestsDialog; //  received requests dialog object
     List<RequestsDetails> joinRequests; // received requests; username list
     RecyclerView eventRequestRecyclerView; // received requests recyclerview
     RequestsRecyclerAdapter requestsRecyclerAdapter; // received requests recyclerview adapter
-
     EventInfo eventInfo; // EventInfo class Object; All the basic event information
     GoogleMap mMap; // GoogleMap Object
     Firebase firebase; // Firebase Object
-
     // View Objects
     ImageButton eventInfoImageButton; // Event information button
     ImageButton allIconsInOneImageButton; // other map related option button
     CoordinatorLayout coordinatorLayout;
-
     // event infomation variables
     List<String> membersList; // members (username) in the event
     List<String> memberCoordinate; // coordinates (LatLng) of the members in the event
@@ -144,23 +141,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> memberProfileName; // member name for users in the event
     String timeStamp; // date and time of when the event was created
     String eventTitle; // title of the event
-    String adminValue; // username of the admin
     String startLocationTextView; // start location description of the event
     String destLocationTextView; // destination location description of the event
     String eventDescription; // event description
     int memberUriCount; // number of URL's fetched of the members
-
     // search variables
     String nameSearch; // name/username/eventID searched for by the user
     RecyclerView searchOptionChoiceRecyclerView; // search option recyclerview
     SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter; // search option recyclerview adapter
-
-    // PlacePicker variables
-    public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
-    public static final int PLACE_PICKER_REQUEST = 1; // used for the place picker intent
     PlacePicker.IntentBuilder builder; // PlacePicker Intent builder
 
     String username; // to access the username variable throughout the activity
+
+    /**
+     * converts the vector drawables to bitmap
+     *
+     * @param context    : to reference to the location of the vector in the res/drawable directory
+     * @param drawableId : the id of the vector drawable in the res/drawable directory
+     * @return : return the bitmap object of the vector drawable
+     */
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(120,
+                102, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,51 +186,58 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // initialize the GoogleMaps with the activity's context. To create custom icons for the markers.
         MapsInitializer.initialize(getApplicationContext());
 
-        chatNotificationCount = 0;
+        // initializing objects and variables
+        // initalizing view objects
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
+        allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
 
+        // initializing variable
+        //initializing String variables
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
-        adminValue = new String();
+        nameSearch = new String();
+
+        // initializing integer variables
         checkPointMakrerEditPosition = 0;
-        // intializing EventInfo Object
-        eventInfo = new EventInfo();
-        // initalizing the requests List Object
-        joinRequests = new ArrayList<>();
+        chatNotificationCount = 0;
         isCheckPointEdit = false;
         zoomFit = false;
-        nameSearch = new String();
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
+        // initializing Class Objects
+        eventInfo = new EventInfo();
+
+        // initializing Collection Objects
+        joinRequests = new ArrayList<>();
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
         memberProfileName = new ArrayList<>();
         checkPointsReached = new ArrayList<>();
-
-
-        eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
-        allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
         memberLocationMarkers = new HashMap<>();
+
+        // TODO: change the service functions later; and optimize their usage
+        // start background service
         startService(new Intent(getBaseContext(), InternetConnectionService.class));
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used
+        // callback is triggered when the map is ready to be used
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // requests received notification
+        unreadRequestsInit();
 
-        if (Constants.currentEventId == null) {
-            backToMain();
-        } else {
-            requestOptionOnClick();
-            unreadChats();
-            loadDestinationIcon();
-            loadCheckPoints();
-        }
+        // TODO: remove it
+        unreadChats();
 
-        //TODO: change them later
-        // previous color #666666
+        // initialize the desitination icon
+        destinationIconInit();
 
+        // initialzie the checkpoints in the map
+        checkPointsInit();
 
+        // set view object color
         eventInfoImageButton.setColorFilter(Color.parseColor("#0C70A5"));
         allIconsInOneImageButton.setColorFilter(Color.parseColor("#666666"));
 
@@ -238,6 +259,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         allIconsInOneImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // show other options dialog
                 showAllInOneDialog();
             }
         });
@@ -245,34 +268,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // show event information dialog
                 eventInfoDialog();
             }
         });
     }
 
-    /**
-     * converts the vector drawables to bitmap
-     * @param context : to reference to the location of the vector in the res/drawable directory
-     * @param drawableId : the id of the vector drawable in the res/drawable directory
-     * @return : return the bitmap object of the vector drawable
-     */
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(120,
-                102, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
-
-    void loadCheckPoints() {
+    // initialize all the checkpoints for the event
+    void checkPointsInit() {
         checkPointCoordinateMap = new HashMap<>();
         Firebase loadCheckPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
         loadCheckPointsFirebase.keepSynced(true);
@@ -324,7 +327,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           });
       }
       */
-    public void loadDestinationIcon() {
+
+    public void destinationIconInit() {
         switch (Constants.dIconResourceId) {
             case 1: {
                 destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_walking);
@@ -604,12 +608,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         }
+
+        // initialize the event information after initalizing the destination icon
         if (destinationIconBitmap != null) {
             initializeEventInfo();
         }
     }
 
+    // initialize the event information
+    void initializeEventInfo() {
+        Firebase eventInfoFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/info");
+        eventInfoFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                eventInfo.setsLocation(dataSnapshot.child("sLocation").getValue().toString());
+                eventInfo.setsLocationDesc(dataSnapshot.child("sLocationDesc").getValue().toString());
+                eventInfo.setdLocation(dataSnapshot.child("dLocation").getValue().toString());
+                eventInfo.setdLocationDesc(dataSnapshot.child("dLocationDesc").getValue().toString());
+            }
 
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    // to apply custom color to a bitmap
     Bitmap applyCustomBitmapColor(Bitmap myBitmap, String color) {
 
         Paint pnt = new Paint();
@@ -628,24 +653,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         myCanvas.drawBitmap(myBit, 0, 0, pnt);
 
         return myBit;
-    }
-
-    void initializeEventInfo() {
-        Firebase eventInfoFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/info");
-        eventInfoFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                eventInfo.setsLocation(dataSnapshot.child("sLocation").getValue().toString());
-                eventInfo.setsLocationDesc(dataSnapshot.child("sLocationDesc").getValue().toString());
-                eventInfo.setdLocation(dataSnapshot.child("dLocation").getValue().toString());
-                eventInfo.setdLocationDesc(dataSnapshot.child("dLocationDesc").getValue().toString());
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
     }
 
     void showAllInOneDialog() {
@@ -1188,9 +1195,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             Intent notificationIntent = new Intent(this, MainActivity.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
+            // Adds the back stack for the Intent (but not the Intent itself)
             stackBuilder.addParentStack(MainActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
+            // Adds the Intent that starts the Activity to the top of the stack
             stackBuilder.addNextIntent(notificationIntent);
             PendingIntent notificationPendingIntent =
                     stackBuilder.getPendingIntent(
@@ -1415,7 +1422,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     // list of all the users requested to join this event
-    void requestOptionOnClick() {
+    void unreadRequestsInit() {
         joinRequests = new ArrayList<>();
         numberOfRequests = 0;
         Firebase requestsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/requested");
@@ -1878,7 +1885,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (destinationIconBitmap != null) {
             String[] destCoordinates = eventInfo.getdLocation().split(",");
             String[] startCoordinates = eventInfo.getsLocation().split(",");
-
             BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
             Bitmap tempBitmap = bitmapDrawable.getBitmap();
             Bitmap startLocationBitmap = applyCustomBitmapColor(Bitmap.createScaledBitmap(tempBitmap, 120, 120, false), "#5d8aa8");
