@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/dialog_join_request_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="JOIN EVENT"
+                android:layout_marginBottom="16dp"
+                android:textColor="@android:color/white"
+                android:background="@android:color/transparent"
+                />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Invites:"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                android:textStyle="bold|italic" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/dialog_received_requests_recycler_view"
+                android:layout_width="fill_parent"
+                android:layout_height="250dp"
+                android:layout_margin="16dp"
+                android:padding="16dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Sent Requests:"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                android:textStyle="bold|italic" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/dialog_sent_requests_recycler_view"
+                android:layout_width="fill_parent"
+                android:layout_height="250dp"
+                android:layout_margin="16dp"
+                android:padding="16dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbars="vertical" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

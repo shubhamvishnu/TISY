@@ -26,12 +26,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
-import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class Login extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -59,7 +57,6 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         // Firebase context
         Firebase.setAndroidContext(this);
         noPhoto = false;
-        startService(new Intent(getBaseContext(), InternetConnectionService.class));
 
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -203,7 +200,8 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // checks if the firebase reference (FIREBASE_USER_DETAILS) has the entered username in database
                 if (dataSnapshot.hasChild(username)) {
-                    storeSharedPreference();
+                    updateUserProfilePhotoInfo();
+
                 } else {
                     // TODO: ask for creation of new user; pop-up confirmation
                     save();
@@ -216,6 +214,25 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         });
     }
 
+    void updateUserProfilePhotoInfo(){
+        Map<String, Object> details = new HashMap<>();
+        if (noPhoto) {
+            details.put("userPhotoUri", noPhoto);
+        } else {
+            details.put("userPhotoUri", userPhotoUrl.toString());
+        }
+        // creating a new user
+        firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
+
+        // adding information to userDetails
+        firebase.updateChildren(details, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                storeSharedPreference();
+            }
+        });
+
+    }
     // creates a new user in firebase
     public void save() {
         // has the password and the count (No. of events created)
@@ -229,6 +246,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         }
         // creating a new user
         firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
+
         // adding information to userDetails
         firebase.setValue(details, new Firebase.CompletionListener() {
             @Override
@@ -258,7 +276,6 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
     // move to the next activity
     void next() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
 
         intent = new Intent(Login.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -269,7 +286,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
     @Override
     public void onBackPressed() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+
         finish();
     }
 
@@ -281,7 +298,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+
 
     }
 }

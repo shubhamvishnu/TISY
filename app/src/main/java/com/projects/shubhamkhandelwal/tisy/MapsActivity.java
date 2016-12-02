@@ -1,12 +1,8 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,7 +17,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -35,7 +30,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +44,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +76,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
-import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
+import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationLog;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
@@ -99,19 +94,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    // PlacePicker variables
+
     public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
     public static final int PLACE_PICKER_REQUEST = 1; // used for the place picker intent
-    // chat related variables
-    public static Dialog chatsDialog; // chats dialog object reference
-    public static int numberOfRequests = 0; // number of join event request received
-    public static int numberOfUnreadChats = 0; // count of number of unread chat messages
-    public static int numberOfReadChats = 0; // count of number of chat messages read
     public static boolean zoomFit; // if true: fits the specified LatLng into the view
+    // request variables
+    public static int numberOfRequests = 0; // number of join event request received
+    String username; // to access the username variable throughout the activity
+    PlacePicker.IntentBuilder builder; // PlacePicker Intent builder
+    EventInfo eventInfo; // EventInfo class Object; All the basic event information
+    GoogleMap mMap; // GoogleMap Object
+    Firebase firebase; // Firebase Object
+    // chat variables
     RecyclerView eventChatsRecyclerView; // chats view recyclerview
     ChatsRecyclerViewAdpater chatsRecyclerViewAdapter; // chats view recyclerview adapter
-    Firebase unreadChatsFirebase; // Firebase reference to the event chat
-    int chatNotificationCount; // number of unread messages in the event chat
     // map event variables
     Map<String, Object> members; // members (usernames) in the event
     List<String> namesList; // names of members in the event
@@ -119,21 +115,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Bitmap destinationIconBitmap; // holds the destination icon
     // checkpoint variables
     Map<String, Object> checkPointCoordinateMap; // contains all the checkpoints in the map; id and it's position (LatLng)
-    boolean isCheckPointEdit; // if true, editing the checkpoint
     int checkPointMakrerEditPosition; // the unique id for the checkpoint
     List<String> checkPointsReached; // checkpoints crossed (reached) by the user
-    // received request variables
     Dialog requestsDialog; //  received requests dialog object
     List<RequestsDetails> joinRequests; // received requests; username list
     RecyclerView eventRequestRecyclerView; // received requests recyclerview
     RequestsRecyclerAdapter requestsRecyclerAdapter; // received requests recyclerview adapter
-    EventInfo eventInfo; // EventInfo class Object; All the basic event information
-    GoogleMap mMap; // GoogleMap Object
-    Firebase firebase; // Firebase Object
+
     // View Objects
     ImageButton eventInfoImageButton; // Event information button
-    ImageButton allIconsInOneImageButton; // other map related option button
     CoordinatorLayout coordinatorLayout;
+
     // event infomation variables
     List<String> membersList; // members (username) in the event
     List<String> memberCoordinate; // coordinates (LatLng) of the members in the event
@@ -145,13 +137,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String destLocationTextView; // destination location description of the event
     String eventDescription; // event description
     int memberUriCount; // number of URL's fetched of the members
+
     // search variables
     String nameSearch; // name/username/eventID searched for by the user
     RecyclerView searchOptionChoiceRecyclerView; // search option recyclerview
     SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter; // search option recyclerview adapter
-    PlacePicker.IntentBuilder builder; // PlacePicker Intent builder
-
-    String username; // to access the username variable throughout the activity
 
     /**
      * converts the vector drawables to bitmap
@@ -190,7 +180,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // initalizing view objects
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
-        allIconsInOneImageButton = (ImageButton) findViewById(R.id.allInOneIcon);
+
 
         // initializing variable
         //initializing String variables
@@ -199,15 +189,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // initializing integer variables
         checkPointMakrerEditPosition = 0;
-        chatNotificationCount = 0;
-        isCheckPointEdit = false;
+
+
         zoomFit = false;
 
         // initializing Class Objects
         eventInfo = new EventInfo();
 
         // initializing Collection Objects
-        joinRequests = new ArrayList<>();
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
@@ -216,8 +205,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         memberLocationMarkers = new HashMap<>();
 
         // TODO: change the service functions later; and optimize their usage
-        // start background service
-        startService(new Intent(getBaseContext(), InternetConnectionService.class));
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used
         // callback is triggered when the map is ready to be used
@@ -225,21 +212,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // requests received notification
-        unreadRequestsInit();
-
-        // TODO: remove it
-        unreadChats();
-
-        // initialize the desitination icon
-        destinationIconInit();
-
-        // initialzie the checkpoints in the map
-        checkPointsInit();
-
         // set view object color
         eventInfoImageButton.setColorFilter(Color.parseColor("#0C70A5"));
-        allIconsInOneImageButton.setColorFilter(Color.parseColor("#666666"));
+
 
         eventInfoImageButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -256,14 +231,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        allIconsInOneImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                // show other options dialog
-                showAllInOneDialog();
-            }
-        });
 
         eventInfoImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,6 +240,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 eventInfoDialog();
             }
         });
+        init();
+    }
+
+    void init() {
+
+        // requests received notification
+        unreadRequestsInit();
+
+        // initialize the destination icon
+        destinationIconInit();
+
+        // initialize the checkpoints in the map
+        checkPointsInit();
     }
 
     // initialize all the checkpoints for the event
@@ -329,286 +310,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
       */
 
     public void destinationIconInit() {
-        switch (Constants.dIconResourceId) {
-            case 1: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_walking);
 
-                break;
-            }
-            case 2: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_swimming);
-
-
-                break;
-            }
-            case 3: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_spa);
-
-
-                break;
-            }
-            case 4: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_gym);
-
-
-                break;
-            }
-            case 5: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_drinks);
-
-
-                break;
-            }
-            case 6: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_casino);
-
-
-                break;
-            }
-            case 7: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination__zoo);
-
-
-                break;
-            }
-            case 8: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_amusement_park);
-
-
-                break;
-            }
-            case 9: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bowling_alley);
-
-
-                break;
-            }
-            case 10: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_aquarium);
-
-
-                break;
-            }
-            case 11: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_night_club);
-
-
-                break;
-            }
-            case 12: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_running);
-
-
-                break;
-
-            }
-            case 13: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_football);
-
-
-                break;
-            }
-            case 14: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_gaming);
-
-
-                break;
-            }
-            case 15: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_bicycle);
-
-
-                break;
-            }
-            case 16: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_cafe);
-
-
-                break;
-            }
-            case 17: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_restaurant);
-
-
-                break;
-            }
-            case 18: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_dinning);
-
-
-                break;
-            }
-            case 19: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pizza);
-
-
-                break;
-            }
-
-            case 20: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hotel);
-
-
-                break;
-            }
-            case 21: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_university);
-
-
-                break;
-            }
-            case 23: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_library);
-
-
-                break;
-            }
-            case 24: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_museum);
-
-
-                break;
-            }
-            case 25: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_beauty_salon);
-
-
-                break;
-            }
-            case 26: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_school);
-
-
-                break;
-            }
-            case 27: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_home);
-
-
-                break;
-            }
-            case 28: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_stadium);
-
-
-                break;
-            }
-            case 29: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_park);
-
-
-                break;
-            }
-            case 30: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_pharmacy);
-
-
-                break;
-
-            }
-
-            case 31: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_hospital);
-
-
-                break;
-
-            }
-            case 32: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_worship);
-
-
-                break;
-            }
-            case 33: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_mall);
-
-
-                break;
-            }
-
-            case 34: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_book_store);
-
-
-                break;
-            }
-            case 35: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_convenience_store);
-
-
-                break;
-            }
-            case 36: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_liquor_store);
-
-
-                break;
-            }
-            case 37: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_laundry);
-
-
-                break;
-            }
-            case 38: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_print_shop);
-
-
-                break;
-            }
-            case 39: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_grocery_store);
-
-
-                break;
-            }
-
-            case 40: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_parking);
-
-
-                break;
-            }
-
-            case 41: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_airport);
-
-
-                break;
-            }
-
-            case 42: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_train_station);
-
-
-                break;
-            }
-
-            case 43: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_bus_station);
-
-
-                break;
-            }
-
-            case 44: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_subway_station);
-
-
-                break;
-            }
-
-            case 45: {
-                destinationIconBitmap = getBitmapFromVectorDrawable(this, R.drawable.destination_icon_tram);
-
-
-                break;
-            }
-
-
-        }
-
+        InitIcon destinationIconInit = new InitIcon();
+        destinationIconBitmap = destinationIconInit.getDestinationIcon(this, Constants.dIconResourceId);
         // initialize the event information after initalizing the destination icon
         if (destinationIconBitmap != null) {
             initializeEventInfo();
@@ -656,7 +360,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void showAllInOneDialog() {
-
+        LinearLayout requestsLayout;
         final Dialog allInOneDialog = new Dialog(this, R.style.event_info_dialog_style);
         allInOneDialog.setContentView(R.layout.dialog_all_in_one_layout);
 
@@ -666,14 +370,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton addNewMemberImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_member);
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
         ImageButton changeMapStyleImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_change_mode_icon);
-        TextView chatUnreadMessageCountTextView = (TextView) allInOneDialog.findViewById(R.id.chat_unread_message_count);
-
-        int count = getUreadChatCount();
-        if (count == 0) {
-            chatUnreadMessageCountTextView.setVisibility(View.INVISIBLE);
-        } else {
-            chatUnreadMessageCountTextView.setVisibility(View.VISIBLE);
-            chatUnreadMessageCountTextView.setText(String.valueOf(count));
+        requestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.requests_option_layout);
+        if(!Constants.eventAdmin){
+            requestsLayout.setVisibility(View.INVISIBLE);
         }
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -718,15 +417,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 showMapStyleOptionsDialog();
             }
         });
+
         Window window = allInOneDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
         allInOneDialog.setCanceledOnTouchOutside(true);
         allInOneDialog.show();
-
-
     }
-
 
     void showMapStyleOptionsDialog() {
 
@@ -850,7 +547,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void addCheckPointDialog() {
-        isCheckPointEdit = false;
         placePickerDialog();
     }
 
@@ -870,25 +566,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                if (isCheckPointEdit) {
-                    if (checkPointMakrerEditPosition != 0) {
-                        editCheckPointPosition(checkPointMakrerEditPosition, place.getLatLng().latitude, place.getLatLng().longitude);
-                        isCheckPointEdit = false;
-                        checkPointMakrerEditPosition = 0;
-                    }
-                } else {
                     saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
-                }
             }
         }
     }
 
-    void editCheckPointPosition(int position, Double latitude, Double longitude) {
-        Firebase saveCheckPoint = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
-        HashMap<String, Object> checkPointFirebaseMap = new HashMap<>();
-        checkPointFirebaseMap.put(String.valueOf(position), latitude + "," + longitude);
-        saveCheckPoint.updateChildren(checkPointFirebaseMap);
-    }
 
     void saveCheckPoint(Double latitude, Double longitude) {
         Firebase saveCheckPoint = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
@@ -1013,10 +695,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    void backToMain() {
-        Intent intent = new Intent(MapsActivity.this, MainActivity.class);
-        startActivity(intent);
-    }
 
     void eventInfoDialog() {
         membersList = new ArrayList<>();
@@ -1131,99 +809,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    void unreadChats() {
-        numberOfReadChats = 0;
-        numberOfUnreadChats = 0;
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.currentEventId + SharedPreferencesName.CHATS_READ_COUNT, MODE_PRIVATE);
-        if (sharedPreferences.contains("chats_read")) {
-            numberOfReadChats = sharedPreferences.getInt("chats_read", 0);
-        }
-        unreadChatsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/chats");
-        unreadChatsFirebase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("listenerForChats", "onChildAdded for unreadChars()");
-                ++numberOfUnreadChats;
-                if (numberOfUnreadChats > numberOfReadChats) {
-                    if (chatsDialog == null) {
-                        showUnreadChatsNotification(true);
-                    }
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    int getUreadChatCount() {
-        int noOfUnreadChats = 0;
-        if (numberOfUnreadChats > numberOfReadChats) {
-            noOfUnreadChats = numberOfUnreadChats - numberOfReadChats;
-        }
-        return noOfUnreadChats;
-    }
-
-    void showUnreadChatsNotification(boolean unread) {
-        int noOfUnreadChats = numberOfUnreadChats - numberOfReadChats;
-        ++chatNotificationCount;
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (unread) {
-            // TODO: start from here
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-            notificationBuilder.setSmallIcon(R.drawable.sample_notification_icon);
-            notificationBuilder.setContentTitle("New message");
-            notificationBuilder.setContentText("You have " + noOfUnreadChats + " unread messages from " + Constants.currentEventId);
-
-            Intent notificationIntent = new Intent(this, MainActivity.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            // Adds the back stack for the Intent (but not the Intent itself)
-            stackBuilder.addParentStack(MainActivity.class);
-            // Adds the Intent that starts the Activity to the top of the stack
-            stackBuilder.addNextIntent(notificationIntent);
-            PendingIntent notificationPendingIntent =
-                    stackBuilder.getPendingIntent(
-                            0,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
-            notificationBuilder.setContentIntent(notificationPendingIntent);
-
-            if (chatNotificationCount == 1) {
-                Uri defaultNotificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                notificationBuilder.setSound(defaultNotificationSoundUri);
-            }
-            notificationBuilder.setAutoCancel(true);
-
-            notificationManager.notify(Constants.CHATS_NOTIFICATION_ID /* ID of notification */, notificationBuilder.build());
-        } else {
-            chatNotificationCount = 0;
-            notificationManager.cancel(Constants.CHATS_NOTIFICATION_ID);
-        }
-
-    }
-
     void showChatsDialog() {
         TextView eventIdTextView;
         ImageButton backArrowImageView;
-        chatsDialog = new Dialog(this, R.style.chat_dialog_style);
+        final Dialog chatsDialog = new Dialog(this, R.style.chat_dialog_style);
 
         chatsDialog.setContentView(R.layout.recycler_view_chats_layout);
 
@@ -1282,16 +871,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         window.setGravity(Gravity.CENTER);
         chatsDialog.show();
         chatsDialog.setCanceledOnTouchOutside(true);
-        showUnreadChatsNotification(false);
         Log.d("listenerForChats", "listener removed");
         chatsDialog.show();
-        chatsDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                chatsDialog = null;
-                unreadChats();
-            }
-        });
+
     }
 
     void sendMessage(final String message) {
@@ -1316,7 +898,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         initializeMapStyle();
         GPSEnabledCheck();
-
     }
 
     void initializeMapStyle() {
@@ -1433,8 +1014,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 RequestsDetails requestItem = new RequestsDetails(dataSnapshot.getKey().toString(), dataSnapshot.getValue().toString());
                 joinRequests.add(requestItem);
                 ++numberOfRequests;
-                showRequestNotification(numberOfRequests, true);
-
             }
 
             @Override
@@ -1449,9 +1028,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     RequestsDetails requestItem = new RequestsDetails(dataSnapshot.getKey().toString(), dataSnapshot.getValue().toString());
                     joinRequests.remove(requestItem);
                     --numberOfRequests;
-                    showRequestNotification(numberOfRequests, false);
-                    Log.d("requests", joinRequests.toString());
-                    Log.d("requests", "" + numberOfRequests);
                 }
             }
 
@@ -1466,44 +1042,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    void showRequestNotification(int numberOfRequests, boolean added) {
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (numberOfRequests <= 0) {
-            notificationManager.cancel(Constants.EVENT_REQUEST_NOTIFICATION_ID);
-        } else {
-            // TODO: start from here
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-            notificationBuilder.setSmallIcon(R.drawable.sample_notification_icon);
-            notificationBuilder.setContentTitle("Requests");
-            notificationBuilder.setContentText(numberOfRequests + " of them would love to join " + Constants.currentEventId);
+    /*
+        void showRequestNotification(int numberOfRequests, boolean added) {
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (numberOfRequests <= 0) {
+                notificationManager.cancel(Constants.EVENT_REQUEST_NOTIFICATION_ID);
+            } else {
+                // TODO: start from here
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+                notificationBuilder.setSmallIcon(R.drawable.sample_notification_icon);
+                notificationBuilder.setContentTitle("Requests");
+                notificationBuilder.setContentText(numberOfRequests + " of them would love to join " + Constants.currentEventId);
 
-            Intent notificationIntent = new Intent(this, MainActivity.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            // Adds the back stack for the Intent (but not the Intent itself)
-            stackBuilder.addParentStack(MainActivity.class);
-            // Adds the Intent that starts the Activity to the top of the stack
-            stackBuilder.addNextIntent(notificationIntent);
-            PendingIntent notificationPendingIntent =
-                    stackBuilder.getPendingIntent(
-                            0,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
-            notificationBuilder.setContentIntent(notificationPendingIntent);
+                Intent notificationIntent = new Intent(this, MainActivity.class);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                // Adds the back stack for the Intent (but not the Intent itself)
+                stackBuilder.addParentStack(MainActivity.class);
+                // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(notificationIntent);
+                PendingIntent notificationPendingIntent =
+                        stackBuilder.getPendingIntent(
+                                0,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+                notificationBuilder.setContentIntent(notificationPendingIntent);
 
-            if (added) {
+                if (added) {
 
-                Uri defaultNotificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                notificationBuilder.setSound(defaultNotificationSoundUri);
+                    Uri defaultNotificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    notificationBuilder.setSound(defaultNotificationSoundUri);
+
+                }
+                notificationBuilder.setAutoCancel(true);
+
+                notificationManager.notify(Constants.EVENT_REQUEST_NOTIFICATION_ID , notificationBuilder.build());
 
             }
-            notificationBuilder.setAutoCancel(true);
-
-            notificationManager.notify(Constants.EVENT_REQUEST_NOTIFICATION_ID /* ID of notification */, notificationBuilder.build());
-
         }
-    }
-
+    */
     void showEventRequestDialog() {
 
 //        List<RequestsDetails> request = joinRequests;
@@ -1544,13 +1121,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         window.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
         window.setGravity(Gravity.CENTER);
         requestsDialog.setCanceledOnTouchOutside(true);
-        showRequestNotification(0, false);
         requestsDialog.show();
     }
 
     void exitEvent() {
         mMap.setOnMyLocationChangeListener(null);
-
         userExit();
     }
 
@@ -1602,7 +1177,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void exitMapEvent() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+
         Intent intent = new Intent(MapsActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -1621,16 +1196,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (id == R.id.leave_event_menu_item) {
             exitEvent();
         }
-        if (id == R.id.chat_event_icon) {
-            showChatsDialog();
-        }
-        if (id == R.id.join_request_menu_item) {
-            showEventRequestDialog();
+        if (id == R.id.all_option_menu_item) {
+            // show other options dialog
+            checkGPS();
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    void checkGPS(){
+        // check for GPS is enabled, if not show snackbar, else just call the location Action
+        LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (mMap != null) {
+                mMap.setPadding(0, 0, 0, 200);
+            }
+            showSnackBar();
+        } else {
+            showAllInOneDialog();
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -1641,7 +1227,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onBackPressed() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
         Intent intent = new Intent(MapsActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -1676,13 +1261,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     locationLog.setLongitude(String.valueOf(location.getLongitude()));
                     userLocationLogFirebase.push().setValue(locationLog);
 
-                    if (!checkInternetConnection()) {
-                        String message = "No internet connection";
-                        showIneternetConnectionSnackBar(message);
-                    } else {
-                        checkNearCheckPoint(location);
-                        updateUserCurrentLocation(location);
-                    }
+//                    if (!checkInternetConnection()) {
+//                        String message = "No internet connection";
+//                        showIneternetConnectionSnackBar(message);
+//                    } else {
+                    checkNearCheckPoint(location);
+                    updateUserCurrentLocation(location);
+                    // }
                 }
             });
             changeInLocation();
@@ -1740,11 +1325,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
-    void updateUserCurrentLocation(Location location) {
-        Firebase updateUserCurrentLocationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
-        Map<String, Object> currentLocation = new HashMap<>();
-        currentLocation.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), location.getLatitude() + "," + location.getLongitude());
-        updateUserCurrentLocationFirebase.updateChildren(currentLocation);
+    void updateUserCurrentLocation(final Location location) {
+        final Firebase updateUserCurrentLocationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+        updateUserCurrentLocationFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Map<String, Object> currentLocation = new HashMap<>();
+                    currentLocation.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), location.getLatitude() + "," + location.getLongitude());
+                    updateUserCurrentLocationFirebase.updateChildren(currentLocation);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     void changeInLocation() {
@@ -1985,10 +1583,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         final Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "Checkpoint-" + checkPointMark, Snackbar.LENGTH_INDEFINITE)
-                .setAction("EDIT", new View.OnClickListener() {
+                .setAction("DELETE", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        openCheckPointEditor(checkPointMark);
+                        deleteCheckPoint(checkPointMark);
                     }
                 });
         snackbar.setCallback(new Snackbar.Callback() {
@@ -2010,10 +1608,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         snackbar.show();
     }
 
-    void openCheckPointEditor(int position) {
-        isCheckPointEdit = true;
-        checkPointMakrerEditPosition = position;
-        placePickerDialog();
+    void deleteCheckPoint(int position) {
+        Firebase deleteCheckPointFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints/"+ position);
+        deleteCheckPointFirebase.removeValue();
+        checkPointCoordinateMap.remove(position);
     }
 
     @Override

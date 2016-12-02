@@ -7,8 +7,8 @@
     android:paddingRight="16dp"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/dialog_join_event_id"
+    <TextView
+        android:id="@+id/join_request_event_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
@@ -17,11 +17,10 @@
         android:gravity="center"
         android:textStyle="bold"
         android:padding="24dp"
-        android:paddingBottom="20dp"
-        android:hint="Enter an event ID" />
+        android:paddingBottom="20dp" />
 
     <EditText
-        android:id="@+id/dialog_join_event_desc"
+        android:id="@+id/join_request_desc_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
@@ -44,6 +43,6 @@
         android:padding="8dp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:id="@+id/joinEventButton"/>
+        android:id="@+id/join_request_send_button"/>
 
 </LinearLayout>

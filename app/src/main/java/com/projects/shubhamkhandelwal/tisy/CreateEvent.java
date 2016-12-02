@@ -2,13 +2,9 @@ package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,9 +14,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,7 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
-import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
+import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 
@@ -93,6 +87,7 @@ public class CreateEvent extends Activity {
     LinearLayout sLocationLinearLayout;
     LinearLayout dLocationLinearLayout;
     LinearLayout dLocationIconLinearLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +131,7 @@ public class CreateEvent extends Activity {
         // inaitalizing eventId
         eventId = new String();
         iconResourceId = -1;
-        startService(new Intent(getBaseContext(), InternetConnectionService.class));
+
 
 
         // generate the eventId; calls the generate() function
@@ -286,7 +281,7 @@ public class CreateEvent extends Activity {
                                 newEvent.put("members", members);
                                 newEvent.put("dIcon", iconResourceId);
                                 newEvent.put("desc", eventDescription);
-                                newEvent.put("title",eventTitle);
+                                newEvent.put("title", eventTitle);
                                 newEvent.put("time", TimeStamp.getTime());
                                 firebase.setValue(newEvent, new Firebase.CompletionListener() {
                                     @Override
@@ -777,36 +772,27 @@ public class CreateEvent extends Activity {
         if (iconResourceId != -1) {
             switch (iconResourceId) {
                 case 1: {
-
                     dLocationIconImageButton.setImageResource(R.drawable.destination_walking);
-
                     break;
                 }
                 case 2: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_swimming);
-
                     break;
                 }
                 case 3: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_spa);
-
                     break;
                 }
                 case 4: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_gym);
-
                     break;
                 }
                 case 5: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_drinks);
-
-
                     break;
                 }
                 case 6: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_casino);
-
-
                     break;
                 }
                 case 7: {
@@ -832,7 +818,6 @@ public class CreateEvent extends Activity {
                 case 12: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_icon_running);
                     break;
-
                 }
                 case 13: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_icon_football);
@@ -862,7 +847,6 @@ public class CreateEvent extends Activity {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_pizza);
                     break;
                 }
-
                 case 20: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_hotel);
                     break;
@@ -902,13 +886,10 @@ public class CreateEvent extends Activity {
                 case 30: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_pharmacy);
                     break;
-
                 }
-
                 case 31: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_hospital);
                     break;
-
                 }
                 case 32: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_worship);
@@ -918,7 +899,6 @@ public class CreateEvent extends Activity {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_mall);
                     break;
                 }
-
                 case 34: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_book_store);
                     break;
@@ -943,32 +923,26 @@ public class CreateEvent extends Activity {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_grocery_store);
                     break;
                 }
-
                 case 40: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_parking);
                     break;
                 }
-
                 case 41: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_airport);
                     break;
                 }
-
                 case 42: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_train_station);
                     break;
                 }
-
                 case 43: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_bus_station);
                     break;
                 }
-
                 case 44: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_subway_station);
                     break;
                 }
-
                 case 45: {
                     dLocationIconImageButton.setImageResource(R.drawable.destination_icon_tram);
                     break;
@@ -978,206 +952,10 @@ public class CreateEvent extends Activity {
     }
 
     public void destinationIconClickListener(View v) {
-
-        switch (v.getId()) {
-            case R.id.destination_walking: {
-                iconResourceId = 1;
-                break;
-            }
-            case R.id.destination_swimming: {
-                iconResourceId = 2;
-                break;
-            }
-            case R.id.destination_spa: {
-                iconResourceId = 3;
-
-                break;
-            }
-            case R.id.destination_gym: {
-                iconResourceId = 4;
-
-                break;
-            }
-            case R.id.destination_drinks: {
-                iconResourceId = 5;
-
-                break;
-            }
-            case R.id.destination_casino: {
-                iconResourceId = 6;
-
-                break;
-            }
-            case R.id.destination_zoo: {
-                iconResourceId = 7;
-
-                break;
-            }
-            case R.id.destination_amusement_park: {
-                iconResourceId = 8;
-                break;
-            }
-            case R.id.destination_bowling_alley: {
-                iconResourceId = 9;
-                break;
-            }
-            case R.id.destination_aquarium: {
-                iconResourceId = 10;
-                break;
-            }
-            case R.id.destination_night_club: {
-                iconResourceId = 11;
-                break;
-            }
-            case R.id.destination_running: {
-                iconResourceId = 12;
-                break;
-
-            }
-            case R.id.destination_football: {
-                iconResourceId = 13;
-                break;
-            }
-            case R.id.destination_gaming: {
-                iconResourceId = 14;
-                break;
-            }
-            case R.id.destination_bicycler: {
-                iconResourceId = 15;
-                break;
-            }
-            case R.id.destination_cafe: {
-                iconResourceId = 16;
-                break;
-            }
-            case R.id.destination_restaurant: {
-                iconResourceId = 17;
-                break;
-            }
-            case R.id.destination_dinning: {
-                iconResourceId = 18;
-                break;
-            }
-            case R.id.destination_pizza: {
-                iconResourceId = 19;
-                break;
-            }
-
-            case R.id.destination_hotel: {
-                iconResourceId = 20;
-                break;
-            }
-            case R.id.destination_university: {
-                iconResourceId = 21;
-                break;
-            }
-            case R.id.destination_library: {
-                iconResourceId = 23;
-                break;
-            }
-            case R.id.destination_museum: {
-                iconResourceId = 24;
-                break;
-            }
-            case R.id.destination_beauty_salon: {
-                iconResourceId = 25;
-                break;
-            }
-            case R.id.destination_school: {
-                iconResourceId = 26;
-                break;
-            }
-            case R.id.destination_home: {
-                iconResourceId = 27;
-                break;
-            }
-            case R.id.destination_stadium: {
-                iconResourceId = 28;
-                break;
-            }
-            case R.id.destination_park: {
-                iconResourceId = 29;
-                break;
-            }
-            case R.id.destination_pharmacy: {
-                iconResourceId = 30;
-                break;
-
-            }
-
-            case R.id.destination_hospital: {
-                iconResourceId = 31;
-                break;
-
-            }
-            case R.id.destination_worship: {
-                iconResourceId = 32;
-                break;
-            }
-            case R.id.destination_mall: {
-                iconResourceId = 33;
-                break;
-            }
-
-            case R.id.destination_book_store: {
-                iconResourceId = 34;
-                break;
-            }
-            case R.id.destination_convenience_store: {
-                iconResourceId = 35;
-                break;
-            }
-            case R.id.destination_liquor_store: {
-                iconResourceId = 36;
-                break;
-            }
-            case R.id.destination_laundry: {
-                iconResourceId = 37;
-                break;
-            }
-            case R.id.destination_print_shop: {
-                iconResourceId = 38;
-                break;
-            }
-            case R.id.destination_grocery_store: {
-                iconResourceId = 39;
-                break;
-            }
-
-            case R.id.destination_parking: {
-                iconResourceId = 40;
-                break;
-            }
-
-            case R.id.destination_airport: {
-                iconResourceId = 41;
-                break;
-            }
-
-            case R.id.destination_train_station: {
-                iconResourceId = 42;
-                break;
-            }
-
-            case R.id.destination_bus_station: {
-                iconResourceId = 43;
-                break;
-            }
-
-            case R.id.destination_subway_station: {
-                iconResourceId = 44;
-                break;
-            }
-
-            case R.id.destination_tram: {
-                iconResourceId = 45;
-                break;
-            }
-
-        }
+        InitIcon destinationIconInit = new InitIcon();
+        iconResourceId = destinationIconInit.initDestinationIconResourceID(v.getId());
         showDLocationView();
     }
-
     void showDLocationView() {
         if (iconResourceId != -1) {
             loadDestinationIcon();
@@ -1366,7 +1144,7 @@ public class CreateEvent extends Activity {
     }
 
     void next() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+
         intent = new Intent(CreateEvent.this, MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -1375,7 +1153,7 @@ public class CreateEvent extends Activity {
 
     @Override
     public void onBackPressed() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+
         intent = new Intent(CreateEvent.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -1385,6 +1163,6 @@ public class CreateEvent extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+
     }
 }

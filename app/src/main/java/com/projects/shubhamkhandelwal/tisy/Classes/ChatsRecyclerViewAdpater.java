@@ -32,7 +32,6 @@ public class ChatsRecyclerViewAdpater extends RecyclerView.Adapter<RecyclerView.
     Firebase firebase;
     LinearLayoutManager layoutManager;
     String currentUsername;
-    int chatsReadCount = 0;
     private LayoutInflater inflator;
 
 
@@ -57,11 +56,6 @@ public class ChatsRecyclerViewAdpater extends RecyclerView.Adapter<RecyclerView.
 
     }
 
-    void updateChatCountSharedPreference(int count) {
-        MapsActivity.numberOfReadChats = count;
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.currentEventId+SharedPreferencesName.CHATS_READ_COUNT, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putInt("chats_read", count).apply();
-    }
 
     void setEventChatListener() {
 
@@ -76,8 +70,7 @@ public class ChatsRecyclerViewAdpater extends RecyclerView.Adapter<RecyclerView.
                 eventChatList.add(chat);
                 notifyItemInserted(position);
                 layoutManager.scrollToPosition(position);
-                ++chatsReadCount;
-                updateChatCountSharedPreference(chatsReadCount);
+
             }
 
             @Override

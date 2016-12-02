@@ -26,37 +26,10 @@
             android:columnCount="2"
             grid:alignmentMode="alignBounds"
             android:padding="8dp"
-            android:rowCount="3"
+            android:rowCount="2"
             android:layout_gravity="center">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_request_icon"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
-                    app:srcCompat="@drawable/requests_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Received Requests "
-                    android:textColor="@color/colorAccent"
-                    android:textSize="16dp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -82,15 +55,6 @@
                         android:tint="@android:color/white"
                         app:srcCompat="@drawable/chat_icon" />
 
-                    <TextView
-                        android:id="@+id/chat_unread_message_count"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginLeft="55dp"
-                        android:background="@drawable/floating_action_button_selector"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
 
                 </FrameLayout>
 
@@ -160,7 +124,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textSize="16dp"
-                    android:text="Send Request"
+                    android:text="Send Invite"
                     android:textColor="@color/colorAccent" />
 
             </LinearLayout>
@@ -221,6 +185,35 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="Map Mode"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/requests_option_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/dialog_request_icon"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/floating_sub_action_button_selector"
+                    android:elevation="20dp"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    android:tint="@android:color/white"
+                    app:srcCompat="@drawable/requests_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Received Requests "
                     android:textColor="@color/colorAccent"
                     android:textSize="16dp" />
             </LinearLayout>

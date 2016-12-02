@@ -37,7 +37,6 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
-import com.projects.shubhamkhandelwal.tisy.Classes.InternetConnectionService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
 
@@ -47,6 +46,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
+
     // variables
     // FAB sub-action button tags; to identify which sub-action button was clicked.
     public static final String MAIN_ACITIVITY_TAG = "MainActivity";
@@ -82,11 +82,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          */
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
-            if (loginCheck.getBoolean("login", true)) {
-                startService(new Intent(getBaseContext(), InternetConnectionService.class));
-            }
         } else {
-            stopService(new Intent(getBaseContext(), InternetConnectionService.class));
+
             intent = new Intent(MainActivity.this, Login.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -305,18 +302,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onClick(View view) {
         if (view.getTag().equals(CREATE_EVENT_TAG)) {
-            stopService(new Intent(getBaseContext(), InternetConnectionService.class));
             intent = new Intent(MainActivity.this, CreateEvent.class);
             startActivity(intent);
         }
-        if (view.getTag().equals(JOIN_EVENT_TAG)) {
-            joinEventDialog();
-        }
+//        if (view.getTag().equals(JOIN_EVENT_TAG)) {
+//            joinEventDialog();
+//        }
         if (view.getTag().equals(ALL_EVENTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
+
         }
         if (view.getTag().equals(REQUESTS_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_REQUESTS);
+            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_REQUESTS);
         }
         if (view.getTag().equals(RECEIVED_REQUEST_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
@@ -398,160 +395,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    // custom dialog to send request to join another event
-    void joinEventDialog() {
-
-        final EditText dialogJoinEventIdEditText;
-        final EditText dialogJoinDescEditText;
-        final Button joinEventButton;
-        final Dialog dialog = new Dialog(this, R.style.dialog_join_request);
-
-        // custom dialog layout
-        dialog.setContentView(R.layout.dialog_join_event_layout);
-
-        // initializing view elements for the custom dialog
-        dialogJoinEventIdEditText = (EditText) dialog.findViewById(R.id.dialog_join_event_id);
-        dialogJoinDescEditText = (EditText) dialog.findViewById(R.id.dialog_join_event_desc);
-        joinEventButton = (Button) dialog.findViewById(R.id.joinEventButton);
-
-        // onclick listener for the button
-        joinEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String joinEventId = dialogJoinEventIdEditText.getText().toString();
-                final String joinEventDesc = dialogJoinDescEditText.getText().toString();
-
-                // check for empty condition; send request calling sendRequest(String, String)
-                if (joinEventId.isEmpty() || joinEventDesc.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "enter the details", Toast.LENGTH_SHORT).show();
-                } else {
-                    // check if the user is already a part of the event.
-                    otherUserEventCheck(joinEventId, joinEventDesc);
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        // button touch feed back
-        joinEventButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        joinEventButton.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        joinEventButton.setBackgroundColor(Color.parseColor("#0DFFFFFF"));
-                        break;
-                }
-                return false;
-            }
-        });
-        Window window = dialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-    }
-
-    /**
-     * checks if the user is already a part of the event.
-     * show snackbar if already a part; else send request to join.
-     */
-    void otherUserEventCheck(final String requestEventId, final String requestEventDesc) {
-        firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent/" + requestEventId);
-        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String message = "You are already a part of the event";
-                    showRequestActionSnackBar(message, false);
-                } else {
-
-                    // sends request to join the event
-                    sendRequest(requestEventId, requestEventDesc);
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    // sends the request to join an event
-    void sendRequest(final String requestEventId, final String requestEventDesc) {
-        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + requestEventId);
-        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // checks if the eventID is valid; i.e if it exists
-                if (dataSnapshot.exists()) {
-                    HashMap<String, Object> updateEvent = new HashMap<String, Object>();
-                    updateEvent.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), requestEventDesc);
-                    firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + requestEventId + "/requested");
-                    firebase.updateChildren(updateEvent, new Firebase.CompletionListener() {
-                        @Override
-                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                            // send request for the user to join the event
-                            setValues(requestEventId, requestEventDesc);
-                        }
-                    });
-
-                } else {
-                    String message = "Event does not exist";
-                    showRequestActionSnackBar(message, false);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    /**
-     * adds request into the event's requested database
-     * @param rID : holds the event unique id
-     * @param rDesc : holds the description along with the request
-     */
-    void setValues(final String rID, final String rDesc) {
-
-        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
-        Map<String, Object> request = new HashMap<>();
-        request.put(rID, rDesc);
-        firebase.updateChildren(request, new Firebase.CompletionListener() {
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                String message = "Request sent";
-                showRequestActionSnackBar(message, true);
-            }
-        });
-    }
-
-    /**
-     * show snackbar
-     * @param message : message to be displayed
-     * @param available : if true, shows the action to join the event; else does not show action button.
-     */
-    void showRequestActionSnackBar(String message, boolean available) {
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayoutMainActivity, message, Snackbar.LENGTH_LONG);
-        if (!available) {
-            snackbar.setAction("JOIN", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    joinEventDialog();
-                }
-            });
-        }
-        snackbar.setActionTextColor(Color.parseColor("#FFFFFF"));
-        snackbar.show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -566,7 +409,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
-        stopService(new Intent(getBaseContext(), InternetConnectionService.class));
         finish();
     }
 
