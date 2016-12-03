@@ -55,6 +55,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final static String ALL_EVENTS_TAG = "all_events";
     public final static String REQUESTS_TAG = "requests";
     public final static String RECEIVED_REQUEST_TAG = "received_requests";
+    public final static String TRACK_TAG = "my_tracks";
+
 
     long activeEventCount; // number of active event of the user.
     long createdEventCount; // number of events created; count of no. of events the user is the admin of.
@@ -169,35 +171,35 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         createEventSubActionButton.setTag(CREATE_EVENT_TAG);
         createEventSubActionButton.setOnClickListener(this);
 
-        //join event menu item.
+        // track movements menu item.
         subActionFABLinearLayout = new LinearLayout(this);
         subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
         subActionFABLinearLayout.setGravity(Gravity.CENTER);
         subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 
-        ImageView sendRequestCircleButton = new ImageView(this);
-        sendRequestCircleButton.setAdjustViewBounds(true);
-        sendRequestCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        sendRequestCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
-        sendRequestCircleButton.setImageResource(R.drawable.requests_icon);
-        sendRequestCircleButton.setPadding(50, 50, 50, 50);
-        sendRequestCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
+        ImageView trackCircleButton = new ImageView(this);
+        trackCircleButton.setAdjustViewBounds(true);
+        trackCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        trackCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
+        trackCircleButton.setImageResource(R.drawable.requests_icon);
+        trackCircleButton.setPadding(50, 50, 50, 50);
+        trackCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
 
 
-        TextView joinEventTextView = new TextView(this);
-        joinEventTextView.setText("Join Event");
-        joinEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        joinEventTextView.setTextSize(16);
-        joinEventTextView.setGravity(Gravity.CENTER);
-        joinEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
+        TextView trackTextView = new TextView(this);
+        trackTextView.setText("My Tracks");
+        trackTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        trackTextView.setTextSize(16);
+        trackTextView.setGravity(Gravity.CENTER);
+        trackTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
 
-        subActionFABLinearLayout.addView(sendRequestCircleButton);
-        subActionFABLinearLayout.addView(joinEventTextView);
+        subActionFABLinearLayout.addView(trackCircleButton);
+        subActionFABLinearLayout.addView(trackTextView);
 
-        SubActionButton sendRequestSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
-        sendRequestSubActionButton.setTag(JOIN_EVENT_TAG);
-        sendRequestSubActionButton.setOnClickListener(this);
+        SubActionButton trackSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
+        trackSubActionButton.setTag(TRACK_TAG);
+        trackSubActionButton.setOnClickListener(this);
 
 
         // all events menu item.
@@ -291,7 +293,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .setEndAngle(360)
                 .setRadius(getResources().getDimensionPixelSize(R.dimen.radius_large))
                 .addSubActionView(createEventSubActionButton, 500, 400)
-                .addSubActionView(sendRequestSubActionButton, 500, 400)
+                .addSubActionView(trackSubActionButton, 500, 400)
                 .addSubActionView(allEventsSubActionButton, 500, 400)
                 .addSubActionView(requestsSubActionButton, 500, 400)
                 .addSubActionView(receivedRequestSubActionButton, 500, 400)
@@ -305,9 +307,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             intent = new Intent(MainActivity.this, CreateEvent.class);
             startActivity(intent);
         }
-//        if (view.getTag().equals(JOIN_EVENT_TAG)) {
-//            joinEventDialog();
-//        }
+        if (view.getTag().equals(TRACK_TAG)) {
+            toTrackActivity();
+        }
         if (view.getTag().equals(ALL_EVENTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
 
@@ -318,6 +320,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (view.getTag().equals(RECEIVED_REQUEST_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
         }
+    }
+    void toTrackActivity(){
+        Intent intent = new Intent(MainActivity.this, TrackActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
     }
 
     /**

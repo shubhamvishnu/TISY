@@ -3,7 +3,6 @@ package com.projects.shubhamkhandelwal.tisy.Classes;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,8 @@ import java.util.List;
  * Created by Shubham Khandelwal on 9/22/2016.
  */
 public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<ActiveEventsRecyclerViewAdapter.ActiveEventsRecyclerViewHolder> {
-    List<ActiveEventInfo> activeEventIds = new ArrayList();
+    List<ActiveEventInfo> activeEventIds = new ArrayList<>();
+
     Firebase firebase;
     Context context;
     String username;
@@ -44,19 +44,26 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (!dataSnapshot.getValue().toString().equals("false")) {
-                    final String activeEventId = dataSnapshot.getKey().toString();
+                    final String activeEventId = dataSnapshot.getKey();
+                    final String association = dataSnapshot.getValue().toString();
 
                     Firebase eventInfo = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + activeEventId);
                     eventInfo.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             int position = activeEventIds.size();
+                            final String title = dataSnapshot.child("title").getValue().toString();
+                            final long numberOfRequests = dataSnapshot.child("requested").getChildrenCount();
+                            final String request = String.valueOf(numberOfRequests);
+                            final String timeCreated = dataSnapshot.child("time").getValue().toString();
+
                             EventInfo eventInfo = new EventInfo();
                             eventInfo.setsLocation(dataSnapshot.child("info").child("sLocation").getValue().toString());
                             eventInfo.setsLocationDesc(dataSnapshot.child("info").child("sLocationDesc").getValue().toString());
                             eventInfo.setdLocation(dataSnapshot.child("info").child("dLocation").getValue().toString());
                             eventInfo.setdLocationDesc(dataSnapshot.child("info").child("dLocationDesc").getValue().toString());
-                            ActiveEventInfo activeEventInfo = new ActiveEventInfo(activeEventId, eventInfo);
+                            ActiveEventInfo activeEventInfo = new ActiveEventInfo(title, association, activeEventId, eventInfo, request, timeCreated);
+
                             activeEventInfo.setAdmin(dataSnapshot.child("admin").getValue().toString());
                             activeEventInfo.setdIconResourceId(Integer.parseInt(dataSnapshot.child("dIcon").getValue().toString()));
                             activeEventIds.add(activeEventInfo);
@@ -103,15 +110,16 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
 
     @Override
     public void onBindViewHolder(ActiveEventsRecyclerViewHolder holder, int position) {
+        holder.activeEventTitleTextView.setText(activeEventIds.get(position).getTitle());
+        holder.activeEventAssociation.setText(activeEventIds.get(position).getAssociation());
         holder.activeEventIdTextView.setText(activeEventIds.get(position).getEventId());
 
         EventInfo info = activeEventIds.get(position).getEventInfo();
-        Log.d("eventInfo", info.toString());
 
         holder.activeEventsLocationDesc.setText(info.getsLocationDesc());
         holder.activeEventdLocationDesc.setText(info.getdLocationDesc());
-
-
+        holder.activeEventRequests.setText(activeEventIds.get(position).getRequests());
+        holder.activeEventTimeCreated.setText(activeEventIds.get(position).getTimeCreated());
     }
 
     @Override
@@ -123,6 +131,10 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
         TextView activeEventIdTextView;
         TextView activeEventsLocationDesc;
         TextView activeEventdLocationDesc;
+        TextView activeEventTitleTextView;
+        TextView activeEventRequests;
+        TextView activeEventTimeCreated;
+        TextView activeEventAssociation;
         View view;
 
         public ActiveEventsRecyclerViewHolder(View itemView) {
@@ -131,9 +143,17 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             activeEventIdTextView = (TextView) itemView.findViewById(R.id.active_event_id_text_view);
             activeEventsLocationDesc = (TextView) itemView.findViewById(R.id.active_event_sLocationDesc);
             activeEventdLocationDesc = (TextView) itemView.findViewById(R.id.active_event_dLocationDesc);
+            activeEventTitleTextView = (TextView) itemView.findViewById(R.id.active_event_title_text_view);
+            activeEventRequests = (TextView) itemView.findViewById(R.id.active_event_requests);
+            activeEventTimeCreated = (TextView) itemView.findViewById(R.id.active_event_time_created);
+            activeEventAssociation = (TextView) itemView.findViewById(R.id.active_event_association_text_view);
             activeEventIdTextView.setOnClickListener(this);
             activeEventsLocationDesc.setOnClickListener(this);
             activeEventdLocationDesc.setOnClickListener(this);
+            activeEventTitleTextView.setOnClickListener(this);
+            activeEventRequests.setOnClickListener(this);
+            activeEventTimeCreated.setOnClickListener(this);
+            activeEventAssociation.setOnClickListener(this);
             view.setOnClickListener(this);
         }
 

@@ -99,4 +99,9 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cameraUpdate);
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
