@@ -215,7 +215,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // set view object color
         eventInfoImageButton.setColorFilter(Color.parseColor("#0C70A5"));
 
-
         eventInfoImageButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1256,18 +1255,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onMyLocationChange(Location location) {
                     Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog");
                     userLocationLogFirebase.keepSynced(true);
-                    LocationLog locationLog = new LocationLog();
-                    locationLog.setLatitude(String.valueOf(location.getLatitude()));
-                    locationLog.setLongitude(String.valueOf(location.getLongitude()));
-                    userLocationLogFirebase.push().setValue(locationLog);
-
-//                    if (!checkInternetConnection()) {
-//                        String message = "No internet connection";
-//                        showIneternetConnectionSnackBar(message);
-//                    } else {
                     checkNearCheckPoint(location);
                     updateUserCurrentLocation(location);
-                    // }
+
                 }
             });
             changeInLocation();

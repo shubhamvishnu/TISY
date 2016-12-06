@@ -15,4 +15,10 @@ public class TimeStamp {
         return "Created at: " + dateFormat.format(date);
 
     }
+    public static String getRawTime(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "dd-MM-yyyy", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }

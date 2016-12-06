@@ -1,25 +1,27 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,11 +39,10 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
+import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
+import com.projects.shubhamkhandelwal.tisy.Classes.MovementTracker;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -84,13 +85,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          */
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
+            startService(new Intent(getBaseContext(), LocationListenerService.class));
         } else {
-
             intent = new Intent(MainActivity.this, Login.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }
+
         // initialize the username variable from the preference
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
 
@@ -147,24 +149,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         // create event menu item
         ImageView createEventCircleButton = new ImageView(this); // image view for the menu item.
-        createEventCircleButton.setImageResource(R.drawable.add_icon);
+        createEventCircleButton.setImageResource(R.drawable.create_event);
         createEventCircleButton.setAdjustViewBounds(true);
         createEventCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         createEventCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
+        createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(600, 600));
         createEventCircleButton.setPadding(50, 50, 50, 50);
-
-        TextView createEventTextView = new TextView(this); // text view for the menu item.
-        createEventTextView.setText("Create Event");
-        createEventTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        createEventTextView.setTextSize(16);
-        createEventTextView.setGravity(Gravity.CENTER);
-        createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        createEventTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
 
         // add the views to the layout for the menu items.
         subActionFABLinearLayout.addView(createEventCircleButton);
-        subActionFABLinearLayout.addView(createEventTextView);
+
 
         // add the layout as an item having the created views. The linear layout acts as a sub-action menu item.
         SubActionButton createEventSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
@@ -182,7 +176,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         trackCircleButton.setAdjustViewBounds(true);
         trackCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         trackCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
-        trackCircleButton.setImageResource(R.drawable.requests_icon);
+        trackCircleButton.setImageResource(R.drawable.all_events_active_icon);
         trackCircleButton.setPadding(50, 50, 50, 50);
         trackCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
 
@@ -239,7 +233,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageView requestsCircleButton = new ImageView(this);
         requestsCircleButton.setAdjustViewBounds(true);
         requestsCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        requestsCircleButton.setImageResource(R.drawable.join_event_icon);
+        requestsCircleButton.setImageResource(R.drawable.requests_icon);
         requestsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
         requestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
         requestsCircleButton.setPadding(50, 50, 50, 50);
@@ -292,14 +286,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .setStartAngle(0) // A whole circle!
                 .setEndAngle(360)
                 .setRadius(getResources().getDimensionPixelSize(R.dimen.radius_large))
-                .addSubActionView(createEventSubActionButton, 500, 400)
+                .addSubActionView(createEventSubActionButton, 600, 600)
                 .addSubActionView(trackSubActionButton, 500, 400)
                 .addSubActionView(allEventsSubActionButton, 500, 400)
                 .addSubActionView(requestsSubActionButton, 500, 400)
                 .addSubActionView(receivedRequestSubActionButton, 500, 400)
                 .attachTo(centerFAB)
                 .build();
+
     }
+
+
 
     @Override
     public void onClick(View view) {
