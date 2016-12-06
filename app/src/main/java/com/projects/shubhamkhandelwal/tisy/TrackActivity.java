@@ -1,8 +1,11 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationLog;
@@ -41,12 +45,14 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
     String dateMonthYear;
     RecyclerView memberRecyclerView;
     RecyclerView dateMonthYearRecyclerView;
+    CoordinatorLayout trackCoordinatorLayout;
     String eventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track);
+        trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
         trackUsername = getIntent().getStringExtra("username");
         eventID = getIntent().getStringExtra("event_id");
         dateMonthYear = TimeStamp.getRawTime();
@@ -64,7 +70,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    void initializeMemberRecyclerView(String username, String eventID) {
+    void initializeMemberRecyclerView(String eventID) {
         memberRecyclerView = (RecyclerView) findViewById(R.id.members_track_activity_recycler_view);
         if (eventID == null) {
             memberRecyclerView.setVisibility(View.GONE);
@@ -135,11 +141,13 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
     void showPolyline() {
         mMap.clear();
         PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.addAll(locationPoints);
-        polylineOptions.width(25);
+        for(int i = 0; i < locationPoints.size(); i++){
+            polylineOptions.add(locationPoints.get(i));
+        }
+        polylineOptions.width(10);
         polylineOptions.color(Color.RED);
-        polylineOptions.geodesic(false);
-        mMap.addPolyline(polylineOptions);
+        polylineOptions.geodesic(true);
+        mMap.addPolyline(polylineOptions).setPoints(locationPoints);
 
         LatLngBounds bounds = cameraLatLngbuilder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
@@ -151,7 +159,14 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onBackPressed() {
-        finish();
+        if(eventID == null) {
+            Intent intent = new Intent(TrackActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }else{
+            finish();
+        }
     }
 
     class MemberRecyclerViewAdapater extends RecyclerView.Adapter<MemberRecyclerViewAdapater.MemberRecyclerViewHolder> {
@@ -239,6 +254,40 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
             initList();
 
         }
+        void showSnackBar(){
+            if (mMap != null) {
+                mMap.setPadding(0, 0, 0, 200);
+            }
+                Snackbar snackbar = Snackbar
+                        .make(trackCoordinatorLayout, "No movement has been recorded", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("GO BACK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(TrackActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                snackbar.setCallback(new Snackbar.Callback() {
+
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        if (mMap != null) {
+                            mMap.setPadding(0, 0, 0, 0);
+                        }
+                    }
+
+                    @Override
+                    public void onShown(Snackbar snackbar) {
+
+
+                    }
+                });
+                snackbar.setActionTextColor(Color.parseColor("#009688"));
+                snackbar.show();
+
+        }
 
         void initList() {
             Firebase dateMonthYearFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + memberName + "/locationLog/");
@@ -246,14 +295,20 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     int position = 0;
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        position = dateMonthYearList.size();
-                        dateMonthYearList.add(snapshot.getKey());
-                        notifyItemInserted(position);
-                    }
-                    initializeMemberRecyclerView(trackUsername, eventID);
-                    initializePoints(trackUsername, dateMonthYearList.get(position));
+                    if(dataSnapshot.hasChildren()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            position = dateMonthYearList.size();
+                            dateMonthYearList.add(snapshot.getKey());
+                            notifyItemInserted(position);
+                        }
+                        initializeMemberRecyclerView(eventID);
+                        initializePoints(trackUsername, dateMonthYearList.get(position));
+                    }else{
+                        memberRecyclerView.setVisibility(View.GONE);
+                        dateMonthYearRecyclerView.setVisibility(View.GONE);
+                        showSnackBar();
 
+                    }
                 }
 
                 @Override

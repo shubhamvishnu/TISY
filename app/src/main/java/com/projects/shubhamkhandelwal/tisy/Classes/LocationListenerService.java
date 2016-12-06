@@ -15,15 +15,12 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
-import java.sql.Time;
-
 /**
  * Created by Shubham Khandelwal on 12/6/2016.
  */
 public class LocationListenerService extends Service {
     LocationManager locationManager; // reference for location manager object.
     String username;
-    boolean runLoop;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -32,55 +29,63 @@ public class LocationListenerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        runLoop = true;
         username = getBaseContext().getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
-
-            init();
-
+        Toast.makeText(getBaseContext(), "service called" + username, Toast.LENGTH_SHORT).show();
+        init();
         return START_STICKY;
     }
-    void init() {
+    class MyLocationListener implements LocationListener{
 
+        @Override
+        public void onLocationChanged(Location location) {
+            Toast.makeText(getBaseContext(), "location listener called" + location, Toast.LENGTH_SHORT).show();
+            String dateMonthYear = TimeStamp.getRawTime();
+            Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/"+ dateMonthYear +"/");
+            userLocationLogFirebase.keepSynced(true);
+            LocationLog locationLog = new LocationLog();
+            locationLog.setLatitude(String.valueOf(location.getLatitude()));
+            locationLog.setLongitude(String.valueOf(location.getLongitude()));
+            userLocationLogFirebase.push().setValue(locationLog);
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    }
+    void init() {
+        Toast.makeText(getBaseContext(), "init called.", Toast.LENGTH_SHORT).show();
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new MyLocationListener();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
-            // to handle the cas    e where the user grants the permission. See the documentation
+            // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-    init();
+            return;
         }
         locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 0,0, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        String dateMonthYear = TimeStamp.getRawTime();
-                        Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/"+ dateMonthYear);
-                        userLocationLogFirebase.keepSynced(true);
-                        LocationLog locationLog = new LocationLog();
-                        locationLog.setLatitude(String.valueOf(location.getLatitude()));
-                        locationLog.setLongitude(String.valueOf(location.getLongitude()));
-                        userLocationLogFirebase.push().setValue(locationLog);
-                    }
+                LocationManager.GPS_PROVIDER, 0, 1 , locationListener);
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 0, 1 , locationListener);
 
-                    @Override
-                    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String s) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String s) {
-
-                    }
-                });
     }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }
