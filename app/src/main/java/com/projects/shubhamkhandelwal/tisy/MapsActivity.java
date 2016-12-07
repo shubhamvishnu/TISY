@@ -64,6 +64,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -1457,16 +1458,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 ++checkPointCounter;
                 String[] coordinate = point.getValue().toString().split(",");
 
-
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.checkpoint_marker);
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.check_point_flag);
                 Bitmap tempBitmap = bitmapDrawable.getBitmap();
                 Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 120, 120, false);
 
                 Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]))).title("checkpoint-" + checkPointCounter).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
                 checkPointMarker.setTag(checkPointCounter);
                 zoomFitCheckPointCoordinates.add(checkPointMarker);
-
-
             }
         }
 

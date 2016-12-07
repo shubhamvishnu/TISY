@@ -50,7 +50,6 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
 
     @Override
     public void onBindViewHolder(EventInfoRecyclerViewHolder holder, int position) {
-
         holder.memberTextView.setText(memberList.get(position));
         holder.coordinateSnapShotTextView.setText(memberCoordinate.get(position));
         holder.nameTextView.setText(memberProfileName.get(position));
@@ -61,12 +60,17 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     public int getItemCount() {
         return memberList.size();
     }
-void showTracks(int position){
-    dialog.dismiss();
-    Intent intent = new Intent(context, TrackActivity.class);
-    intent.putExtra("username", memberList.get(position));
-    context.startActivity(intent);
-}
+
+    void showTracks(int position) {
+        dialog.dismiss();
+        Intent intent = new Intent(context, TrackActivity.class);
+        intent.putExtra("username", memberList.get(position));
+        if (Constants.currentEventId != null) {
+            intent.putExtra("event_id", Constants.currentEventId);
+        }
+        context.startActivity(intent);
+    }
+
     class EventInfoRecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView memberTextView;
         TextView coordinateSnapShotTextView;
@@ -85,7 +89,7 @@ void showTracks(int position){
                 @Override
                 public void onClick(View view) {
                     if (memberCoordinate.get(getPosition()).equals("0.0,0.0")) {
-                    }else{
+                    } else {
                         showTracks(getPosition());
                     }
                 }

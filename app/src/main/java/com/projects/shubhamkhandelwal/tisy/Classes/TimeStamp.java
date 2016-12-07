@@ -21,4 +21,16 @@ public class TimeStamp {
         Date date = new Date();
         return dateFormat.format(date);
     }
+    public static String getHour(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "HH", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+    public static String getHourAndMinute(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "HH:mm", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }

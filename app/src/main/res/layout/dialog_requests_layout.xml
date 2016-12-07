@@ -11,16 +11,18 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="8dp">
             <Button
                 android:id="@+id/dialog_join_request_button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="JOIN EVENT"
+                android:textStyle="bold"
                 android:layout_marginBottom="16dp"
                 android:textColor="@android:color/white"
-                android:background="@android:color/transparent"
+                android:background="@drawable/join_event_background"
                 />
             <TextView
                 android:layout_width="fill_parent"

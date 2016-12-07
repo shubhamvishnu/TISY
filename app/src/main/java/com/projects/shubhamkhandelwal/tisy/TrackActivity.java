@@ -291,15 +291,20 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
         void initList() {
             Firebase dateMonthYearFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + memberName + "/locationLog/");
+            dateMonthYearFirebase.keepSynced(true);
+            Toast.makeText(TrackActivity.this, "username :" + memberName, Toast.LENGTH_SHORT).show();
             dateMonthYearFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     int position = 0;
                     if(dataSnapshot.hasChildren()) {
+                        dateMonthYearList = new ArrayList<String>();
+                        Toast.makeText(TrackActivity.this,dataSnapshot.getChildrenCount() + "", Toast.LENGTH_SHORT).show();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            position = dateMonthYearList.size();
+                            int pos = dateMonthYearList.size();
                             dateMonthYearList.add(snapshot.getKey());
-                            notifyItemInserted(position);
+                            notifyItemInserted(pos);
+                            position = pos;
                         }
                         initializeMemberRecyclerView(eventID);
                         initializePoints(trackUsername, dateMonthYearList.get(position));

@@ -38,5 +38,5 @@
         android:padding="16dp"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical"
-        ></android.support.v7.widget.RecyclerView>
+        />
 </RelativeLayout>
