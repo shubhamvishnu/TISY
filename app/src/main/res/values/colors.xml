@@ -3,4 +3,23 @@
     <color name="colorPrimary">#34495e</color>
     <color name="colorPrimaryDark">#2c3e50</color>
     <color name="colorAccent">#e74c3c</color>
+
+    <color name="customColor0">#0a1e33</color>
+    <color name="customColor1">#009688</color>
+    <color name="customColor2">#800020</color>
+    <color name="customColor3">#C2B280</color>
+    <color name="customColor4">#563957</color>
+    <color name="customColor5">#007F66</color>
+    <color name="customColor6">#6d8764</color>
+    <color name="customColor7">#6082B6</color>
+    <color name="customColor8">#455A64</color>
+
+
+
+
+
+
+
+
+
 </resources>

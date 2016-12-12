@@ -7,7 +7,20 @@ public class LocationLog {
 
     String latitude;
     String longitude;
-//
+    String hourAndMinute;
+
+    public String getHourAndMinute() {
+        return hourAndMinute;
+    }
+
+    public void setHourAndMinute(String hourAndMinute) {
+        this.hourAndMinute = hourAndMinute;
+    }
+
+
+
+
+    //
 //    public LocationLog(String latitude, String longitude) {
 //        this.latitude = latitude;
 //        this.longitude = longitude;

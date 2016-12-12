@@ -26,8 +26,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.projects.shubhamkhandelwal.tisy.Classes.CheckInPoints;
+import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationLog;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
@@ -41,12 +42,16 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
     String trackUsername;
     GoogleMap mMap;
     List<LatLng> locationPoints;
+    List<String> timePoints;
+    List<CheckInPoints> checkInPoints;
+    List<Integer> timeLog;
     LatLngBounds.Builder cameraLatLngbuilder;
     String dateMonthYear;
     RecyclerView memberRecyclerView;
     RecyclerView dateMonthYearRecyclerView;
     CoordinatorLayout trackCoordinatorLayout;
     String eventID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +70,6 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
 
         initializeDateRecyclerView(trackUsername);
-
 
 
     }
@@ -94,6 +98,24 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         dateMonthYearRecyclerView.setLayoutManager(layoutManager);
     }
 
+    int getCustomColor(int customColor) {
+
+        if (customColor < 8) {
+            customColor = customColor % 8;
+        }
+        Constants.colors.add(R.color.customColor0);
+        Constants.colors.add(R.color.customColor1);
+        Constants.colors.add(R.color.customColor2);
+        Constants.colors.add(R.color.customColor3);
+        Constants.colors.add(R.color.customColor4);
+        Constants.colors.add(R.color.customColor5);
+        Constants.colors.add(R.color.customColor6);
+        Constants.colors.add(R.color.customColor7);
+        Constants.colors.add(R.color.customColor8);
+
+        return Constants.colors.get(customColor);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -106,7 +128,10 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
     public void initializePoints(String user, String dateMonthYear) {
         cameraLatLngbuilder = new LatLngBounds.Builder();
+
         locationPoints = new ArrayList<>();
+        timePoints = new ArrayList<>();
+        timeLog = new ArrayList<>();
 
         Firebase userLocationPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + user + "/locationLog/" + dateMonthYear);
         userLocationPointsFirebase.keepSynced(true);
@@ -123,12 +148,14 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                         if (!((latitude == 0.0) && (longitude == 0.0))) {
                             LatLng latLng = new LatLng(latitude, longitude);
                             locationPoints.add(latLng);
+                            timePoints.add(locationLog.getHourAndMinute());
                             cameraLatLngbuilder.include(latLng);
+                            timeLog.add(Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]));
                         }
                     }
-                    showPolyline();
-                }
 
+                    initializeCheckPoints(dataSnapshot);
+                }
             }
 
             @Override
@@ -138,17 +165,72 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
+    void initializeCheckPoints(DataSnapshot dataSnapshot) {
+        DataSnapshot snapshot = dataSnapshot.child("checkPoints");
+        if (snapshot.exists()) {
+            checkInPoints = new ArrayList<>();
+            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                CheckInPoints checkPoints = childSnapshot.getValue(CheckInPoints.class);
+                checkInPoints.add(checkPoints);
+            }
+        } else {
+            showPolyline();
+        }
+    }
+
     void showPolyline() {
         mMap.clear();
-        PolylineOptions polylineOptions = new PolylineOptions();
-        for(int i = 0; i < locationPoints.size(); i++){
-            polylineOptions.add(locationPoints.get(i));
-        }
-        polylineOptions.width(10);
-        polylineOptions.color(Color.RED);
-        polylineOptions.geodesic(true);
-        mMap.addPolyline(polylineOptions).setPoints(locationPoints);
+        // TODO: show start time line location
+        // TODO show end time line location
+        int initialTime = timeLog.get(0);
 
+        PolylineOptions polylineOptions = new PolylineOptions();
+        int count = 0;
+        for (int i = 0; i < locationPoints.size(); i++) {
+            polylineOptions.add(locationPoints.get(i));
+            if (initialTime < timeLog.get(0)) {
+                ++count;
+                //TODO: show hour change marker
+                showLines(polylineOptions, getCustomColor(count));
+                polylineOptions = new PolylineOptions();
+            }
+        }
+        if (count == 0) {
+            showLines(polylineOptions, getCustomColor(count));
+        }
+        showCheckInPoints();
+
+
+    }
+
+    void showLines(PolylineOptions polylineOptions, int customColor) {
+        polylineOptions.width(10);
+        polylineOptions.color(customColor);
+        polylineOptions.geodesic(true);
+        mMap.addPolyline(polylineOptions);
+        zoomFitMap();
+    }
+
+    void showCheckInPoints() {
+        if (!checkInPoints.isEmpty()) {
+            for (int i = 0; i < checkInPoints.size(); i++) {
+                CheckInPoints checkIns = checkInPoints.get(i);
+                Double latitude = Double.parseDouble(checkIns.getLatitude());
+                Double longitude = Double.parseDouble(checkIns.getLatitude());
+                String name = checkIns.getName();
+                String description = checkIns.getDescription();
+                String time = checkIns.getTime();
+
+                if (description.contains("notAvailable")) {
+                    description = "";
+                }
+                // TODO: show checkIn marker
+            }
+            zoomFitMap();
+        }
+    }
+
+    void zoomFitMap() {
         LatLngBounds bounds = cameraLatLngbuilder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
@@ -159,12 +241,12 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onBackPressed() {
-        if(eventID == null) {
+        if (eventID == null) {
             Intent intent = new Intent(TrackActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
-        }else{
+        } else {
             finish();
         }
     }
@@ -191,12 +273,12 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            int position = memberList.size();
-                            memberList.add(snapshot.getKey());
-                            notifyItemInserted(position);
-                        }
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        int position = memberList.size();
+                        memberList.add(snapshot.getKey());
+                        notifyItemInserted(position);
                     }
+                }
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
@@ -254,38 +336,39 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
             initList();
 
         }
-        void showSnackBar(){
+
+        void showSnackBar() {
             if (mMap != null) {
                 mMap.setPadding(0, 0, 0, 200);
             }
-                Snackbar snackbar = Snackbar
-                        .make(trackCoordinatorLayout, "No movement has been recorded", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("GO BACK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(TrackActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                snackbar.setCallback(new Snackbar.Callback() {
-
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        if (mMap != null) {
-                            mMap.setPadding(0, 0, 0, 0);
+            Snackbar snackbar = Snackbar
+                    .make(trackCoordinatorLayout, "No movement has been recorded", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("GO BACK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(TrackActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
                         }
+                    });
+            snackbar.setCallback(new Snackbar.Callback() {
+
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    if (mMap != null) {
+                        mMap.setPadding(0, 0, 0, 0);
                     }
+                }
 
-                    @Override
-                    public void onShown(Snackbar snackbar) {
+                @Override
+                public void onShown(Snackbar snackbar) {
 
 
-                    }
-                });
-                snackbar.setActionTextColor(Color.parseColor("#009688"));
-                snackbar.show();
+                }
+            });
+            snackbar.setActionTextColor(Color.parseColor("#009688"));
+            snackbar.show();
 
         }
 
@@ -297,9 +380,9 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     int position = 0;
-                    if(dataSnapshot.hasChildren()) {
+                    if (dataSnapshot.hasChildren()) {
                         dateMonthYearList = new ArrayList<String>();
-                        Toast.makeText(TrackActivity.this,dataSnapshot.getChildrenCount() + "", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TrackActivity.this, dataSnapshot.getChildrenCount() + "", Toast.LENGTH_SHORT).show();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             int pos = dateMonthYearList.size();
                             dateMonthYearList.add(snapshot.getKey());
@@ -308,7 +391,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                         }
                         initializeMemberRecyclerView(eventID);
                         initializePoints(trackUsername, dateMonthYearList.get(position));
-                    }else{
+                    } else {
                         memberRecyclerView.setVisibility(View.GONE);
                         dateMonthYearRecyclerView.setVisibility(View.GONE);
                         showSnackBar();

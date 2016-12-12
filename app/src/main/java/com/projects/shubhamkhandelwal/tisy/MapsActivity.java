@@ -62,6 +62,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
+import com.google.android.gms.maps.StreetViewPanorama;
+import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -1622,6 +1625,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
+    void showStreetView(final Double latitude, final Double longitude){
+
+        StreetViewPanoramaFragment streetViewPanoramaFragment =
+                (StreetViewPanoramaFragment) getFragmentManager()
+                        .findFragmentById(R.id.streetviewpanorama);
+
+        streetViewPanoramaFragment.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
+            @Override
+            public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
+                streetViewPanorama.setPosition(new LatLng(latitude, longitude));
+                if (streetViewPanorama.getLocation() != null) {
+                    Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("longitude", longitude);
+                    startActivity(intent);
+                }else{
+                    // TODO: show dialog to say streetview unavailable and finish() on OK
+                    showStreetViewNotAvailableSnackBar();
+                }
+            }
+        });
+    }
+    void showStreetViewNotAvailableSnackBar(){
+        if (mMap != null) {
+            mMap.setPadding(0, 0, 0, 200);
+        }
+        final Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, "Oops! Street view isn't available here...", Snackbar.LENGTH_SHORT);
+        snackbar.setCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (mMap != null) {
+                    mMap.setPadding(0, 0, 0, 0);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+
+
+            }
+        });
+        snackbar.show();
+    }
     void showStreetViewSnackBar(final Marker marker) {
         if (mMap != null) {
             mMap.setPadding(0, 0, 0, 200);
@@ -1631,10 +1679,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setAction("SEE IT", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
-                        intent.putExtra("latitude", marker.getPosition().latitude);
-                        intent.putExtra("longitude", marker.getPosition().longitude);
-                        startActivity(intent);
+                        showStreetView(marker.getPosition().latitude,  marker.getPosition().longitude);
+
 
                     }
                 });
