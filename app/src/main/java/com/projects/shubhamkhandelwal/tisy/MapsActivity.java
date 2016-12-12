@@ -1095,7 +1095,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventRequestRecyclerView = (RecyclerView) requestsDialog.findViewById(R.id.event_requests_recycler_view);
         eventRequestRecyclerView.setHasFixedSize(true);
 
-        requestsRecyclerAdapter = new RequestsRecyclerAdapter(getApplicationContext(), joinRequests);
+        requestsRecyclerAdapter = new RequestsRecyclerAdapter(this, joinRequests);
         eventRequestRecyclerView.setAdapter(requestsRecyclerAdapter);
         eventRequestRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 

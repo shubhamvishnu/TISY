@@ -2,6 +2,7 @@ package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,20 +11,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.projects.shubhamkhandelwal.tisy.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by Shubham Khandelwal on 8/15/2016.
  */
 public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecyclerAdapter.RequestsRecyclerViewHolder> {
     List<RequestsDetails> requestDetails = new ArrayList<>();
+    List<String> profileURLsList = new ArrayList<>();
     Firebase firebase;
     Context context;
     private LayoutInflater inflator;
@@ -32,6 +39,25 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
         this.context = context;
         inflator = LayoutInflater.from(context);
         this.requestDetails = requestDetails;
+        fetchProfileURLS();
+    }
+    void fetchProfileURLS(){
+        profileURLsList = new ArrayList<>();
+        for(int i = 0; i < requestDetails.size(); i++){
+            final Firebase profileFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + "/userPhotoUri/");
+            profileFirebase.keepSynced(true);
+            profileFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    profileURLsList.add(dataSnapshot.getValue().toString());
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -45,11 +71,12 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
     public void onBindViewHolder(final RequestsRecyclerViewHolder holder, final int position) {
         holder.usernameTextView.setText(requestDetails.get(position).getUsername());
         holder.descriptionTextView.setText(requestDetails.get(position).getDescription());
+        Picasso.with(context).load(Uri.parse(profileURLsList.get(position))).error(R.drawable.default_profile_image_icon).into(holder.profileImageCircleImageView);
     }
 
     @Override
     public int getItemCount() {
-        return requestDetails.size();
+        return profileURLsList.size();
     }
 
     // TODO: action for declining the request
@@ -120,6 +147,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
         TextView descriptionTextView;
         Button addUserButton;
         Button deleteUserButton;
+        CircleImageView profileImageCircleImageView;
 
         public RequestsRecyclerViewHolder(View itemView) {
             super(itemView);
@@ -127,6 +155,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
             descriptionTextView = (TextView) itemView.findViewById(R.id.description_recycler_view_text_view);
             addUserButton = (Button) itemView.findViewById(R.id.add_user_recycler_view_button);
             deleteUserButton = (Button) itemView.findViewById(R.id.delete_user_recycler_view_button);
+            profileImageCircleImageView = (CircleImageView) itemView.findViewById(R.id.profile_image_recycler_circle_image_view);
             deleteUserButton.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
