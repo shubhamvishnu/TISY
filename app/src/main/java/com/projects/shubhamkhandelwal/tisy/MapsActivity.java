@@ -67,7 +67,6 @@ import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -77,11 +76,11 @@ import com.google.maps.android.ui.IconGenerator;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
+import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
-import com.projects.shubhamkhandelwal.tisy.Classes.LocationLog;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
@@ -235,7 +234,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-
         eventInfoImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -364,6 +362,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void showAllInOneDialog() {
         LinearLayout requestsLayout;
+        LinearLayout sendRequestsLayout;
         final Dialog allInOneDialog = new Dialog(this, R.style.event_info_dialog_style);
         allInOneDialog.setContentView(R.layout.dialog_all_in_one_layout);
 
@@ -374,8 +373,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
         ImageButton changeMapStyleImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_change_mode_icon);
         requestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.requests_option_layout);
-        if(!Constants.eventAdmin){
+        sendRequestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.send_request_option_layout);
+
+        if (!Constants.eventAdmin) {
             requestsLayout.setVisibility(View.INVISIBLE);
+            sendRequestsLayout.setVisibility(View.INVISIBLE);
         }
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -569,7 +571,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                    saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+                saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             }
         }
     }
@@ -778,7 +780,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView timeStampTextView;
         TextView titleTextView;
         RecyclerView eventInfoMembersRecyclerView;
-
+        ImageButton editMembersImageButton;
 
         Dialog eventInfoDialog = new Dialog(this, R.style.event_info_dialog_style);
         eventInfoDialog.setContentView(R.layout.dialog_event_info_layout);
@@ -789,6 +791,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventDescriptionTextView = (TextView) eventInfoDialog.findViewById(R.id.event_desc_text_view);
         timeStampTextView = (TextView) eventInfoDialog.findViewById(R.id.time_stamp_text_view);
         titleTextView = (TextView) eventInfoDialog.findViewById(R.id.event_title_text_view);
+
+        editMembersImageButton = (ImageButton) eventInfoDialog.findViewById(R.id.editMembersImageButton);
 
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
         eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -803,6 +807,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoMembersRecyclerView.setHasFixedSize(true);
         EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
         eventInfoMembersRecyclerView.setAdapter(adapter);
+
+        editMembersImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new EventDialogs().showDialog(MapsActivity.this, Constants.TYPE_DELETE_MEMBERS);
+            }
+        });
 
         Window window = eventInfoDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
@@ -1139,12 +1150,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
-                        Firebase removeMember = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + snapshot.getKey().toString() + "/activeEvent/" + Constants.currentEventId);
+                        Firebase removeMember = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + snapshot.getKey() + "/activeEvent/" + Constants.currentEventId);
                         removeMember.removeValue();
                     }
                     if (dataSnapshot.child("requested").exists()) {
                         for (DataSnapshot snapshot : dataSnapshot.child("requested").getChildren()) {
-                            Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + snapshot.getKey().toString() + Constants.currentEventId);
+                            Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + snapshot.getKey() + Constants.currentEventId);
                             removeRequest.removeValue();
                         }
                     }
@@ -1158,13 +1169,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         } else {
-            Firebase removeCurrentUser = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent/" + Constants.currentEventId);
-            removeCurrentUser.removeValue(new Firebase.CompletionListener() {
+            Firebase removeMember = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members/" + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) );
+            removeMember.removeValue(new Firebase.CompletionListener() {
                 @Override
                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                    exitMapEvent();
+                    Firebase removeCurrentUser = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent/" + Constants.currentEventId);
+                    removeCurrentUser.removeValue(new Firebase.CompletionListener() {
+                        @Override
+                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                            exitMapEvent();
+                        }
+                    });
                 }
             });
+
         }
 
     }
@@ -1202,13 +1220,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (id == R.id.all_option_menu_item) {
             // show other options dialog
             checkGPS();
-
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    void checkGPS(){
+    void checkGPS() {
         // check for GPS is enabled, if not show snackbar, else just call the location Action
         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -1220,6 +1237,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             showAllInOneDialog();
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -1257,8 +1275,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                 @Override
                 public void onMyLocationChange(Location location) {
-                    Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog");
-                    userLocationLogFirebase.keepSynced(true);
+
                     checkNearCheckPoint(location);
                     updateUserCurrentLocation(location);
 
@@ -1324,10 +1341,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateUserCurrentLocationFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Map<String, Object> currentLocation = new HashMap<>();
-                    currentLocation.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), location.getLatitude() + "," + location.getLongitude());
-                    updateUserCurrentLocationFirebase.updateChildren(currentLocation);
+                if (checkInternetConnection()) {
+                    if (dataSnapshot.exists()) {
+                        Map<String, Object> currentLocation = new HashMap<>();
+                        currentLocation.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), location.getLatitude() + "," + location.getLongitude());
+                        updateUserCurrentLocationFirebase.updateChildren(currentLocation);
+                    }
                 }
             }
 
@@ -1600,9 +1619,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void deleteCheckPoint(int position) {
-        Firebase deleteCheckPointFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints/"+ position);
+        Firebase deleteCheckPointFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints/" + position);
         deleteCheckPointFirebase.removeValue();
         checkPointCoordinateMap.remove(position);
+        zoomFitMembers();
     }
 
     @Override
@@ -1625,7 +1645,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
-    void showStreetView(final Double latitude, final Double longitude){
+    void showStreetView(final Double latitude, final Double longitude) {
 
         StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getFragmentManager()
@@ -1640,14 +1660,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     intent.putExtra("latitude", latitude);
                     intent.putExtra("longitude", longitude);
                     startActivity(intent);
-                }else{
+                } else {
                     // TODO: show dialog to say streetview unavailable and finish() on OK
                     showStreetViewNotAvailableSnackBar();
                 }
             }
         });
     }
-    void showStreetViewNotAvailableSnackBar(){
+
+    void showStreetViewNotAvailableSnackBar() {
         if (mMap != null) {
             mMap.setPadding(0, 0, 0, 200);
         }
@@ -1670,6 +1691,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         snackbar.show();
     }
+
     void showStreetViewSnackBar(final Marker marker) {
         if (mMap != null) {
             mMap.setPadding(0, 0, 0, 200);
@@ -1679,7 +1701,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setAction("SEE IT", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showStreetView(marker.getPosition().latitude,  marker.getPosition().longitude);
+                        showStreetView(marker.getPosition().latitude, marker.getPosition().longitude);
 
 
                     }

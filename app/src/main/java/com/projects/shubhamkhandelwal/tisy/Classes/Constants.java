@@ -19,8 +19,8 @@ public class Constants {
     public static int TYPE_CREATE_EVENTS = 1000;
     public static int TYPE_ALL_EVENTS = 1001;
     public static int TYPE_ALL_REQUESTS = 1002;
-    public static int TYPE_RECEIVED_REQUESTS = 1003;
-    public static int TYPE_REQUESTS = 1004;
+    public static int TYPE_REQUESTS = 1003;
+    public static int TYPE_DELETE_MEMBERS = 1004;
 
     public static int START_LOCATION_TAG = 7000;
     public static int DESTINATION_LOCATION_TAG = 7001;

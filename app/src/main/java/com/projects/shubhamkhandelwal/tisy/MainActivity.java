@@ -55,7 +55,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final static String JOIN_EVENT_TAG = "send_requests";
     public final static String ALL_EVENTS_TAG = "all_events";
     public final static String REQUESTS_TAG = "requests";
-    public final static String RECEIVED_REQUEST_TAG = "received_requests";
+    public final static String STREETVIEW_TAG = "streetview";
     public final static String TRACK_TAG = "my_tracks";
 
 
@@ -268,7 +268,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         receivedRequestsCircleButton.setPadding(50, 50, 50, 50);
 
         TextView recevivedTextView = new TextView(this);
-        recevivedTextView.setText("Received Requests");
+        recevivedTextView.setText("Streetview");
         recevivedTextView.setTextColor(getResources().getColor(R.color.colorAccent));
         recevivedTextView.setTextSize(16);
         recevivedTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
@@ -278,7 +278,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         receivedRequestLinearLayout.addView(recevivedTextView);
 
         SubActionButton receivedRequestSubActionButton = itemBuilder.setContentView(receivedRequestLinearLayout).build();
-        receivedRequestSubActionButton.setTag(RECEIVED_REQUEST_TAG);
+        receivedRequestSubActionButton.setTag(STREETVIEW_TAG);
         receivedRequestSubActionButton.setOnClickListener(this);
 
         // add items to custom FAB menu.
@@ -314,9 +314,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (view.getTag().equals(REQUESTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_REQUESTS);
         }
-        if (view.getTag().equals(RECEIVED_REQUEST_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
+        if (view.getTag().equals(STREETVIEW_TAG)) {
+          toStreetViewActivity();
         }
+    }
+    void toStreetViewActivity(){
+        Intent intent = new Intent(MainActivity.this, StreetViewForLocationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
     void toTrackActivity(){
         Intent intent = new Intent(MainActivity.this, TrackActivity.class);

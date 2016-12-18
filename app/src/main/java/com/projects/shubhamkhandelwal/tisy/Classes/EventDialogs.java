@@ -15,9 +15,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.projects.shubhamkhandelwal.tisy.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EventDialogs{
+    List<String> members;
     public void showDialog(Context context, int type){
         final Dialog dialog = new Dialog(context, R.style.event_dialogs);
         if(type == Constants.TYPE_ALL_EVENTS) {
@@ -26,12 +35,12 @@ public class EventDialogs{
         }else if(type == Constants.TYPE_ALL_REQUESTS){
             dialog.setContentView(R.layout.activity_all_requests);
             showAllRequestsDialog(context, dialog);
-        }else if(type == Constants.TYPE_RECEIVED_REQUESTS){
-            dialog.setContentView(R.layout.dialog_received_requests_layout);
-            showReceviedRequests(context, dialog);
         }else if(type == Constants.TYPE_REQUESTS){
             dialog.setContentView(R.layout.dialog_requests_layout);
             showRequests(context, dialog);
+        }else if(type == Constants.TYPE_DELETE_MEMBERS){
+            dialog.setContentView(R.layout.dialog_delete_event_members_layout);
+            showMembersDialog(context, dialog);
         }
 
         Window window = dialog.getWindow();
@@ -42,6 +51,43 @@ public class EventDialogs{
 
 
     }
+    void showMembersDialog(final Context context, final Dialog dialog){
+        members = new ArrayList<>();
+        Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren()){
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        members.add(snapshot.getKey());
+                    }
+                    initDeleteEventMemberRecyclerView(context, members, dialog);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
+    }
+    void initDeleteEventMemberRecyclerView(final Context context, List<String> members, final Dialog dialog){
+        RecyclerView deleteEventMemberRecyclerView;
+        EventMembersRecyclerViewAdapater eventMembersRecyclerViewAdapater;
+
+        deleteEventMemberRecyclerView= (RecyclerView) dialog.findViewById(R.id.delete_event_members_recycler_view);
+        deleteEventMemberRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
+        deleteEventMemberRecyclerView.setLayoutManager(linearLayoutManager);
+
+        eventMembersRecyclerViewAdapater = new EventMembersRecyclerViewAdapater(context, members);
+        deleteEventMemberRecyclerView.setAdapter(eventMembersRecyclerViewAdapater);
+    }
+
     void showRequests(final Context context, final Dialog dialog){
         Button joinRequestButton = (Button) dialog.findViewById(R.id.dialog_join_request_button);
 
@@ -117,6 +163,7 @@ public class EventDialogs{
 
 
     }
+    /*
     void showReceviedRequests(Context context, final Dialog dialog){
         ImageButton exitButton;
         RecyclerView receivedRequestRecyclerView;
@@ -137,7 +184,7 @@ public class EventDialogs{
                 dialog.dismiss();
             }
         });
-    }
+    }*/
     void showAllRequestsDialog(Context context, final Dialog dialog) {
         ImageButton exitImageButton;
         RecyclerView joinEventRequestsRecyclerView;

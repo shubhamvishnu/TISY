@@ -8,7 +8,7 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,8 +26,7 @@
         <activity
             android:name=".MainActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait"
-           >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +49,7 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait"
-            android:theme="@style/MapTheme"/>
+            android:theme="@style/MapTheme" />
         <activity
             android:name=".CreateEvent"
             android:screenOrientation="portrait"
@@ -59,8 +58,10 @@
             android:name=".Login"
             android:screenOrientation="portrait" />
         <activity android:name=".StreetViewActivity" />
-        <activity android:name=".TrackActivity"
+        <activity
+            android:name=".TrackActivity"
             android:theme="@style/MapTheme" />
+        <activity android:name=".StreetViewForLocationActivity"></activity>
     </application>
 
 </manifest>
