@@ -1,6 +1,7 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -67,24 +68,14 @@ public class StreetViewForLocationActivity extends FragmentActivity
 
         StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getFragmentManager()
-                        .findFragmentById(R.id.streetviewpanorama);
-
+                        .findFragmentById(R.id.streeview_activity_streetviewpanorama);
+        streetViewPanoramaFragment.getView().setBackgroundColor(Color.WHITE);
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
         streetViewPanorama.setPosition(latLng);
-        if (streetViewPanorama.getLocation() != null) {
-            streetViewUnavailableLinearLayout.setVisibility(View.INVISIBLE);
-            streetViewUnavailableLinearLayout.setVisibility(View.VISIBLE);
-            Toast.makeText(StreetViewForLocationActivity.this, "available", Toast.LENGTH_SHORT).show();
-        } else {
-            streetViewUnavailableLinearLayout.setVisibility(View.VISIBLE);
-            streetViewUnavailableLinearLayout.setVisibility(View.INVISIBLE);
-            // TODO: show dialog to say streetview unavailable and finish() on OK
-            Toast.makeText(StreetViewForLocationActivity.this, "not available", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

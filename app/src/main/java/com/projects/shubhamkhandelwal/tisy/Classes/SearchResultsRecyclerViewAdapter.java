@@ -52,12 +52,45 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name) || Pattern.compile(Pattern.quote(snapshot.getKey()), Pattern.CASE_INSENSITIVE).matcher(name).find() || Pattern.compile(Pattern.quote(snapshot.child("name").getValue().toString()), Pattern.CASE_INSENSITIVE).matcher(name).find() ) {
-                            int position = eventIdList.size();
-                            eventIdList.add(snapshot.getKey());
-                            nameList.add(snapshot.child("name").getValue().toString());
-                            notifyItemInserted(position);
+                    for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name) || Pattern.compile(Pattern.quote(snapshot.getKey()), Pattern.CASE_INSENSITIVE).matcher(name).find() || Pattern.compile(Pattern.quote(snapshot.child("name").getValue().toString()), Pattern.CASE_INSENSITIVE).matcher(name).find()) {
+                            if (!snapshot.getKey().equals(username)) {
+                                Firebase sentRequestsFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId + "/");
+                                sentRequestsFirebase.keepSynced(true);
+                                sentRequestsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (!dataSnapshot.child(snapshot.getKey()).exists()) {
+
+                                            Firebase userRequestsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + snapshot.getKey());
+                                            userRequestsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                    if (!dataSnapshot.child(snapshot.getKey()).exists()) {
+                                                        int position = eventIdList.size();
+                                                        eventIdList.add(snapshot.getKey());
+                                                        nameList.add(snapshot.child("name").getValue().toString());
+                                                        notifyItemInserted(position);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(FirebaseError firebaseError) {
+
+                                                }
+                                            });
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
+
+                                    }
+                                });
+
+                            }
                         }
                     }
                 }
@@ -90,6 +123,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     }
 
     void sendRequest(final int position) {
+
         Firebase userIdCheckFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + eventIdList.get(position));
         userIdCheckFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -121,6 +155,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
+
     }
 
     class SearchResultsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -140,7 +175,9 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.search_option_add_member_image_view: {
-                    sendRequest(getPosition());
+                    if (eventIdList.size() > 0) {
+                        sendRequest(getPosition());
+                    }
                     break;
                 }
             }

@@ -1646,27 +1646,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void showStreetView(final Double latitude, final Double longitude) {
-
-        StreetViewPanoramaFragment streetViewPanoramaFragment =
-                (StreetViewPanoramaFragment) getFragmentManager()
-                        .findFragmentById(R.id.streetviewpanorama);
-
-        streetViewPanoramaFragment.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
-            @Override
-            public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
-                streetViewPanorama.setPosition(new LatLng(latitude, longitude));
-                if (streetViewPanorama.getLocation() != null) {
+//
+//        StreetViewPanoramaFragment streetViewPanoramaFragment =
+//                (StreetViewPanoramaFragment) getFragmentManager()
+//                        .findFragmentById(R.id.streetviewpanorama);
+//
+//        streetViewPanoramaFragment.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
+//            @Override
+//            public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
+//                streetViewPanorama.setPosition(new LatLng(latitude, longitude));
+//                if (streetViewPanorama.getLocation() != null) {
                     Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
                     intent.putExtra("latitude", latitude);
                     intent.putExtra("longitude", longitude);
                     startActivity(intent);
-                } else {
-                    // TODO: show dialog to say streetview unavailable and finish() on OK
-                    showStreetViewNotAvailableSnackBar();
-                }
+//                } else {
+//                    // TODO: show dialog to say streetview unavailable and finish() on OK
+//                    showStreetViewNotAvailableSnackBar();
+//                }
             }
-        });
-    }
+
 
     void showStreetViewNotAvailableSnackBar() {
         if (mMap != null) {

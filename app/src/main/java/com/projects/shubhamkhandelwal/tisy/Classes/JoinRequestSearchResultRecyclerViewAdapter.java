@@ -62,7 +62,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                 if (dataSnapshot.exists()) {
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         // check if the name is not equal to username
-                        if (!snapshot.getKey().equals(username)) {
+                        if (!snapshot.getKey().trim().contentEquals(username.trim())) {
                             // check if the name has activeEvents
                             if (snapshot.child("activeEvent").hasChildren()) {
                                 // iterate through the users events
@@ -164,6 +164,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
     // sends the request to join an event
     void sendJoinRequest(final String requestEventId, final String requestEventDesc) {
         Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + requestEventId);
+        firebase.keepSynced(true);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -173,6 +174,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                     HashMap<String, Object> updateEvent = new HashMap<String, Object>();
                     updateEvent.put(username, requestEventDesc);
                     final Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + requestEventId + "/requested");
+                    firebase.keepSynced(true);
                     firebase.updateChildren(updateEvent, new Firebase.CompletionListener() {
                         @Override
                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -202,7 +204,8 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
      */
     void setValues(final String rID, final String rDesc) {
 
-        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
+        Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
+        firebase.keepSynced(true);
         Map<String, Object> request = new HashMap<>();
         request.put(rID, rDesc);
         firebase.updateChildren(request, new Firebase.CompletionListener() {

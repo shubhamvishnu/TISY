@@ -126,7 +126,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         mMap.getUiSettings().setAllGesturesEnabled(true);
     }
 
-    public void initializePoints(String user, String dateMonthYear) {
+    public void initializePoints(String user, final String dateMonthYear) {
         cameraLatLngbuilder = new LatLngBounds.Builder();
 
         locationPoints = new ArrayList<>();
@@ -154,7 +154,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                         }
                     }
 
-                    initializeCheckPoints(dataSnapshot);
+                    initializeCheckPoints(dateMonthYear);
                 }
             }
 
@@ -165,17 +165,31 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
-    void initializeCheckPoints(DataSnapshot dataSnapshot) {
-        DataSnapshot snapshot = dataSnapshot.child("checkPoints");
-        if (snapshot.exists()) {
-            checkInPoints = new ArrayList<>();
-            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                CheckInPoints checkPoints = childSnapshot.getValue(CheckInPoints.class);
-                checkInPoints.add(checkPoints);
+    void initializeCheckPoints(String dateMonthYear) {
+        checkInPoints = new ArrayList<>();
+        Firebase checkInFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + "/checkInLog/" + dateMonthYear);
+        checkInFirebase.keepSynced(true);
+        checkInFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        CheckInPoints checkPoints = childSnapshot.getValue(CheckInPoints.class);
+                        checkInPoints.add(checkPoints);
+
+                    }
+                    showPolyline();
+                } else {
+                    showPolyline();
+                }
             }
-        } else {
-            showPolyline();
-        }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 
     void showPolyline() {

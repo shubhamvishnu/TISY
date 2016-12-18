@@ -12,7 +12,6 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.projects.shubhamkhandelwal.tisy.R;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class JoinEventRequestsRecyclerViewAdapter extends RecyclerView.Adapter<J
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 int position = joinEventIds.size();
-                JoinEventInfo joinEventInfo = new JoinEventInfo(dataSnapshot.getKey().toString(), dataSnapshot.getValue().toString());
+                JoinEventInfo joinEventInfo = new JoinEventInfo(dataSnapshot.getKey(), dataSnapshot.getValue().toString());
                 joinEventIds.add(joinEventInfo);
                 notifyItemInserted(position);
             }
@@ -106,33 +105,24 @@ public class JoinEventRequestsRecyclerViewAdapter extends RecyclerView.Adapter<J
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.remove_request_image_button: {
-                    final Firebase removeMemberRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + joinEventIds.get(getPosition()).getEventId() + "/requested/" + username);
-                    removeMemberRequestFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                removeMemberRequestFirebase.removeValue(new Firebase.CompletionListener() {
+                    if (joinEventIds.size() > 0) {
+                        Firebase removeMemberRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + joinEventIds.get(getPosition()).getEventId() + "/requested/" + username);
+                        removeMemberRequestFirebase.removeValue(new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+
+                                Firebase removeRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username + "/" + joinEventIds.get(getPosition()).getEventId());
+                                removeRequestFirebase.removeValue(new Firebase.CompletionListener() {
                                     @Override
                                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-
-                                        Firebase removeRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username + "/" + joinEventIds.get(getPosition()).getEventId());
-                                        removeRequestFirebase.removeValue(new Firebase.CompletionListener() {
-                                            @Override
-                                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                                joinEventIds.remove(getPosition());
-                                                notifyItemRemoved(getPosition());
-                                            }
-                                        });
+                                        joinEventIds.remove(getPosition());
+                                        notifyItemRemoved(getPosition());
                                     }
                                 });
+
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-
-                        }
-                    });
+                        });
+                    }
 
 
                     break;

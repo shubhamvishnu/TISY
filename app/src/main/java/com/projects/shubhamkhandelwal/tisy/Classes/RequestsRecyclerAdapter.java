@@ -44,7 +44,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
     void fetchProfileURLS(){
         profileURLsList = new ArrayList<>();
         for(int i = 0; i < requestDetails.size(); i++){
-            final Firebase profileFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + "/userPhotoUri/");
+            final Firebase profileFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + requestDetails.get(i).getUsername() +"/userPhotoUri/");
             profileFirebase.keepSynced(true);
             profileFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
