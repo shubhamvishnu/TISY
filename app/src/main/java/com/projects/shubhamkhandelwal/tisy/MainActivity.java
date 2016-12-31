@@ -134,7 +134,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         // Custom FAB for showing options.
         centerFAB = (ImageButton) findViewById(R.id.center_fab); // initialize the center FAB main button.
-        centerFAB.setColorFilter(getResources().getColor(R.color.colorAccent));
 
         // Custom FAB menu.
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
@@ -149,12 +148,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         // create event menu item
         ImageView createEventCircleButton = new ImageView(this); // image view for the menu item.
-        createEventCircleButton.setImageResource(R.drawable.create_event);
+        createEventCircleButton.setImageResource(R.drawable.add);
         createEventCircleButton.setAdjustViewBounds(true);
-        createEventCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
+        createEventCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
         createEventCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(600, 600));
-        createEventCircleButton.setPadding(50, 50, 50, 50);
+        createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
+        createEventCircleButton.setPadding(50, 100, 50, 100);
 
         // add the views to the layout for the menu items.
         subActionFABLinearLayout.addView(createEventCircleButton);
@@ -171,25 +170,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         subActionFABLinearLayout.setGravity(Gravity.CENTER);
         subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-
         ImageView trackCircleButton = new ImageView(this);
         trackCircleButton.setAdjustViewBounds(true);
         trackCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        trackCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
-        trackCircleButton.setImageResource(R.drawable.all_events_active_icon);
-        trackCircleButton.setPadding(50, 50, 50, 50);
-        trackCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-
-
-        TextView trackTextView = new TextView(this);
-        trackTextView.setText("My Tracks");
-        trackTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        trackTextView.setTextSize(16);
-        trackTextView.setGravity(Gravity.CENTER);
-        trackTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
+        trackCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
+        trackCircleButton.setImageResource(R.drawable.tracks_image);
+        trackCircleButton.setPadding(50, 100, 50, 100);
+        trackCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
 
         subActionFABLinearLayout.addView(trackCircleButton);
-        subActionFABLinearLayout.addView(trackTextView);
 
         SubActionButton trackSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         trackSubActionButton.setTag(TRACK_TAG);
@@ -205,19 +194,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageView allActiveEventsCircleButton = new ImageView(this);
         allActiveEventsCircleButton.setAdjustViewBounds(true);
         allActiveEventsCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        allActiveEventsCircleButton.setImageResource(R.drawable.all_events_active_icon);
-        allActiveEventsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
-        allActiveEventsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        allActiveEventsCircleButton.setPadding(50, 50, 50, 50);
+        allActiveEventsCircleButton.setImageResource(R.drawable.allevents);
+        allActiveEventsCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
+        allActiveEventsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
+        allActiveEventsCircleButton.setPadding(50, 100, 50, 100);
 
-        TextView allEventsTextView = new TextView(this);
-        allEventsTextView.setText("All Events");
-        allEventsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        allEventsTextView.setTextSize(16);
-        allEventsTextView.setGravity(Gravity.CENTER);
-        allEventsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
+
         subActionFABLinearLayout.addView(allActiveEventsCircleButton);
-        subActionFABLinearLayout.addView(allEventsTextView);
+
 
         SubActionButton allEventsSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         allEventsSubActionButton.setTag(ALL_EVENTS_TAG);
@@ -233,20 +217,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageView requestsCircleButton = new ImageView(this);
         requestsCircleButton.setAdjustViewBounds(true);
         requestsCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        requestsCircleButton.setImageResource(R.drawable.requests_icon);
-        requestsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
-        requestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        requestsCircleButton.setPadding(50, 50, 50, 50);
-
-        TextView requestsTextView = new TextView(this);
-        requestsTextView.setText("Sent Requests");
-        requestsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        requestsTextView.setTextSize(16);
-        requestsTextView.setGravity(Gravity.CENTER);
-        requestsTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
+        requestsCircleButton.setImageResource(R.drawable.requests);
+        requestsCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
+        requestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
+        requestsCircleButton.setPadding(50, 100, 50, 100);
 
         subActionFABLinearLayout.addView(requestsCircleButton);
-        subActionFABLinearLayout.addView(requestsTextView);
 
         SubActionButton requestsSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
         requestsSubActionButton.setTag(REQUESTS_TAG);
@@ -262,20 +238,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageView receivedRequestsCircleButton = new ImageView(this);
         receivedRequestsCircleButton.setAdjustViewBounds(true);
         receivedRequestsCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        receivedRequestsCircleButton.setImageResource(R.drawable.request_received_icon);
-        receivedRequestsCircleButton.setBackground(getResources().getDrawable(R.drawable.floating_sub_action_button_selector));
-        receivedRequestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
-        receivedRequestsCircleButton.setPadding(50, 50, 50, 50);
+        receivedRequestsCircleButton.setImageResource(R.drawable.streetview);
+        receivedRequestsCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
+        receivedRequestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
+        receivedRequestsCircleButton.setPadding(50, 100, 50, 100);
 
-        TextView recevivedTextView = new TextView(this);
-        recevivedTextView.setText("Streetview");
-        recevivedTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-        recevivedTextView.setTextSize(16);
-        recevivedTextView.setLayoutParams(new ViewGroup.LayoutParams(500, 150));
-        recevivedTextView.setGravity(Gravity.CENTER);
+
 
         receivedRequestLinearLayout.addView(receivedRequestsCircleButton);
-        receivedRequestLinearLayout.addView(recevivedTextView);
 
         SubActionButton receivedRequestSubActionButton = itemBuilder.setContentView(receivedRequestLinearLayout).build();
         receivedRequestSubActionButton.setTag(STREETVIEW_TAG);

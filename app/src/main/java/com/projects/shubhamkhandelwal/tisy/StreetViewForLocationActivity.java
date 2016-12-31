@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -24,18 +25,30 @@ public class StreetViewForLocationActivity extends FragmentActivity
     // intialization for place picker dialog
     int PLACE_PICKER_REQUEST = 1;
     PlacePicker.IntentBuilder builder;
-    LinearLayout streetViewUnavailableLinearLayout;
-    LinearLayout streetViewAvailableLinearLayout;
+    ImageButton editStreetViewLocation;
+    ImageButton editStreetViewMarkerIcon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_street_view_for_location);
-        streetViewUnavailableLinearLayout = (LinearLayout) findViewById(R.id.streetview_unavailable_linear_layout);
-        streetViewAvailableLinearLayout = (LinearLayout) findViewById(R.id.streetview_available_linear_layout);
+        editStreetViewLocation = (ImageButton) findViewById(R.id.streetview_edit_option_icon);
+        editStreetViewMarkerIcon = (ImageButton) findViewById(R.id.streetview_edit_marker_option_icon);
+
         placePickerDialog();
-
-
+editStreetViewMarkerIcon.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        placePickerDialog();
+    }
+});
+        editStreetViewLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                placePickerDialog();
+            }
+        });
     }
 
     // to call the placepicker dialog
@@ -69,7 +82,6 @@ public class StreetViewForLocationActivity extends FragmentActivity
         StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getFragmentManager()
                         .findFragmentById(R.id.streeview_activity_streetviewpanorama);
-        streetViewPanoramaFragment.getView().setBackgroundColor(Color.WHITE);
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
     }
 

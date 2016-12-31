@@ -24,8 +24,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.projects.shubhamkhandelwal.tisy.Classes.CheckInPoints;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
@@ -36,8 +38,6 @@ import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class TrackActivity extends AppCompatActivity implements OnMapReadyCallback {
     String trackUsername;
     GoogleMap mMap;
@@ -47,10 +47,9 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
     List<Integer> timeLog;
     LatLngBounds.Builder cameraLatLngbuilder;
     String dateMonthYear;
-    RecyclerView memberRecyclerView;
+
     RecyclerView dateMonthYearRecyclerView;
     CoordinatorLayout trackCoordinatorLayout;
-    String eventID;
 
 
     @Override
@@ -59,7 +58,7 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_track);
         trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
         trackUsername = getIntent().getStringExtra("username");
-        eventID = getIntent().getStringExtra("event_id");
+
         dateMonthYear = TimeStamp.getRawTime();
         Toast.makeText(TrackActivity.this, "username : " + trackUsername, Toast.LENGTH_SHORT).show();
 
@@ -72,20 +71,6 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         initializeDateRecyclerView(trackUsername);
 
 
-    }
-
-    void initializeMemberRecyclerView(String eventID) {
-        memberRecyclerView = (RecyclerView) findViewById(R.id.members_track_activity_recycler_view);
-        if (eventID == null) {
-            memberRecyclerView.setVisibility(View.GONE);
-        } else {
-            memberRecyclerView.setHasFixedSize(true);
-            MemberRecyclerViewAdapater memberRecyclerViewAdapater = new MemberRecyclerViewAdapater(this, eventID);
-            memberRecyclerView.setAdapter(memberRecyclerViewAdapater);
-            LinearLayoutManager layoutManager
-                    = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            memberRecyclerView.setLayoutManager(layoutManager);
-        }
     }
 
     void initializeDateRecyclerView(String username) {
@@ -153,8 +138,8 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                             timeLog.add(Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]));
                         }
                     }
+                    showPolyline();
 
-                    initializeCheckPoints(dateMonthYear);
                 }
             }
 
@@ -165,84 +150,70 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
-    void initializeCheckPoints(String dateMonthYear) {
-        checkInPoints = new ArrayList<>();
-        Firebase checkInFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + "/checkInLog/" + dateMonthYear);
-        checkInFirebase.keepSynced(true);
-        checkInFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                        CheckInPoints checkPoints = childSnapshot.getValue(CheckInPoints.class);
-                        checkInPoints.add(checkPoints);
-
-                    }
-                    showPolyline();
-                } else {
-                    showPolyline();
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-    }
 
     void showPolyline() {
         mMap.clear();
         // TODO: show start time line location
         // TODO show end time line location
+
         int initialTime = timeLog.get(0);
 
         PolylineOptions polylineOptions = new PolylineOptions();
-        int count = 0;
-        for (int i = 0; i < locationPoints.size(); i++) {
+        List<LatLng> latLngList = new ArrayList<>();
+        List<String> timeList = new ArrayList<>();
+
+        latLngList.add(locationPoints.get(0));
+        timeList.add(timePoints.get(0));
+
+        int size = locationPoints.size();
+
+        for (int i = 0; i < size; i++) {
             polylineOptions.add(locationPoints.get(i));
-            if (initialTime < timeLog.get(0)) {
-                ++count;
-                //TODO: show hour change marker
-                showLines(polylineOptions, getCustomColor(count));
-                polylineOptions = new PolylineOptions();
+
+            if (initialTime < timeLog.get(i)) {
+                initialTime = timeLog.get(i);
+                latLngList.add(locationPoints.get(i));
+                timeList.add(timePoints.get(i));
             }
         }
-        if (count == 0) {
-            showLines(polylineOptions, getCustomColor(count));
-        }
-        showCheckInPoints();
+        latLngList.add(locationPoints.get((latLngList.size() - 1)));
+        timeList.add(timePoints.get((timePoints.size()-1)));
+        showLines(polylineOptions);
+        showHourChangeMarkers(latLngList, timeList);
 
 
     }
 
-    void showLines(PolylineOptions polylineOptions, int customColor) {
-        polylineOptions.width(10);
-        polylineOptions.color(customColor);
-        polylineOptions.geodesic(true);
-        mMap.addPolyline(polylineOptions);
+    void showHourChangeMarkers(List<LatLng> latLngList,List<String> timeList) {
+
+        for (int i = 0; i < latLngList.size(); i++) {
+            if (i == 0) {
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLngList.get(i))
+                        .title(timeList.get(i)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+            } else if (i == (latLngList.size() - 1)) {
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLngList.get(i))
+                        .title(timeList.get(i)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+            } else {
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLngList.get(i))
+                        .title(timeList.get(i)));
+            }
+        }
         zoomFitMap();
     }
 
-    void showCheckInPoints() {
-        if (!checkInPoints.isEmpty()) {
-            for (int i = 0; i < checkInPoints.size(); i++) {
-                CheckInPoints checkIns = checkInPoints.get(i);
-                Double latitude = Double.parseDouble(checkIns.getLatitude());
-                Double longitude = Double.parseDouble(checkIns.getLatitude());
-                String name = checkIns.getName();
-                String description = checkIns.getDescription();
-                String time = checkIns.getTime();
+    void showLines(PolylineOptions polylineOptions) {
+        polylineOptions.width(20);
+        polylineOptions.color(R.color.customColor2);
+        polylineOptions.geodesic(true);
 
-                if (description.contains("notAvailable")) {
-                    description = "";
-                }
-                // TODO: show checkIn marker
-            }
-            zoomFitMap();
-        }
+        mMap.addPolyline(polylineOptions).setPoints(locationPoints);
+
+        zoomFitMap();
     }
+
 
     void zoomFitMap() {
         LatLngBounds bounds = cameraLatLngbuilder.build();
@@ -255,85 +226,9 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onBackPressed() {
-        if (eventID == null) {
-            Intent intent = new Intent(TrackActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        } else {
-            finish();
-        }
+        finish();
     }
 
-    class MemberRecyclerViewAdapater extends RecyclerView.Adapter<MemberRecyclerViewAdapater.MemberRecyclerViewHolder> {
-        Context context;
-        String eventID;
-        List<String> memberList;
-        private LayoutInflater inflator;
-
-        public MemberRecyclerViewAdapater(Context context, String eventID) {
-            this.context = context;
-            this.eventID = eventID;
-            inflator = LayoutInflater.from(context);
-            memberList = new ArrayList<>();
-
-            initList();
-
-        }
-
-        void initList() {
-            Firebase eventMemberFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventID + "/members/");
-            eventMemberFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        int position = memberList.size();
-                        memberList.add(snapshot.getKey());
-                        notifyItemInserted(position);
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-        }
-
-        @Override
-        public MemberRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflator.inflate(R.layout.recycler_view_event_members_layout, parent, false);
-            MemberRecyclerViewHolder viewHolder = new MemberRecyclerViewHolder(view);
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(MemberRecyclerViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return memberList.size();
-        }
-
-        class MemberRecyclerViewHolder extends RecyclerView.ViewHolder {
-            CircleImageView memberImageView;
-
-            public MemberRecyclerViewHolder(View itemView) {
-                super(itemView);
-                memberImageView = (CircleImageView) itemView.findViewById(R.id.event_member_image_view);
-                memberImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        trackUsername = memberList.get(getPosition());
-                        initializeDateRecyclerView(trackUsername);
-                    }
-                });
-            }
-        }
-    }
 
     class DateRecyclerViewAdapter extends RecyclerView.Adapter<DateRecyclerViewAdapter.DateRecyclerViewHolder> {
         Context context;
@@ -403,10 +298,8 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
                             notifyItemInserted(pos);
                             position = pos;
                         }
-                        initializeMemberRecyclerView(eventID);
                         initializePoints(trackUsername, dateMonthYearList.get(position));
                     } else {
-                        memberRecyclerView.setVisibility(View.GONE);
                         dateMonthYearRecyclerView.setVisibility(View.GONE);
                         showSnackBar();
 

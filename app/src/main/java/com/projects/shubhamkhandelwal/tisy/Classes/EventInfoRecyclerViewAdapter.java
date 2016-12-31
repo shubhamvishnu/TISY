@@ -65,9 +65,6 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
         dialog.dismiss();
         Intent intent = new Intent(context, TrackActivity.class);
         intent.putExtra("username", memberList.get(position));
-        if (Constants.currentEventId != null) {
-            intent.putExtra("event_id", Constants.currentEventId);
-        }
         context.startActivity(intent);
     }
 
@@ -88,10 +85,7 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (memberCoordinate.get(getPosition()).equals("0.0,0.0")) {
-                    } else {
                         showTracks(getPosition());
-                    }
                 }
             });
         }

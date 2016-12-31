@@ -123,8 +123,6 @@ public class JoinEventRequestsRecyclerViewAdapter extends RecyclerView.Adapter<J
                             }
                         });
                     }
-
-
                     break;
                 }
             }

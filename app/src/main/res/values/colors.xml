@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#2c3e50</color>
     <color name="colorAccent">#e74c3c</color>
 
+
     <color name="customColor0">#0a1e33</color>
     <color name="customColor1">#009688</color>
     <color name="customColor2">#800020</color>
@@ -13,7 +14,7 @@
     <color name="customColor6">#6d8764</color>
     <color name="customColor7">#6082B6</color>
     <color name="customColor8">#455A64</color>
-
+    <color name="customColor9">#96e74c3c</color>
 
 
 

@@ -3,6 +3,7 @@ package com.projects.shubhamkhandelwal.tisy;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -372,6 +373,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton addNewMemberImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_member);
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
         ImageButton changeMapStyleImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_change_mode_icon);
+        ImageButton mapTypeImageButton = (ImageButton) allInOneDialog.findViewById(R.id.map_type_option_icon);
+
         requestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.requests_option_layout);
         sendRequestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.send_request_option_layout);
 
@@ -379,6 +382,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             requestsLayout.setVisibility(View.INVISIBLE);
             sendRequestsLayout.setVisibility(View.INVISIBLE);
         }
+        mapTypeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                showMapTypeOptionDialog();
+            }
+        });
         requestIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -430,18 +440,65 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         allInOneDialog.show();
     }
 
+    void showMapTypeOptionDialog(){
+        final Dialog mapTypeDialog = new Dialog(this, R.style.event_info_dialog_style);
+        mapTypeDialog.setContentView(R.layout.dialog_map_type_option_layout);
+        ImageButton defaultMapTypeImageButton, terrainMapTypeImageButton, satelliteMapTypeImageButton, hybridMapTypeImageButton;
+        defaultMapTypeImageButton = (ImageButton) mapTypeDialog.findViewById(R.id.map_type_default);
+        terrainMapTypeImageButton = (ImageButton) mapTypeDialog.findViewById(R.id.map_type_terrain);
+        satelliteMapTypeImageButton = (ImageButton) mapTypeDialog.findViewById(R.id.map_type_satellite);
+        hybridMapTypeImageButton = (ImageButton) mapTypeDialog.findViewById(R.id.map_type_hybrid);
+
+
+        defaultMapTypeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapTypeDialog.dismiss();
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
+        });
+        terrainMapTypeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapTypeDialog.dismiss();
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+            }
+        });
+        satelliteMapTypeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapTypeDialog.dismiss();
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+            }
+        });
+        hybridMapTypeImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mapTypeDialog.dismiss();
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+            }
+        });
+        Window window = mapTypeDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mapTypeDialog.setCanceledOnTouchOutside(true);
+        mapTypeDialog.show();
+    }
     void showMapStyleOptionsDialog() {
 
         final Dialog mapStyleDialog = new Dialog(this, R.style.event_info_dialog_style);
         mapStyleDialog.setContentView(R.layout.dialog_map_style_option_layout);
-        Button defaultModeButton, aubergineModeButton, retroModeButton, darkModeButton, nightModeButton, silverModeButton;
+        ImageButton defaultModeButton, aubergineModeButton, retroModeButton, darkModeButton, nightModeButton, silverModeButton;
 
-        defaultModeButton = (Button) mapStyleDialog.findViewById(R.id.default_mode);
-        aubergineModeButton = (Button) mapStyleDialog.findViewById(R.id.aubergine_mode);
-        nightModeButton = (Button) mapStyleDialog.findViewById(R.id.night_mode);
-        retroModeButton = (Button) mapStyleDialog.findViewById(R.id.retro_mode);
-        darkModeButton = (Button) mapStyleDialog.findViewById(R.id.dark_mode);
-        silverModeButton = (Button) mapStyleDialog.findViewById(R.id.silver_mode);
+        defaultModeButton = (ImageButton) mapStyleDialog.findViewById(R.id.default_mode);
+        aubergineModeButton = (ImageButton) mapStyleDialog.findViewById(R.id.aubergine_mode);
+        nightModeButton = (ImageButton) mapStyleDialog.findViewById(R.id.night_mode);
+        retroModeButton = (ImageButton) mapStyleDialog.findViewById(R.id.retro_mode);
+        darkModeButton = (ImageButton) mapStyleDialog.findViewById(R.id.dark_mode);
+        silverModeButton = (ImageButton) mapStyleDialog.findViewById(R.id.silver_mode);
 
         defaultModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -743,7 +800,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("fetching event details for you!");
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                showEventInfoDialog();
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
         progressDialog.show();
         memberUriCount = 0;
         for (String name : membersList) {
@@ -757,7 +826,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     if (membersList.size() == memberUriCount) {
                         progressDialog.dismiss();
-                        showEventInfoDialog();
+
                     }
                 }
 
@@ -1278,7 +1347,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     checkNearCheckPoint(location);
                     updateUserCurrentLocation(location);
-
                 }
             });
             changeInLocation();
@@ -1336,7 +1404,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
-    void updateUserCurrentLocation(final Location location) {
+     void updateUserCurrentLocation(final Location location) {
         final Firebase updateUserCurrentLocationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
         updateUserCurrentLocationFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1364,11 +1432,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         changeInLocationFirebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                 eventMembersUpdate();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
                 updateMemberLocation(dataSnapshot);
             }
 
@@ -1464,7 +1534,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void zoomFitMembers() {
         if (mMap != null) {
             zoomFit = true;
-            eventMembersUpdate();
             updateMapMembers();
         }
     }

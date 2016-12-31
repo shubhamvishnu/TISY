@@ -2,74 +2,141 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-
-    <Button
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/default_mode"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:elevation="20dp"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/default_map_image_icon" />
+    <TextView
+android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Default Mode"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="16dp"
+        android:textSize="8dp"
         android:textStyle="bold" />
-
-    <Button
-
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/aubergine_mode"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:elevation="20dp"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/aubergine_map_image_icon" />
+    <TextView
+
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Ainergine Mode"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="16dp"
+        android:textSize="8dp"
         android:textStyle="bold" />
-
-    <Button
-
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/dark_mode"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:elevation="20dp"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/dark_map_image_icon" />
+    <TextView
+
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Dark Mode"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="16dp"
+        android:textSize="8dp"
         android:textStyle="bold" />
-
-    <Button
-
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/night_mode"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:elevation="20dp"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/night_map_image_icon" />
+    <TextView
+
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Night Mode"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="16dp"
+        android:textSize="8dp"
         android:textStyle="bold" />
 
-    <Button
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/retro_mode"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:elevation="20dp"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/retro_map_image_icon" />
+    <TextView
+
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Retro Mode"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="16dp"
+        android:textSize="8dp"
         android:textStyle="bold" />
-    <Button
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/silver_mode"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:elevation="20dp"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/silver_map_image_icon" />
+
+
+    <TextView
+
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Silver Mode"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="16dp"
+        android:textSize="8dp"
         android:textStyle="bold" />
 
 
