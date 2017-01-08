@@ -9,6 +9,16 @@ public class LocationLog {
     String longitude;
     String hourAndMinute;
 
+    public int getCustomColor() {
+        return customColor;
+    }
+
+    public void setCustomColor(int customColor) {
+        this.customColor = customColor;
+    }
+
+    int customColor;
+
     public String getHourAndMinute() {
         return hourAndMinute;
     }

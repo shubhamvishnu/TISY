@@ -800,7 +800,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("fetching event details for you!");
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
         progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -862,7 +862,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         titleTextView = (TextView) eventInfoDialog.findViewById(R.id.event_title_text_view);
 
         editMembersImageButton = (ImageButton) eventInfoDialog.findViewById(R.id.editMembersImageButton);
-
+        if(Constants.eventAdmin){
+            editMembersImageButton.setVisibility(View.INVISIBLE);
+        }
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
         eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
@@ -876,6 +878,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoMembersRecyclerView.setHasFixedSize(true);
         EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
         eventInfoMembersRecyclerView.setAdapter(adapter);
+
 
         editMembersImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1606,7 +1609,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
 
-            markerBubbleBitmap = iconGenerator.makeIcon(namesList.get(memberPositionTracker).toString());
+            markerBubbleBitmap = iconGenerator.makeIcon(namesList.get(memberPositionTracker));
             marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerBubbleBitmap)));
             ++i;
             builder.include(marker.getPosition());

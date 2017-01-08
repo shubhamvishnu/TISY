@@ -30,6 +30,7 @@ import java.util.Map;
 public class LocationListenerService extends Service {
     LocationManager locationManager; // reference for location manager object.
     String username;
+    int customColor;
 
     @Nullable
     @Override
@@ -47,6 +48,7 @@ public class LocationListenerService extends Service {
 
 
     void init() {
+        customColor = 0;
         Toast.makeText(getBaseContext(), "init called.", Toast.LENGTH_SHORT).show();
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
@@ -153,6 +155,8 @@ public class LocationListenerService extends Service {
             LocationLog locationLog = new LocationLog();
             locationLog.setLatitude(String.valueOf(location.getLatitude()));
             locationLog.setLongitude(String.valueOf(location.getLongitude()));
+
+            locationLog.setCustomColor(customColor);
             locationLog.setHourAndMinute(hourAndMinute);
 
             updateLocationLog(locationLog, dateMonthYear);
@@ -162,17 +166,28 @@ public class LocationListenerService extends Service {
 
         @Override
         public void onStatusChanged(String s, int i, Bundle bundle) {
-            Toast.makeText(getBaseContext(), "onStatusChanged", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getBaseContext(), "onStatusChanged"+ s, Toast.LENGTH_SHORT).show();
+//            String dateMonthYear = TimeStamp.getRawTime();
+//            String hourAndMinute = TimeStamp.getHourAndMinute();
+//
+//            LocationLog locationLog = new LocationLog();
+//            locationLog.setLatitude(String.valueOf(0));
+//            locationLog.setLongitude(String.valueOf(0));
+//            locationLog.setHourAndMinute(hourAndMinute);
+//
+//            updateLocationLog(locationLog, dateMonthYear);
         }
 
         @Override
         public void onProviderEnabled(String s) {
-            Toast.makeText(getBaseContext(), "onStatusChanged", Toast.LENGTH_SHORT).show();
+           customColor++;
+
+
         }
 
         @Override
         public void onProviderDisabled(String s) {
-            Toast.makeText(getBaseContext(), "onStatusChanged", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "onProviderDisabled"+ s, Toast.LENGTH_SHORT).show();
         }
     }
 }

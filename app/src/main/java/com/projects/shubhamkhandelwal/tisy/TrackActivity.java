@@ -1,24 +1,36 @@
 package com.projects.shubhamkhandelwal.tisy;
 
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,78 +39,197 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.projects.shubhamkhandelwal.tisy.Classes.CheckInPoints;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
+import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationLog;
+import com.projects.shubhamkhandelwal.tisy.Classes.LocationNote;
+import com.projects.shubhamkhandelwal.tisy.Classes.Note;
+import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class TrackActivity extends AppCompatActivity implements OnMapReadyCallback {
-    String trackUsername;
+public class TrackActivity extends FragmentActivity implements OnMapReadyCallback,GoogleMap.OnMarkerClickListener {
     GoogleMap mMap;
-    List<LatLng> locationPoints;
-    List<String> timePoints;
-    List<CheckInPoints> checkInPoints;
-    List<Integer> timeLog;
-    LatLngBounds.Builder cameraLatLngbuilder;
-    String dateMonthYear;
+    String username;
+    List<LocationLog> locationLogList;
+    ImageButton addNoteImageButton;
+    // intialization for place picker dialog
+    int PLACE_PICKER_REQUEST = 1;
+    PlacePicker.IntentBuilder placePickerBuilder;
+    EditText addNoteTitleEditText;
+    Boolean fromDialog;
 
-    RecyclerView dateMonthYearRecyclerView;
+    Map<Integer, Note> tagNoteMap;
     CoordinatorLayout trackCoordinatorLayout;
+    LatLngBounds.Builder builder;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track);
-        trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
-        trackUsername = getIntent().getStringExtra("username");
+        fromDialog = false;
 
-        dateMonthYear = TimeStamp.getRawTime();
-        Toast.makeText(TrackActivity.this, "username : " + trackUsername, Toast.LENGTH_SHORT).show();
-
-
+        tagNoteMap = new HashMap<>();
+        builder = new LatLngBounds.Builder();
+        locationLogList = new ArrayList<>();
+        username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.track_map);
         mapFragment.getMapAsync(this);
-
-
-        initializeDateRecyclerView(trackUsername);
+        addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
+        trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
+        addNoteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                placePickerDialog();
+                // showAddNoteDialog();
+            }
+        });
+        initColors();
 
 
     }
 
-    void initializeDateRecyclerView(String username) {
-        dateMonthYearRecyclerView = (RecyclerView) findViewById(R.id.date_track_activity_recycler_view);
-        dateMonthYearRecyclerView.setHasFixedSize(true);
-        DateRecyclerViewAdapter dateRecyclerViewAdapter = new DateRecyclerViewAdapter(this, username);
-        dateMonthYearRecyclerView.setAdapter(dateRecyclerViewAdapter);
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        dateMonthYearRecyclerView.setLayoutManager(layoutManager);
-    }
-
-    int getCustomColor(int customColor) {
-
-        if (customColor < 8) {
-            customColor = customColor % 8;
+    // to call the placepicker dialog
+    void placePickerDialog() {
+        placePickerBuilder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(placePickerBuilder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
         }
-        Constants.colors.add(R.color.customColor0);
-        Constants.colors.add(R.color.customColor1);
-        Constants.colors.add(R.color.customColor2);
-        Constants.colors.add(R.color.customColor3);
-        Constants.colors.add(R.color.customColor4);
-        Constants.colors.add(R.color.customColor5);
-        Constants.colors.add(R.color.customColor6);
-        Constants.colors.add(R.color.customColor7);
-        Constants.colors.add(R.color.customColor8);
+    }
 
-        return Constants.colors.get(customColor);
+    // callback for place picker dialog
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                LatLng latLng = place.getLatLng();
+                String locationDesc = place.getName().toString();
+                if (fromDialog) {
+                    addNoteTitleEditText.setText(locationDesc);
+                    fromDialog = false;
+                } else {
+                    showAddNoteDialog(latLng, locationDesc);
+                }
+            }
+        }
+    }
+
+    void showAddNoteDialog(final LatLng location, final String locationTitle) {
+        final Dialog dialog = new Dialog(this, R.style.event_dialogs);
+        dialog.setContentView(R.layout.dialog_add_note_layout);
+
+        ImageButton editLocationImageButton = (ImageButton) dialog.findViewById(R.id.note_edit_location_image_button);
+        addNoteTitleEditText = (EditText) dialog.findViewById(R.id.note_title_edit_text);
+        final EditText noteDescriptionEditText = (EditText) dialog.findViewById(R.id.note_description_edit_text);
+        Button saveNoteButton = (Button) dialog.findViewById(R.id.save_note_button);
+
+        if (!(locationTitle == null || locationTitle.isEmpty())) {
+            addNoteTitleEditText.setText(locationTitle);
+        }
+        editLocationImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fromDialog = true;
+                placePickerDialog();
+            }
+        });
+        saveNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String locationDesc = noteDescriptionEditText.getText().toString();
+                if (!(locationDesc.isEmpty() || locationDesc == null || location == null)) {
+                    dialog.dismiss();
+                    saveNote(location, locationTitle, locationDesc);
+                } else {
+                    Toast.makeText(TrackActivity.this, "enter all the details", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Window window = dialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(true);
+    }
+
+    void saveNote(LatLng location, String locationTitle, String locationDesc) {
+        Firebase saveNoteFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + TimeStamp.getRawTime());
+        saveNoteFirebase.keepSynced(true);
+        LocationNote locationNote = new LocationNote(locationTitle, locationDesc, String.valueOf(location.latitude), String.valueOf(location.longitude));
+        saveNoteFirebase.push().setValue(locationNote);
+    }
+
+    void showNotes() {
+        Firebase saveNoteFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + TimeStamp.getRawTime());
+        saveNoteFirebase.keepSynced(true);
+        saveNoteFirebase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                LatLng latLng = new LatLng(Double.parseDouble(dataSnapshot.child("latitude").getValue().toString()), Double.parseDouble(dataSnapshot.child("longitude").getValue().toString()));
+
+                Note note = new Note();
+                note.setDesc(dataSnapshot.child("description").getValue().toString());
+                note.setTitle(dataSnapshot.child("title").getValue().toString());
+                note.setKey(dataSnapshot.getKey());
+
+                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon))));
+
+
+                builder.include(latLng);
+
+                int tag = tagNoteMap.size();
+                marker.setTag(tag);
+                tagNoteMap.put(tag, note);
+                zoomFit();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    void initColors() {
+        Constants.colors.add(this.getString(R.string.customColor0));
+        Constants.colors.add(this.getString(R.string.customColor1));
+        Constants.colors.add(this.getString(R.string.customColor2));
+        Constants.colors.add(this.getString(R.string.customColor3));
+        Constants.colors.add(this.getString(R.string.customColor4));
+        Constants.colors.add(this.getString(R.string.customColor5));
+        Constants.colors.add(this.getString(R.string.customColor6));
+        Constants.colors.add(this.getString(R.string.customColor7));
+        Constants.colors.add(this.getString(R.string.customColor8));
     }
 
     @Override
@@ -109,38 +240,41 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
+       init();
+        mMap.setOnMarkerClickListener(this);
     }
 
-    public void initializePoints(String user, final String dateMonthYear) {
-        cameraLatLngbuilder = new LatLngBounds.Builder();
+    void init(){
+        builder = new LatLngBounds.Builder();
+        mMap.clear();
+        tagNoteMap = new HashMap<>();
+        initLatLngs();
+        showNotes();
+    }
+    String getCustomColor(int customColor) {
+        if (customColor > 8) {
+            customColor = customColor % 8;
+            Log.d("custom color : ", "" + customColor);
+        }
+        return Constants.colors.get(customColor);
+    }
 
-        locationPoints = new ArrayList<>();
-        timePoints = new ArrayList<>();
-        timeLog = new ArrayList<>();
-
-        Firebase userLocationPointsFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + user + "/locationLog/" + dateMonthYear);
-        userLocationPointsFirebase.keepSynced(true);
-        userLocationPointsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+    void initLatLngs() {
+        Firebase initLatLng = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" + TimeStamp.getRawTime());
+        initLatLng.keepSynced(true);
+        initLatLng.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long childrenCount = dataSnapshot.getChildrenCount();
-                Toast.makeText(TrackActivity.this, "child count : " + childrenCount, Toast.LENGTH_SHORT).show();
                 if (dataSnapshot.hasChildren()) {
+                    locationLogList = new ArrayList<>();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        LocationLog locationLog = snapshot.getValue(LocationLog.class);
-                        Double latitude = Double.parseDouble(locationLog.getLatitude());
-                        Double longitude = Double.parseDouble(locationLog.getLongitude());
-                        if (!((latitude == 0.0) && (longitude == 0.0))) {
-                            LatLng latLng = new LatLng(latitude, longitude);
-                            locationPoints.add(latLng);
-                            timePoints.add(locationLog.getHourAndMinute());
-                            cameraLatLngbuilder.include(latLng);
-                            timeLog.add(Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]));
-                        }
+                        locationLogList.add(snapshot.getValue(LocationLog.class));
                     }
-                    showPolyline();
+                    showTrack();
+                } else {
 
                 }
+
             }
 
             @Override
@@ -148,203 +282,105 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
 
             }
         });
+
+    }
+
+    Bitmap applyCustomBitmapColor(Bitmap myBitmap, String color) {
+
+        Paint pnt = new Paint();
+        Bitmap myBit = myBitmap;
+
+        Canvas myCanvas = new Canvas(myBit);
+        int myColor = myBit.getPixel(0, 0);
+
+        // Set the colour to replace.
+        // TODO: change color later
+        ColorFilter filter = new LightingColorFilter(myColor, Color.parseColor(color));
+
+        pnt.setColorFilter(filter);
+
+        // Draw onto new bitmap. result Bitmap is newBit
+        myCanvas.drawBitmap(myBit, 0, 0, pnt);
+
+        return myBit;
     }
 
 
-    void showPolyline() {
-        mMap.clear();
-        // TODO: show start time line location
-        // TODO show end time line location
+    void showTrack() {
 
-        int initialTime = timeLog.get(0);
+        // int initialHour = Integer.parseInt(locationLogList.get(0).getHourAndMinute().split(":")[0]);
+        Bitmap positionMarkerBitmap = InitIcon.getBitmapFromVectorDrawable(this, R.drawable.timeline_position_marker_icon);
+        for (int i = 0; i < locationLogList.size(); i++) {
+            LocationLog locationLog = locationLogList.get(i);
+            int hour = Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]);
 
-        PolylineOptions polylineOptions = new PolylineOptions();
-        List<LatLng> latLngList = new ArrayList<>();
-        List<String> timeList = new ArrayList<>();
+            LatLng coordinate = new LatLng(Double.parseDouble(locationLog.getLatitude()), Double.parseDouble(locationLog.getLongitude()));
+            builder.include(coordinate);
 
-        latLngList.add(locationPoints.get(0));
-        timeList.add(timePoints.get(0));
 
-        int size = locationPoints.size();
-
-        for (int i = 0; i < size; i++) {
-            polylineOptions.add(locationPoints.get(i));
-
-            if (initialTime < timeLog.get(i)) {
-                initialTime = timeLog.get(i);
-                latLngList.add(locationPoints.get(i));
-                timeList.add(timePoints.get(i));
-            }
+            positionMarkerBitmap = applyCustomBitmapColor(positionMarkerBitmap, getCustomColor(hour));
+            mMap.addMarker(new MarkerOptions().position(coordinate).title("Here at " + locationLog.getHourAndMinute()).icon(BitmapDescriptorFactory.fromBitmap(positionMarkerBitmap)));
         }
-        latLngList.add(locationPoints.get((latLngList.size() - 1)));
-        timeList.add(timePoints.get((timePoints.size()-1)));
-        showLines(polylineOptions);
-        showHourChangeMarkers(latLngList, timeList);
-
-
+        zoomFit();
     }
 
-    void showHourChangeMarkers(List<LatLng> latLngList,List<String> timeList) {
-
-        for (int i = 0; i < latLngList.size(); i++) {
-            if (i == 0) {
-                mMap.addMarker(new MarkerOptions()
-                        .position(latLngList.get(i))
-                        .title(timeList.get(i)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-            } else if (i == (latLngList.size() - 1)) {
-                mMap.addMarker(new MarkerOptions()
-                        .position(latLngList.get(i))
-                        .title(timeList.get(i)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-            } else {
-                mMap.addMarker(new MarkerOptions()
-                        .position(latLngList.get(i))
-                        .title(timeList.get(i)));
-            }
-        }
-        zoomFitMap();
-    }
-
-    void showLines(PolylineOptions polylineOptions) {
-        polylineOptions.width(20);
-        polylineOptions.color(R.color.customColor2);
-        polylineOptions.geodesic(true);
-
-        mMap.addPolyline(polylineOptions).setPoints(locationPoints);
-
-        zoomFitMap();
-    }
-
-
-    void zoomFitMap() {
-        LatLngBounds bounds = cameraLatLngbuilder.build();
+    void zoomFit(){
+        LatLngBounds bounds = builder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
         int padding = (int) (width * 0.10); // offset from edges of the map 12% of screen
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cameraUpdate);
     }
-
     @Override
-    public void onBackPressed() {
-        finish();
+    public boolean onMarkerClick(Marker marker) {
+        Integer markerTag = (Integer) marker.getTag();
+        if(tagNoteMap.containsKey(markerTag)){
+            showNoteDialog(markerTag);
+        }
+        return false;
     }
+    void showNoteDialog(final int markerTag){
+        final Dialog dialog = new Dialog(this, R.style.event_dialogs);
+        dialog.setContentView(R.layout.dialog_show_note_layout);
 
+        TextView titleTextView, descTextView;
+        Button deleteNoteButton;
 
-    class DateRecyclerViewAdapter extends RecyclerView.Adapter<DateRecyclerViewAdapter.DateRecyclerViewHolder> {
-        Context context;
-        List<String> dateMonthYearList;
-        String memberName;
-        private LayoutInflater inflator;
+        titleTextView = (TextView) dialog.findViewById(R.id.show_note_title);
+        descTextView = (TextView) dialog.findViewById(R.id.show_note_desc);
+        deleteNoteButton = (Button) dialog.findViewById(R.id.delete_note_button);
 
-        public DateRecyclerViewAdapter(Context context, String memberName) {
-            this.context = context;
-            this.memberName = memberName;
-            inflator = LayoutInflater.from(context);
-            dateMonthYearList = new ArrayList<>();
+        titleTextView.setText(tagNoteMap.get(markerTag).getTitle());
+        descTextView.setText(tagNoteMap.get(markerTag).getDesc());
 
-            initList();
-
-        }
-
-        void showSnackBar() {
-            if (mMap != null) {
-                mMap.setPadding(0, 0, 0, 200);
+        deleteNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteNote(tagNoteMap.get(markerTag).getKey(), dialog, markerTag);
             }
-            Snackbar snackbar = Snackbar
-                    .make(trackCoordinatorLayout, "No movement has been recorded", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("GO BACK", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(TrackActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-            snackbar.setCallback(new Snackbar.Callback() {
+        });
 
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    if (mMap != null) {
-                        mMap.setPadding(0, 0, 0, 0);
-                    }
-                }
+        Window window = dialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(true);
+    }
+    void deleteNote(String key, final Dialog dialog, final int markerTag){
+        Firebase deleteNote = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + TimeStamp.getRawTime() + "/" + key);
+        deleteNote.keepSynced(true);
+        deleteNote.removeValue(new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                Toast.makeText(TrackActivity.this, "note deleted.", Toast.LENGTH_SHORT).show();
 
-                @Override
-                public void onShown(Snackbar snackbar) {
+                tagNoteMap.remove(markerTag);
 
+                dialog.dismiss();
 
-                }
-            });
-            snackbar.setActionTextColor(Color.parseColor("#009688"));
-            snackbar.show();
-
-        }
-
-        void initList() {
-            Firebase dateMonthYearFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + memberName + "/locationLog/");
-            dateMonthYearFirebase.keepSynced(true);
-            Toast.makeText(TrackActivity.this, "username :" + memberName, Toast.LENGTH_SHORT).show();
-            dateMonthYearFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int position = 0;
-                    if (dataSnapshot.hasChildren()) {
-                        dateMonthYearList = new ArrayList<String>();
-                        Toast.makeText(TrackActivity.this, dataSnapshot.getChildrenCount() + "", Toast.LENGTH_SHORT).show();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            int pos = dateMonthYearList.size();
-                            dateMonthYearList.add(snapshot.getKey());
-                            notifyItemInserted(pos);
-                            position = pos;
-                        }
-                        initializePoints(trackUsername, dateMonthYearList.get(position));
-                    } else {
-                        dateMonthYearRecyclerView.setVisibility(View.GONE);
-                        showSnackBar();
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-        }
-
-        @Override
-        public DateRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflator.inflate(R.layout.recycler_view_date_month_year_row_layout, parent, false);
-            DateRecyclerViewHolder viewHolder = new DateRecyclerViewHolder(view);
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(DateRecyclerViewHolder holder, int position) {
-            holder.dateMonthYearButton.setText(dateMonthYearList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return dateMonthYearList.size();
-        }
-
-        class DateRecyclerViewHolder extends RecyclerView.ViewHolder {
-            Button dateMonthYearButton;
-
-            public DateRecyclerViewHolder(View itemView) {
-                super(itemView);
-                dateMonthYearButton = (Button) itemView.findViewById(R.id.date_month_year_button);
-                dateMonthYearButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dateMonthYear = dateMonthYearList.get(getPosition());
-                        initializePoints(trackUsername, dateMonthYear);
-                    }
-                });
+               init();
             }
-        }
-
+        });
     }
 }

@@ -12,7 +12,8 @@ public class Constants {
 
     public static String currentEventId = ""; // holds reference to the eventID of the currently active event
     public static boolean eventAdmin = false; // holds reference to the eventID of the currently active event
-    public static List<Integer> colors = new ArrayList<>();
+    public static List<String> colors = new ArrayList<>();
+
 
     public static int dIconResourceId = -1;
 

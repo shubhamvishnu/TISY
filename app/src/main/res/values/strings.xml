@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">TISY</string>
     <string name="title_activity_maps">Map</string>
-
+    <string name="customColor0">#0a1e33</string>
+    <string name="customColor1">#009688</string>
+    <string name="customColor2">#800020</string>
+    <string name="customColor3">#C2B280</string>
+    <string name="customColor4">#563957</string>
+    <string name="customColor5">#007F66</string>
+    <string name="customColor6">#6d8764</string>
+    <string name="customColor7">#6082B6</string>
+    <string name="customColor8">#455A64</string>
+    <string name="customColor9">#96e74c3c</string>
 
 </resources>

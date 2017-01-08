@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:textColor="@android:color/white"
+        android:id="@+id/note_title_edit_text"/>
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/note_edit_location_image_button"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/edit_slocation_icon" />
+    </LinearLayout>
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:textColor="@android:color/white"
+        android:id="@+id/note_description_edit_text"/>
+    <Button
+        android:id="@+id/save_note_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="SAVE (change it later to a tick with circle)"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="12dp"
+        android:background="@android:color/transparent"/>
+</LinearLayout>

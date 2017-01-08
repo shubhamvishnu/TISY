@@ -2,6 +2,7 @@ package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,13 +57,17 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
                             final long numberOfRequests = dataSnapshot.child("requested").getChildrenCount();
                             final String request = String.valueOf(numberOfRequests);
                             final String timeCreated = dataSnapshot.child("time").getValue().toString();
-
+                            // final String memberCount = String.valueOf(dataSnapshot.child("members").getChildrenCount());
+                            final List<String> memberList = new ArrayList<String>();
+                            for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
+                                memberList.add(snapshot.getKey());
+                            }
                             EventInfo eventInfo = new EventInfo();
                             eventInfo.setsLocation(dataSnapshot.child("info").child("sLocation").getValue().toString());
                             eventInfo.setsLocationDesc(dataSnapshot.child("info").child("sLocationDesc").getValue().toString());
                             eventInfo.setdLocation(dataSnapshot.child("info").child("dLocation").getValue().toString());
                             eventInfo.setdLocationDesc(dataSnapshot.child("info").child("dLocationDesc").getValue().toString());
-                            ActiveEventInfo activeEventInfo = new ActiveEventInfo(title, association, activeEventId, eventInfo, request, timeCreated);
+                            ActiveEventInfo activeEventInfo = new ActiveEventInfo(title, association, activeEventId, eventInfo, request, timeCreated, memberList);
 
                             activeEventInfo.setAdmin(dataSnapshot.child("admin").getValue().toString());
                             activeEventInfo.setdIconResourceId(Integer.parseInt(dataSnapshot.child("dIcon").getValue().toString()));
@@ -120,6 +125,10 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
         holder.activeEventdLocationDesc.setText(info.getdLocationDesc());
         holder.activeEventRequests.setText(activeEventIds.get(position).getRequests());
         holder.activeEventTimeCreated.setText(activeEventIds.get(position).getTimeCreated());
+
+
+        holder.activeMembersRecyclerViewAdapter = new ActiveMembersRecyclerViewAdapter(context, activeEventIds.get(position).getMemberList());
+        holder.activeEventMemberRecyclerView.setAdapter(holder.activeMembersRecyclerViewAdapter);
     }
 
     @Override
@@ -135,6 +144,9 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
         TextView activeEventRequests;
         TextView activeEventTimeCreated;
         TextView activeEventAssociation;
+        RecyclerView activeEventMemberRecyclerView;
+        ActiveMembersRecyclerViewAdapter activeMembersRecyclerViewAdapter;
+
         View view;
 
         public ActiveEventsRecyclerViewHolder(View itemView) {
@@ -147,6 +159,13 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             activeEventRequests = (TextView) itemView.findViewById(R.id.active_event_requests);
             activeEventTimeCreated = (TextView) itemView.findViewById(R.id.active_event_time_created);
             activeEventAssociation = (TextView) itemView.findViewById(R.id.active_event_association_text_view);
+
+            activeEventMemberRecyclerView = (RecyclerView) itemView.findViewById(R.id.active_event_member_recycler_view);
+            activeEventMemberRecyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager
+                    = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            activeEventMemberRecyclerView.setLayoutManager(layoutManager);
+
             activeEventIdTextView.setOnClickListener(this);
             activeEventsLocationDesc.setOnClickListener(this);
             activeEventdLocationDesc.setOnClickListener(this);

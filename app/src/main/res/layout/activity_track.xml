@@ -20,11 +20,26 @@
         android:layout_weight="1"
         tools:context="com.projects.shubhamkhandelwal.tisy.TrackActivity" >
     </fragment>
-        <android.support.v7.widget.RecyclerView
-            android:background="@color/colorPrimaryDark"
-            android:id="@+id/date_track_activity_recycler_view"
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:background="@color/colorPrimaryDark"-->
+            <!--android:id="@+id/date_track_activity_recycler_view"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--/>-->
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            />
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:orientation="horizontal">
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/track_activity_add_note"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/note_pin_marker_icon" />
+        </LinearLayout>
     </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>
