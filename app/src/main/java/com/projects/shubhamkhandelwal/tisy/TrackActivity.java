@@ -26,7 +26,6 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -55,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TrackActivity extends FragmentActivity implements OnMapReadyCallback,GoogleMap.OnMarkerClickListener {
+public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     GoogleMap mMap;
     String username;
     List<LocationLog> locationLogList;
@@ -80,6 +79,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         tagNoteMap = new HashMap<>();
         builder = new LatLngBounds.Builder();
         locationLogList = new ArrayList<>();
+
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.track_map);
@@ -186,16 +186,13 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 note.setDesc(dataSnapshot.child("description").getValue().toString());
                 note.setTitle(dataSnapshot.child("title").getValue().toString());
                 note.setKey(dataSnapshot.getKey());
-
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon, 150,150))));
-
-
-                builder.include(latLng);
+                note.setLatlng(latLng);
 
                 int tag = tagNoteMap.size();
-                marker.setTag(tag);
                 tagNoteMap.put(tag, note);
-                zoomFit();
+
+                showNotesOnMap();
+
             }
 
             @Override
@@ -219,6 +216,16 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             }
         });
     }
+    void showNotesOnMap(){
+
+        for(Map.Entry<Integer, Note> mapEntry : tagNoteMap.entrySet()) {
+            Marker marker = mMap.addMarker(new MarkerOptions().position(mapEntry.getValue().getLatlng()).title(mapEntry.getValue().getTitle()).snippet(mapEntry.getValue().getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon, 150, 150))));
+            marker.setTag(mapEntry.getKey());
+            builder.include(mapEntry.getValue().getLatlng());
+        }
+        zoomFit();
+    }
+
 
     void initColors() {
         Constants.colors.add(this.getString(R.string.customColor0));
@@ -240,17 +247,19 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
-       init();
+        init();
         mMap.setOnMarkerClickListener(this);
     }
 
-    void init(){
+    void init() {
         builder = new LatLngBounds.Builder();
         mMap.clear();
         tagNoteMap = new HashMap<>();
+        locationLogList = new ArrayList<>();
         initLatLngs();
         showNotes();
     }
+
     String getCustomColor(int customColor) {
         if (customColor > 8) {
             customColor = customColor % 8;
@@ -262,18 +271,25 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     void initLatLngs() {
         Firebase initLatLng = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" + TimeStamp.getRawTime());
         initLatLng.keepSynced(true);
-        initLatLng.addListenerForSingleValueEvent(new ValueEventListener() {
+        initLatLng.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    locationLogList = new ArrayList<>();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        locationLogList.add(snapshot.getValue(LocationLog.class));
-                    }
-                    showTrack();
-                } else {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                locationLogList.add(dataSnapshot.getValue(LocationLog.class));
+                showTrack();
+            }
 
-                }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
 
@@ -307,9 +323,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
 
     void showTrack() {
-
         // int initialHour = Integer.parseInt(locationLogList.get(0).getHourAndMinute().split(":")[0]);
-        Bitmap positionMarkerBitmap = InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.footstep_image_icon, 72,72);
+        Bitmap positionMarkerBitmap = InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.footstep_image_icon, 72, 72);
         for (int i = 0; i < locationLogList.size(); i++) {
             LocationLog locationLog = locationLogList.get(i);
             int hour = Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]);
@@ -324,7 +339,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         zoomFit();
     }
 
-    void zoomFit(){
+    void zoomFit() {
         LatLngBounds bounds = builder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
@@ -332,15 +347,17 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cameraUpdate);
     }
+
     @Override
     public boolean onMarkerClick(Marker marker) {
         Integer markerTag = (Integer) marker.getTag();
-        if(tagNoteMap.containsKey(markerTag)){
+        if (tagNoteMap.containsKey(markerTag)) {
             showNoteDialog(markerTag);
         }
         return false;
     }
-    void showNoteDialog(final int markerTag){
+
+    void showNoteDialog(final int markerTag) {
         final Dialog dialog = new Dialog(this, R.style.event_dialogs);
         dialog.setContentView(R.layout.dialog_show_note_layout);
 
@@ -367,7 +384,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         dialog.show();
         dialog.setCanceledOnTouchOutside(true);
     }
-    void deleteNote(String key, final Dialog dialog, final int markerTag){
+
+    void deleteNote(String key, final Dialog dialog, final int markerTag) {
         Firebase deleteNote = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + TimeStamp.getRawTime() + "/" + key);
         deleteNote.keepSynced(true);
         deleteNote.removeValue(new Firebase.CompletionListener() {
@@ -379,7 +397,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
                 dialog.dismiss();
 
-               init();
+                init();
             }
         });
     }

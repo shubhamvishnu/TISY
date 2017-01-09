@@ -1,5 +1,7 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Shubham Khandelwal on 1/8/2017.
  */
@@ -28,6 +30,15 @@ public class Note {
         this.key = key;
     }
 
+    public LatLng getLatlng() {
+        return latlng;
+    }
+
+    public void setLatlng(LatLng latlng) {
+        this.latlng = latlng;
+    }
+
+    LatLng latlng;
     String title;
     String desc;
     String key;
