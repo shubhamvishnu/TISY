@@ -862,7 +862,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         titleTextView = (TextView) eventInfoDialog.findViewById(R.id.event_title_text_view);
 
         editMembersImageButton = (ImageButton) eventInfoDialog.findViewById(R.id.editMembersImageButton);
-        if(Constants.eventAdmin){
+        if(!Constants.eventAdmin){
             editMembersImageButton.setVisibility(View.INVISIBLE);
         }
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
@@ -1567,7 +1567,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String[] startCoordinates = eventInfo.getsLocation().split(",");
             BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
             Bitmap tempBitmap = bitmapDrawable.getBitmap();
-            Bitmap startLocationBitmap = applyCustomBitmapColor(Bitmap.createScaledBitmap(tempBitmap, 120, 120, false), "#5d8aa8");
+            Bitmap startLocationBitmap = applyCustomBitmapColor(Bitmap.createScaledBitmap(tempBitmap, 200, 200, false), "#5d8aa8");
             destinationIconBitmap = applyCustomBitmapColor(destinationIconBitmap, "#5d8aa8");
             startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromBitmap(startLocationBitmap)).snippet(eventInfo.getsLocationDesc()));
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));

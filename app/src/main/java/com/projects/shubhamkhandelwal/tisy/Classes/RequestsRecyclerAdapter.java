@@ -41,10 +41,11 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
         this.requestDetails = requestDetails;
         fetchProfileURLS();
     }
-    void fetchProfileURLS(){
+
+    void fetchProfileURLS() {
         profileURLsList = new ArrayList<>();
-        for(int i = 0; i < requestDetails.size(); i++){
-            final Firebase profileFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + requestDetails.get(i).getUsername() +"/userPhotoUri/");
+        for (int i = 0; i < requestDetails.size(); i++) {
+            final Firebase profileFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + requestDetails.get(i).getUsername() + "/userPhotoUri/");
             profileFirebase.keepSynced(true);
             profileFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -79,25 +80,18 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
         return profileURLsList.size();
     }
 
-    // TODO: action for declining the request
-    void requestAction(boolean addMember, int position) {
-        if (addMember) {
-            addMember(position);
-        } else {
-            deleteRequest(position);
-        }
-    }
 
     void deleteRequest(final int position) {
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/requested/" + requestDetails.get(position).getUsername());
         firebase.removeValue(new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + requestDetails.get(position).getUsername() +"/"+ Constants.currentEventId);
+                firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + requestDetails.get(position).getUsername() + "/" + Constants.currentEventId);
                 firebase.removeValue(new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                         requestDetails.remove(position);
+                        profileURLsList.remove(position);
                         notifyItemRemoved(position);
 
                     }
@@ -118,7 +112,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                 firebase.updateChildren(updateMember, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + requestDetails.get(position).getUsername()+"/" + Constants.currentEventId);
+                        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + requestDetails.get(position).getUsername() + "/" + Constants.currentEventId);
                         firebase.removeValue(new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -129,6 +123,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                                     @Override
                                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                         requestDetails.remove(position);
+                                        profileURLsList.remove(position);
                                         notifyItemRemoved(position);
                                     }
                                 });
@@ -187,14 +182,19 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
             addUserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    requestAction(true, getPosition());
-
+                    int position = getPosition();
+                    if (position >= 0 && requestDetails.size() > 0 && position < requestDetails.size()) {
+                        addMember(position);
+                    }
                 }
             });
             deleteUserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    requestAction(false, getPosition());
+                    int position = getPosition();
+                    if (position >= 0 && requestDetails.size() > 0 && position < requestDetails.size()) {
+                        deleteRequest(position);
+                    }
                 }
             });
         }

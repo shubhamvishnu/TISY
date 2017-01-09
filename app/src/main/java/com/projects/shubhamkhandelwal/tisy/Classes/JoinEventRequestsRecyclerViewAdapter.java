@@ -1,6 +1,8 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,22 +103,44 @@ public class JoinEventRequestsRecyclerViewAdapter extends RecyclerView.Adapter<J
             removeRequestImageButton.setOnClickListener(this);
         }
 
+
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.remove_request_image_button: {
-                    if (joinEventIds.size() > 0) {
-                        Firebase removeMemberRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + joinEventIds.get(getPosition()).getEventId() + "/requested/" + username);
+                    final int position = getPosition();
+                    if (joinEventIds.size() >  0 && position >= 0 && position < joinEventIds.size()) {
+                    final ProgressDialog progressDialog = new ProgressDialog(context);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setTitle("Removing");
+                    progressDialog.setMessage("Working on it!");
+                    progressDialog.setCancelable(false);
+                    progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+
+                        }
+                    });
+                    progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+
+                        }
+                    });
+                    progressDialog.show();
+
+                        Firebase removeMemberRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + joinEventIds.get(position).getEventId() + "/requested/" + username);
                         removeMemberRequestFirebase.removeValue(new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
 
-                                Firebase removeRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username + "/" + joinEventIds.get(getPosition()).getEventId());
+                                Firebase removeRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username + "/" + joinEventIds.get(position).getEventId());
                                 removeRequestFirebase.removeValue(new Firebase.CompletionListener() {
                                     @Override
                                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                        joinEventIds.remove(getPosition());
-                                        notifyItemRemoved(getPosition());
+                                        joinEventIds.remove(position);
+                                        notifyItemRemoved(position);
+                                        progressDialog.dismiss();
                                     }
                                 });
 

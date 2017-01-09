@@ -88,17 +88,24 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     public int getItemCount() {
         return eventIdList.size();
     }
-void removeRequest(final int position){
-    firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + eventIdList.get(position) +"/" +username);
-    firebase.removeValue(new Firebase.CompletionListener() {
-        @Override
-        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-            firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + username + "/"+eventIdList.get(position));
-            firebase.removeValue();
-        }
-    });
-}
-    void addUser(final int position){
+
+    void removeRequest(final int position) {
+        firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + eventIdList.get(position) + "/" + username);
+        firebase.removeValue(new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + username + "/" + eventIdList.get(position));
+                firebase.removeValue(new Firebase.CompletionListener() {
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    void addUser(final int position) {
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventIdList.get(position) + "/members");
         final Map<String, Object> updateMember = new HashMap<String, Object>();
         updateMember.put(username, "0.0,0.0");
@@ -111,13 +118,14 @@ void removeRequest(final int position){
                 firebase.updateChildren(updateUserDetails, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                      removeRequest(position);
+                        removeRequest(position);
 
                     }
                 });
             }
         });
     }
+
     public class ReceivedRequestsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView eventIdTextView;
         ImageButton acceptRequestImageButton, declineRequestImageButton;
@@ -135,11 +143,17 @@ void removeRequest(final int position){
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.accept_request_image_button: {
-                    addUser(getPosition());
+                    int position = getPosition();
+                    if (position >= 0 && eventIdList.size() > 0) {
+                        addUser(position);
+                    }
                     break;
                 }
                 case R.id.decline_request_image_button: {
-                    removeRequest(getPosition());
+                    int position = getPosition();
+                    if (position >= 0 && eventIdList.size() > 0 && position < eventIdList.size()) {
+                        removeRequest(position);
+                    }
                     break;
                 }
             }

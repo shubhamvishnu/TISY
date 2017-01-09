@@ -46,12 +46,16 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     void populateViewWithResults() {
         nameList = new ArrayList<>();
         eventIdList = new ArrayList<>();
+        final List<String> activeEventList = new ArrayList<>();
         Firebase searchResultFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS);
         searchResultFirebase.keepSynced(true);
         searchResultFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    for (DataSnapshot activeEventSnapshot : dataSnapshot.child(username).child("activeEvent").getChildren()) {
+                        activeEventList.add(activeEventSnapshot.getKey());
+                    }
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name) || Pattern.compile(Pattern.quote(snapshot.getKey()), Pattern.CASE_INSENSITIVE).matcher(name).find() || Pattern.compile(Pattern.quote(snapshot.child("name").getValue().toString()), Pattern.CASE_INSENSITIVE).matcher(name).find()) {
                             if (!snapshot.getKey().equals(username)) {
@@ -68,10 +72,13 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                                     if (!dataSnapshot.child(snapshot.getKey()).exists()) {
-                                                        int position = eventIdList.size();
-                                                        eventIdList.add(snapshot.getKey());
-                                                        nameList.add(snapshot.child("name").getValue().toString());
-                                                        notifyItemInserted(position);
+                                                        if (!activeEventList.contains(snapshot.getKey())) {
+
+                                                            int position = eventIdList.size();
+                                                            eventIdList.add(snapshot.getKey());
+                                                            nameList.add(snapshot.child("name").getValue().toString());
+                                                            notifyItemInserted(position);
+                                                        }
                                                     }
                                                 }
 

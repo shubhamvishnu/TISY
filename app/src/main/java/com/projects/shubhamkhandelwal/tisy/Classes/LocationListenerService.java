@@ -64,9 +64,9 @@ public class LocationListenerService extends Service {
             return;
         }
         locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 0, 4, locationListener);
+                LocationManager.GPS_PROVIDER, 0, 10, locationListener);
         locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER, 0, 4, locationListener);
+                LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
 
     }
 

@@ -187,7 +187,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 note.setTitle(dataSnapshot.child("title").getValue().toString());
                 note.setKey(dataSnapshot.getKey());
 
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon))));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon, 150,150))));
 
 
                 builder.include(latLng);
@@ -309,7 +309,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     void showTrack() {
 
         // int initialHour = Integer.parseInt(locationLogList.get(0).getHourAndMinute().split(":")[0]);
-        Bitmap positionMarkerBitmap = InitIcon.getBitmapFromVectorDrawable(this, R.drawable.timeline_position_marker_icon);
+        Bitmap positionMarkerBitmap = InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.footstep_image_icon, 72,72);
         for (int i = 0; i < locationLogList.size(); i++) {
             LocationLog locationLog = locationLogList.get(i);
             int hour = Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]);
