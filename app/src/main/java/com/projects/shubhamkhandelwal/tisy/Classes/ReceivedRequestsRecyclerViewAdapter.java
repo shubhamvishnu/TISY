@@ -1,6 +1,8 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,15 +30,36 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     List<String> eventIdList;
     String username;
     private LayoutInflater inflator;
-
+    ProgressDialog progressDialog;
     public ReceivedRequestsRecyclerViewAdapter(Context context) {
         this.context = context;
         inflator = LayoutInflater.from(context);
         eventIdList = new ArrayList<>();
+
         username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);
+        initProgressDialog();
         loadRequests();
     }
 
+    void initProgressDialog(){
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("making changes...");
+        progressDialog.setMessage("Working on it!");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
+    }
     void loadRequests() {
         firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + username);
         firebase.keepSynced(true);
@@ -58,6 +81,9 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
                 int position = eventIdList.indexOf(dataSnapshot.getKey());
                 eventIdList.remove(position);
                 notifyItemRemoved(position);
+                if(progressDialog.isShowing()){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -90,6 +116,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     }
 
     void removeRequest(final int position) {
+        progressDialog.show();
         firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + eventIdList.get(position) + "/" + username);
         firebase.removeValue(new Firebase.CompletionListener() {
             @Override
@@ -106,6 +133,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     }
 
     void addUser(final int position) {
+        progressDialog.show();
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventIdList.get(position) + "/members");
         final Map<String, Object> updateMember = new HashMap<String, Object>();
         updateMember.put(username, "0.0,0.0");
@@ -144,7 +172,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
             switch (view.getId()) {
                 case R.id.accept_request_image_button: {
                     int position = getPosition();
-                    if (position >= 0 && eventIdList.size() > 0) {
+                    if (position >= 0 && eventIdList.size() > 0 && position < eventIdList.size()) {
                         addUser(position);
                     }
                     break;

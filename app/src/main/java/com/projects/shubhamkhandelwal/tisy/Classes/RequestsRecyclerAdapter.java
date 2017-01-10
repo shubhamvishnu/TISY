@@ -1,6 +1,8 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -34,14 +36,34 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
     Firebase firebase;
     Context context;
     private LayoutInflater inflator;
+    ProgressDialog progressDialog;
 
     public RequestsRecyclerAdapter(android.content.Context context, List<RequestsDetails> requestDetails) {
         this.context = context;
         inflator = LayoutInflater.from(context);
         this.requestDetails = requestDetails;
         fetchProfileURLS();
+        initProgressDialog();
     }
+    void initProgressDialog(){
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("making changes...");
+        progressDialog.setMessage("Working on it!");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
 
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
+    }
     void fetchProfileURLS() {
         profileURLsList = new ArrayList<>();
         for (int i = 0; i < requestDetails.size(); i++) {
@@ -93,7 +115,9 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                         requestDetails.remove(position);
                         profileURLsList.remove(position);
                         notifyItemRemoved(position);
-
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
                     }
                 });
 
@@ -125,6 +149,9 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                                         requestDetails.remove(position);
                                         profileURLsList.remove(position);
                                         notifyItemRemoved(position);
+                                        if(progressDialog.isShowing()){
+                                            progressDialog.dismiss();
+                                        }
                                     }
                                 });
                             }
@@ -184,6 +211,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                 public void onClick(View view) {
                     int position = getPosition();
                     if (position >= 0 && requestDetails.size() > 0 && position < requestDetails.size()) {
+                        progressDialog.show();
                         addMember(position);
                     }
                 }
@@ -193,6 +221,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                 public void onClick(View view) {
                     int position = getPosition();
                     if (position >= 0 && requestDetails.size() > 0 && position < requestDetails.size()) {
+                        progressDialog.show();
                         deleteRequest(position);
                     }
                 }

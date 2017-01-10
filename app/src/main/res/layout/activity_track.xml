@@ -31,6 +31,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="horizontal">
             <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/track_activity_add_note"
@@ -40,6 +42,20 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/note_pin_marker_icon" />
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/track_activity_show_calendar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/calendar_icon" />
+            <picker.ugurtekbas.com.Picker.Picker
+                android:id="@+id/time_picker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
         </LinearLayout>
     </LinearLayout>
     </android.support.design.widget.CoordinatorLayout>

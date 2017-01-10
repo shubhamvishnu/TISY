@@ -1,6 +1,8 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +32,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     List<String> nameList;
     String username;
     List<String> eventIdList;
-
+    ProgressDialog progressDialog;
 
     public SearchResultsRecyclerViewAdapter(Context context, String name) {
         this.context = context;
@@ -41,6 +43,27 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         nameList = new ArrayList<>();
         username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);
         populateViewWithResults();
+        initProgressDialog();
+    }
+
+    void initProgressDialog(){
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("making changes...");
+        progressDialog.setMessage("Working on it!");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
     }
 
     void populateViewWithResults() {
@@ -136,6 +159,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+
                     Firebase sendRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
                     HashMap<String, Object> sendRequestUsername = new HashMap<String, Object>();
                     sendRequestUsername.put(eventIdList.get(position), username);
@@ -151,6 +175,9 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
                                     eventIdList.remove(position);
                                     nameList.remove(position);
                                     notifyItemRemoved(position);
+                                    if(progressDialog.isShowing()){
+                                        progressDialog.dismiss();
+                                    }
                                 }
                             });
                         }
@@ -182,8 +209,10 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.search_option_add_member_image_view: {
-                    if (eventIdList.size() > 0) {
-                        sendRequest(getPosition());
+                    int position = getPosition();
+                    if (eventIdList.size() >  0 && position >= 0 && position < eventIdList.size()) {
+                        progressDialog.show();
+                        sendRequest(position);
                     }
                     break;
                 }

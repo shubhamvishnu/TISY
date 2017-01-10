@@ -23,8 +23,8 @@ public class Constants {
     public static int TYPE_REQUESTS = 1003;
     public static int TYPE_DELETE_MEMBERS = 1004;
 
-    public static int START_LOCATION_TAG = 7000;
-    public static int DESTINATION_LOCATION_TAG = 7001;
+    public static String START_LOCATION_TAG = "start_location_marker";
+    public static String DESTINATION_LOCATION_TAG = "destination_location_marker";
 
 
     public static int TYPE_MAP_STYLE_DEFAULT = 8000;

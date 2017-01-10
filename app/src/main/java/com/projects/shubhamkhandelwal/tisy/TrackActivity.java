@@ -26,6 +26,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -49,16 +50,21 @@ import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+
+public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
     GoogleMap mMap;
     String username;
     List<LocationLog> locationLogList;
     ImageButton addNoteImageButton;
+    ImageButton showCalendarImageButton;
     // intialization for place picker dialog
     int PLACE_PICKER_REQUEST = 1;
     PlacePicker.IntentBuilder placePickerBuilder;
@@ -85,18 +91,47 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.track_map);
         mapFragment.getMapAsync(this);
         addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
+        showCalendarImageButton = (ImageButton) findViewById(R.id.track_activity_show_calendar);
         trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
         addNoteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 placePickerDialog();
-                // showAddNoteDialog();
+            }
+        });
+        showCalendarImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
         initColors();
-
+        deleteJunkTracks();
 
     }
+    void deleteJunkTracks(){
+        final Firebase junkTracksFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" );
+        junkTracksFirebase.keepSynced(true);
+        junkTracksFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren()){
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        if(!snapshot.getKey().equals(TimeStamp.getRawTime())){
+                            Toast.makeText(TrackActivity.this, "deleted event date :" + snapshot.getKey(), Toast.LENGTH_SHORT).show();
+                            junkTracksFirebase.child(snapshot.getKey()).removeValue();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
 
     // to call the placepicker dialog
     void placePickerDialog() {
@@ -401,4 +436,5 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             }
         });
     }
+
 }

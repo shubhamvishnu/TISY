@@ -82,6 +82,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
+import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
@@ -118,8 +119,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Map<String, Object> memberLocationMarkers; // contains map of (username, marker object) to reference marker positions (LatLng) for every member
     Bitmap destinationIconBitmap; // holds the destination icon
     // checkpoint variables
-    Map<String, Object> checkPointCoordinateMap; // contains all the checkpoints in the map; id and it's position (LatLng)
-    int checkPointMakrerEditPosition; // the unique id for the checkpoint
+    Map<String, Note> checkPointCoordinateMap; // contains all the checkpoints in the map; id and it's position (LatLng)
     List<String> checkPointsReached; // checkpoints crossed (reached) by the user
     Dialog requestsDialog; //  received requests dialog object
     List<RequestsDetails> joinRequests; // received requests; username list
@@ -191,8 +191,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         nameSearch = new String();
 
-        // initializing integer variables
-        checkPointMakrerEditPosition = 0;
+
 
 
         zoomFit = false;
@@ -265,18 +264,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         loadCheckPointsFirebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                checkPointCoordinateMap.put(dataSnapshot.getKey(), dataSnapshot.getValue());
+                Note note = new Note();
+                note.setTitle(dataSnapshot.child("title").getValue().toString());
+                note.setDesc(dataSnapshot.child("desc").getValue().toString());
+                note.setKey(dataSnapshot.child("key").getValue().toString());
+                LatLng latLng = new LatLng(Double.parseDouble(dataSnapshot.child("latlng/latitude").getValue().toString()),Double.parseDouble(dataSnapshot.child("latlng/longitude").getValue().toString()));
+                note.setLatlng(latLng);
+
+                checkPointCoordinateMap.put(dataSnapshot.getKey(), note);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Toast.makeText(MapsActivity.this, "marker edited" + dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
-                checkPointCoordinateMap.put(dataSnapshot.getKey(), dataSnapshot.getValue());
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                checkPointCoordinateMap.remove(dataSnapshot.getKey());
             }
 
             @Override
@@ -628,18 +631,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+                showCheckPointAddOptionDialog(place.getLatLng(), place.getName().toString());
+               // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             }
         }
     }
 
 
-    void saveCheckPoint(Double latitude, Double longitude) {
-        Firebase saveCheckPoint = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
-        HashMap<String, Object> checkPointFirebaseMap = new HashMap<>();
-        checkPointFirebaseMap.put(String.valueOf(checkPointCoordinateMap.size() + 1), latitude + "," + longitude);
-        saveCheckPoint.updateChildren(checkPointFirebaseMap);
-    }
 
     void sendMemberRequest() {
 
@@ -1361,10 +1359,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void checkNearCheckPoint(Location location) {
         if (checkPointCoordinateMap == null || checkPointCoordinateMap.isEmpty()) {
         } else {
-            for (Map.Entry<String, Object> checkpoint : checkPointCoordinateMap.entrySet()) {
+            for (Map.Entry<String, Note> checkpoint : checkPointCoordinateMap.entrySet()) {
+                Note note = checkpoint.getValue();
+                LatLng latLng = note.getLatlng();
                 float[] distance = new float[2];
-                String[] coordinate = checkpoint.getValue().toString().split(",");
-                Location.distanceBetween(location.getLatitude(), location.getLongitude(), Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]), distance);
+                Location.distanceBetween(location.getLatitude(), location.getLongitude(), latLng.latitude, latLng.longitude, distance);
                 if (distance[0] <= 20) {
                     Toast.makeText(MapsActivity.this, " distance0:" + distance[0] + " distance1:" + distance[1], Toast.LENGTH_SHORT).show();
 
@@ -1547,17 +1546,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.clear();
         List<Marker> zoomFitCheckPointCoordinates = new ArrayList<>();
         if (!checkPointCoordinateMap.isEmpty()) {
-            int checkPointCounter = 0;
-            for (Map.Entry<String, Object> point : checkPointCoordinateMap.entrySet()) {
-                ++checkPointCounter;
-                String[] coordinate = point.getValue().toString().split(",");
+
+            for (Map.Entry<String, Note> checkpointMapEntry : checkPointCoordinateMap.entrySet()) {
 
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.check_point_flag);
                 Bitmap tempBitmap = bitmapDrawable.getBitmap();
                 Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 120, 120, false);
 
-                Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]))).title("checkpoint-" + checkPointCounter).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
-                checkPointMarker.setTag(checkPointCounter);
+                Note note = checkpointMapEntry.getValue();
+                Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(note.getLatlng()).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
+                checkPointMarker.setTag(note.getKey());
                 zoomFitCheckPointCoordinates.add(checkPointMarker);
             }
         }
@@ -1659,61 +1657,114 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    void showCheckPointEditOption(final int checkPointMark) {
-        if (mMap != null) {
-            mMap.setPadding(0, 0, 0, 200);
-        }
-        final Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Checkpoint-" + checkPointMark, Snackbar.LENGTH_INDEFINITE)
-                .setAction("DELETE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        deleteCheckPoint(checkPointMark);
-                    }
-                });
-        snackbar.setCallback(new Snackbar.Callback() {
 
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                if (mMap != null) {
-                    mMap.setPadding(0, 0, 0, 0);
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-
-
-            }
-        });
-        snackbar.setActionTextColor(Color.parseColor("#009688"));
-        snackbar.show();
-    }
-
-    void deleteCheckPoint(int position) {
-        Firebase deleteCheckPointFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints/" + position);
+    void deleteCheckPoint(String key, String mapKey) {
+        Firebase deleteCheckPointFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints/" + key);
         deleteCheckPointFirebase.removeValue();
-        checkPointCoordinateMap.remove(position);
+        checkPointCoordinateMap.remove(mapKey);
         zoomFitMembers();
     }
+    void showCheckPointAddOptionDialog(final LatLng latLng, String title){
+        final Dialog addCheckPointDialog = new Dialog(this, R.style.event_info_dialog_style);
+        addCheckPointDialog.setContentView(R.layout.dialog_add_check_point);
+        final EditText checkpointTitle = (EditText) addCheckPointDialog.findViewById(R.id.checkpoint_title_edit_text);
+        ImageButton checkPointEditLocation = (ImageButton) addCheckPointDialog.findViewById(R.id.checkpoint_edit_location_image_button);
+        Button saveCheckPointButton = (Button) addCheckPointDialog.findViewById(R.id.save_checkpoint_button);
+        final EditText checkPointDescription = (EditText) addCheckPointDialog.findViewById(R.id.checkpoint_description_edit_text);
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Integer clickCount = (Integer) marker.getTag();
-        if (clickCount != null) {
-            if (clickCount == Constants.START_LOCATION_TAG | clickCount == Constants.DESTINATION_LOCATION_TAG) {
-                showStreetViewSnackBar(marker);
-            } else {
-                for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
-                    if (clickCount == i) {
-                        Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
-                        showCheckPointEditOption(i);
-                    }
+        checkpointTitle.setText(title);
+        saveCheckPointButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String desc = checkPointDescription.getText().toString();
+                String title = checkpointTitle.getText().toString();
 
+                if(!desc.isEmpty() || title.isEmpty()){
+                    saveCheckPoint(title, desc, latLng);
+                    addCheckPointDialog.dismiss();
                 }
             }
+        });
+        checkPointEditLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                placePickerDialog();
+            }
+        });
+        Window window = addCheckPointDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        addCheckPointDialog.setCanceledOnTouchOutside(true);
+        addCheckPointDialog.show();
+    }
+    void saveCheckPoint(String title, String desc, LatLng latlng){
+        Note note = new Note();
+        note.setTitle(title);
+        note.setDesc(desc);
+        note.setLatlng(latlng);
+        Firebase saveCheckPoint = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints");
+        Firebase newCheckPoint = saveCheckPoint.push();
+        note.setKey(newCheckPoint.getKey());
 
+        newCheckPoint.setValue(note);
+
+    }
+    void showCheckPointDialog(final String markerTag){
+        final Dialog showCheckPointDialog = new Dialog(this, R.style.event_info_dialog_style);
+        showCheckPointDialog.setContentView(R.layout.dialog_show_checkpoint_layout);
+
+        EditText titleEditText, descriptionEditText;
+        Button  deleteCheckPointButton;
+
+        titleEditText = (EditText) showCheckPointDialog.findViewById(R.id.show_checkpoint_title_edit_text);
+        descriptionEditText = (EditText) showCheckPointDialog.findViewById(R.id.show_checkpoint_description_edit_text);
+
+        final Note note = checkPointCoordinateMap.get(markerTag);
+        titleEditText.setText(note.getTitle());
+        descriptionEditText.setText(note.getDesc());
+
+        deleteCheckPointButton = (Button) showCheckPointDialog.findViewById(R.id.show_delete_checkpoint_button);
+
+        deleteCheckPointButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteCheckPoint(note.getKey(), markerTag);
+                showCheckPointDialog.dismiss();
+            }
+        });
+
+
+        Window window = showCheckPointDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        showCheckPointDialog.setCanceledOnTouchOutside(true);
+        showCheckPointDialog.show();
+    }
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        String markerTag = (String) marker.getTag();
+        if(markerTag!=null) {
+            if (markerTag.equals(Constants.START_LOCATION_TAG) || markerTag.equals(Constants.DESTINATION_LOCATION_TAG)) {
+                showStreetViewSnackBar(marker);
+            } else {
+                showCheckPointDialog(markerTag);
+            }
         }
+//        Integer clickCount = (Integer) marker.getTag();
+//        if (clickCount != null) {
+//            if (clickCount == Constants.START_LOCATION_TAG | clickCount == Constants.DESTINATION_LOCATION_TAG) {
+//                showStreetViewSnackBar(marker);
+//            } else {
+//                for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
+//                    if (clickCount == i) {
+//                        Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
+//                        showCheckPointEditOption(i);
+//                    }
+//
+//                }
+//            }
+//
+//        }
         return false;
     }
 

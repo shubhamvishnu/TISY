@@ -31,9 +31,6 @@ public class EventDialogs {
         if (type == Constants.TYPE_ALL_EVENTS) {
             dialog.setContentView(R.layout.activity_all_events_actvity);
             showAllEventsDialog(context, dialog);
-        } else if (type == Constants.TYPE_ALL_REQUESTS) {
-            dialog.setContentView(R.layout.activity_all_requests);
-            showAllRequestsDialog(context, dialog);
         } else if (type == Constants.TYPE_REQUESTS) {
             dialog.setContentView(R.layout.dialog_requests_layout);
             showRequests(context, dialog);
