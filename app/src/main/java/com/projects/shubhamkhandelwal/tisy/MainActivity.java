@@ -43,6 +43,9 @@ import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.MovementTracker;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
+import com.tiancaicc.springfloatingactionmenu.MenuItemView;
+import com.tiancaicc.springfloatingactionmenu.OnMenuActionListener;
+import com.tiancaicc.springfloatingactionmenu.SpringFloatingActionMenu;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,13 +53,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     // variables
     // FAB sub-action button tags; to identify which sub-action button was clicked.
-    public static final String MAIN_ACITIVITY_TAG = "MainActivity";
-    public final static String CREATE_EVENT_TAG = "create_event";
-    public final static String JOIN_EVENT_TAG = "send_requests";
-    public final static String ALL_EVENTS_TAG = "all_events";
-    public final static String REQUESTS_TAG = "requests";
-    public final static String STREETVIEW_TAG = "streetview";
-    public final static String TRACK_TAG = "my_tracks";
+
+    public final static String CREATE_EVENT_TAG = "Create Event";
+    public final static String JOIN_EVENT_TAG = "Join Event";
+    public final static String ALL_EVENTS_TAG = "All Events";
+    public final static String REQUESTS_TAG = "Requests";
+    public final static String STREETVIEW_TAG = "StreetView";
+    public final static String TRACK_TAG = "My Tracks";
 
 
     long activeEventCount; // number of active event of the user.
@@ -109,160 +112,68 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          *      contains two view items-ImageButton and TextView; These two view are added inside a linear layout.
          */
 
-        // FAB for user account information view.
-        ImageView userAccountImageIcon = new ImageView(this); // Create an icon imageview.
-        userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
+//        // FAB for user account information view.
+//        ImageView userAccountImageIcon = new ImageView(this); // Create an icon imageview.
+//        userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+//        userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
+//
+//        // create menu
+//        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this) //builder for the user account information FAB.
+//                .setContentView(userAccountImageIcon)
+//                .setBackgroundDrawable(R.drawable.floating_action_button_selector)
+//                .build();
+//        userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // initializes user information upon request to view the user information
+//                initializeUserInformation();
+//            }
+//        });
 
-        // create menu
-        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this) //builder for the user account information FAB.
-                .setContentView(userAccountImageIcon)
-                .setBackgroundDrawable(R.drawable.floating_action_button_selector)
+        final com.melnykov.fab.FloatingActionButton fab = new com.melnykov.fab.FloatingActionButton(this);
+        fab.setType(com.melnykov.fab.FloatingActionButton.TYPE_NORMAL);
+        fab.setImageResource(R.drawable.option_main);
+        fab.setColorPressedResId(R.color.customColor4);
+        fab.setColorNormalResId(R.color.customColor7);
+        fab.setColorRippleResId(R.color.customColor8);
+        fab.setShadow(true);
+
+
+        new SpringFloatingActionMenu.Builder(this)
+                .fab(fab)
+                //add menu item via addMenuItem(bgColor,icon,label,label color,onClickListener)
+                //添加菜单按钮参数依次是背景颜色,图标,标签,标签的颜色,点击事件
+                .addMenuItem(R.color.customColor2, R.drawable.all_event_main, ALL_EVENTS_TAG, R.color.customColor0,this)
+                .addMenuItem(R.color.customColor3, R.drawable.create_main, CREATE_EVENT_TAG, R.color.customColor0,this)
+                .addMenuItem(R.color.customColor5, R.drawable.requests_main, REQUESTS_TAG, R.color.customColor0,this)
+                .addMenuItem(R.color.customColor6,  R.drawable.my_tracks_main, TRACK_TAG, R.color.customColor0,this)
+                //you can choose menu layout animation
+                //设置动画类型
+                .animationType(SpringFloatingActionMenu.ANIMATION_TYPE_TUMBLR)
+                //setup reveal color while the menu opening
+                //设置reveal效果的颜色
+                .revealColor(R.color.colorPrimary)
+                //set FAB location, only support bottom center and bottom right
+                //设置FAB的位置,只支持底部居中和右下角的位置
+                .gravity(Gravity.RIGHT | Gravity.BOTTOM)
+                .onMenuActionListner(new OnMenuActionListener() {
+                    @Override
+                    public void onMenuOpen() {
+                        //set FAB icon when the menu opened
+                        //设置FAB的icon当菜单打开的时候
+                        fab.setImageResource(R.drawable.option_main);
+                    }
+
+                    @Override
+                    public void onMenuClose() {
+                        //set back FAB icon when the menu closed
+                        //设置回FAB的图标当菜单关闭的时候
+                        fab.setImageResource(R.drawable.option_main);
+                    }
+                })
                 .build();
-        userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // initializes user information upon request to view the user information
-                initializeUserInformation();
-            }
-        });
-
-        // create menu with items
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this) // attaching the user account information FAB to the builder.
-                .attachTo(floatingActionButton)
-                .build();
-
-        // Custom FAB for showing options.
-        centerFAB = (ImageButton) findViewById(R.id.center_fab); // initialize the center FAB main button.
-
-        // Custom FAB menu.
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
-        itemBuilder.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
-        itemBuilder.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-
-        // layout for the menu items.
-        LinearLayout subActionFABLinearLayout = new LinearLayout(this);
-        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        subActionFABLinearLayout.setGravity(Gravity.CENTER);
-        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        // create event menu item
-        ImageView createEventCircleButton = new ImageView(this); // image view for the menu item.
-        createEventCircleButton.setImageResource(R.drawable.add);
-        createEventCircleButton.setAdjustViewBounds(true);
-        createEventCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-        createEventCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        createEventCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-        createEventCircleButton.setPadding(50, 100, 50, 100);
-
-        // add the views to the layout for the menu items.
-        subActionFABLinearLayout.addView(createEventCircleButton);
 
 
-        // add the layout as an item having the created views. The linear layout acts as a sub-action menu item.
-        SubActionButton createEventSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
-        createEventSubActionButton.setTag(CREATE_EVENT_TAG);
-        createEventSubActionButton.setOnClickListener(this);
-
-        // track movements menu item.
-        subActionFABLinearLayout = new LinearLayout(this);
-        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        subActionFABLinearLayout.setGravity(Gravity.CENTER);
-        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        ImageView trackCircleButton = new ImageView(this);
-        trackCircleButton.setAdjustViewBounds(true);
-        trackCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        trackCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-        trackCircleButton.setImageResource(R.drawable.tracks_image);
-        trackCircleButton.setPadding(50, 100, 50, 100);
-        trackCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-
-        subActionFABLinearLayout.addView(trackCircleButton);
-
-        SubActionButton trackSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
-        trackSubActionButton.setTag(TRACK_TAG);
-        trackSubActionButton.setOnClickListener(this);
-
-
-        // all events menu item.
-        subActionFABLinearLayout = new LinearLayout(this);
-        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        subActionFABLinearLayout.setGravity(Gravity.CENTER);
-        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        ImageView allActiveEventsCircleButton = new ImageView(this);
-        allActiveEventsCircleButton.setAdjustViewBounds(true);
-        allActiveEventsCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        allActiveEventsCircleButton.setImageResource(R.drawable.allevents);
-        allActiveEventsCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-        allActiveEventsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-        allActiveEventsCircleButton.setPadding(50, 100, 50, 100);
-
-
-        subActionFABLinearLayout.addView(allActiveEventsCircleButton);
-
-
-        SubActionButton allEventsSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
-        allEventsSubActionButton.setTag(ALL_EVENTS_TAG);
-        allEventsSubActionButton.setOnClickListener(this);
-
-
-        // all sent requests menu item.
-        subActionFABLinearLayout = new LinearLayout(this);
-        subActionFABLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        subActionFABLinearLayout.setGravity(Gravity.CENTER);
-        subActionFABLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        ImageView requestsCircleButton = new ImageView(this);
-        requestsCircleButton.setAdjustViewBounds(true);
-        requestsCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        requestsCircleButton.setImageResource(R.drawable.requests);
-        requestsCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-        requestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-        requestsCircleButton.setPadding(50, 100, 50, 100);
-
-        subActionFABLinearLayout.addView(requestsCircleButton);
-
-        SubActionButton requestsSubActionButton = itemBuilder.setContentView(subActionFABLinearLayout).build();
-        requestsSubActionButton.setTag(REQUESTS_TAG);
-        requestsSubActionButton.setOnClickListener(this);
-
-
-        // all received requests menu item.
-        LinearLayout receivedRequestLinearLayout = new LinearLayout(this);
-        receivedRequestLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        receivedRequestLinearLayout.setGravity(Gravity.CENTER);
-        receivedRequestLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
-
-        ImageView receivedRequestsCircleButton = new ImageView(this);
-        receivedRequestsCircleButton.setAdjustViewBounds(true);
-        receivedRequestsCircleButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        receivedRequestsCircleButton.setImageResource(R.drawable.streetview);
-        receivedRequestsCircleButton.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-        receivedRequestsCircleButton.setLayoutParams(new ViewGroup.LayoutParams(500, 500));
-        receivedRequestsCircleButton.setPadding(50, 100, 50, 100);
-
-
-
-        receivedRequestLinearLayout.addView(receivedRequestsCircleButton);
-
-        SubActionButton receivedRequestSubActionButton = itemBuilder.setContentView(receivedRequestLinearLayout).build();
-        receivedRequestSubActionButton.setTag(STREETVIEW_TAG);
-        receivedRequestSubActionButton.setOnClickListener(this);
-
-        // add items to custom FAB menu.
-        FloatingActionMenu circleMenu = new FloatingActionMenu.Builder(this)
-                .setStartAngle(0) // A whole circle!
-                .setEndAngle(360)
-                .setRadius(getResources().getDimensionPixelSize(R.dimen.radius_large))
-                .addSubActionView(createEventSubActionButton, 600, 600)
-                .addSubActionView(trackSubActionButton, 500, 400)
-                .addSubActionView(allEventsSubActionButton, 500, 400)
-                .addSubActionView(requestsSubActionButton, 500, 400)
-                .addSubActionView(receivedRequestSubActionButton, 500, 400)
-                .attachTo(centerFAB)
-                .build();
 
     }
 
@@ -270,21 +181,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        if (view.getTag().equals(CREATE_EVENT_TAG)) {
+
+        MenuItemView menuItemView = (MenuItemView) view;
+        String label = menuItemView.getLabelTextView().getText().toString();
+
+
+        if (label.equals(CREATE_EVENT_TAG)) {
             intent = new Intent(MainActivity.this, CreateEvent.class);
             startActivity(intent);
         }
-        if (view.getTag().equals(TRACK_TAG)) {
+        if (label.equals(TRACK_TAG)) {
             toTrackActivity();
         }
-        if (view.getTag().equals(ALL_EVENTS_TAG)) {
+        if (label.equals(ALL_EVENTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
 
         }
-        if (view.getTag().equals(REQUESTS_TAG)) {
+        if (label.equals(REQUESTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_REQUESTS);
         }
-        if (view.getTag().equals(STREETVIEW_TAG)) {
+        if (label.equals(STREETVIEW_TAG)) {
           toStreetViewActivity();
         }
     }

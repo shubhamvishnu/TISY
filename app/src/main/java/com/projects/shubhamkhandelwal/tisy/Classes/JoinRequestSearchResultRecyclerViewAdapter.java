@@ -53,13 +53,21 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
     void populateViewWithResults() {
         nameList = new ArrayList<>();
         eventIdList = new ArrayList<>();
+        final List<String> activeEventList = new ArrayList<>();
         Firebase searchResultFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS);
+
         final Firebase requestsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
+        requestsFirebase.keepSynced(true);
+
         searchResultFirebase.keepSynced(true);
         searchResultFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    for (DataSnapshot activeEventSnapshot : dataSnapshot.child(username).child("activeEvent").getChildren()) {
+                        activeEventList.add(activeEventSnapshot.getKey());
+                    }
+
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         // check if the name is not equal to username
                         if (!snapshot.getKey().trim().contentEquals(username.trim())) {
@@ -72,25 +80,26 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                                         requestsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if(dataSnapshot.exists()){
+                                                if (dataSnapshot.exists()) {
                                                     int count = 0;
-                                                    for(DataSnapshot snapshot1 : dataSnapshot.getChildren()){
-                                                        if(eventSnapshot.getKey().equals(snapshot1.getKey())){
+                                                    for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                                        if (eventSnapshot.getKey().equals(snapshot1.getKey())) {
                                                             count++;
                                                         }
-
                                                     }
-                                                    if(count == 0){
+                                                    if (count == 0 && !activeEventList.contains(eventSnapshot.getKey())) {
                                                         int position = eventIdList.size();
                                                         eventIdList.add(eventSnapshot.getKey());
                                                         nameList.add(snapshot.child("name").getValue().toString());
                                                         notifyItemInserted(position);
                                                     }
-                                                }else{
-                                                    int position = eventIdList.size();
-                                                    eventIdList.add(eventSnapshot.getKey());
-                                                    nameList.add(snapshot.child("name").getValue().toString());
-                                                    notifyItemInserted(position);
+                                                } else {
+                                                    if (!activeEventList.contains(eventSnapshot.getKey())) {
+                                                        int position = eventIdList.size();
+                                                        eventIdList.add(eventSnapshot.getKey());
+                                                        nameList.add(snapshot.child("name").getValue().toString());
+                                                        notifyItemInserted(position);
+                                                    }
                                                 }
                                             }
 

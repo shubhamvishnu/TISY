@@ -58,7 +58,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
     GoogleMap mMap;
     String username;
@@ -90,6 +89,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.track_map);
         mapFragment.getMapAsync(this);
+
         addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
         showCalendarImageButton = (ImageButton) findViewById(R.id.track_activity_show_calendar);
         trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
@@ -99,14 +99,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 placePickerDialog();
             }
         });
-        showCalendarImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
         initColors();
-        deleteJunkTracks();
+
 
     }
     void deleteJunkTracks(){

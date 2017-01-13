@@ -61,7 +61,7 @@
         <activity
             android:name=".TrackActivity"
             android:theme="@style/MapTheme" />
-        <activity android:name=".StreetViewForLocationActivity"></activity>
+        <activity android:name=".StreetViewForLocationActivity" />
     </application>
 
 </manifest>

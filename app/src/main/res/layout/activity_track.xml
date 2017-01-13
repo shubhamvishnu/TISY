@@ -50,11 +50,7 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/calendar_icon" />
-            <picker.ugurtekbas.com.Picker.Picker
-                android:id="@+id/time_picker"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+
 
         </LinearLayout>
     </LinearLayout>

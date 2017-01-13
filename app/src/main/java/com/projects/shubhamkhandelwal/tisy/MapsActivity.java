@@ -1551,7 +1551,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.check_point_flag);
                 Bitmap tempBitmap = bitmapDrawable.getBitmap();
-                Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 120, 120, false);
+                Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 170, 170, false);
 
                 Note note = checkpointMapEntry.getValue();
                 Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(note.getLatlng()).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
