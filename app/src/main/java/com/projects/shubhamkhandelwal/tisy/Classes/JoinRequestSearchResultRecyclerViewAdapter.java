@@ -251,4 +251,5 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
             }
         }
     }
+
 }

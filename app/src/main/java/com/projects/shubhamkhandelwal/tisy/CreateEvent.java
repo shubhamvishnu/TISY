@@ -3,6 +3,7 @@ package com.projects.shubhamkhandelwal.tisy;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -1142,7 +1143,13 @@ public class CreateEvent extends Activity {
         });
 
     }
-
+    void storeMapStyle() {
+        SharedPreferences mapStylePreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+        SharedPreferences.Editor mapStyleEditor = mapStylePreference.edit();
+        mapStyleEditor.putInt("style", Constants.TYPE_MAP_STYLE_AUBERGINE);
+        mapStyleEditor.putInt("type", Constants.TYPE_MAP_SATELLITE);
+        mapStyleEditor.apply();
+    }
     void next() {
 
         intent = new Intent(CreateEvent.this, MapsActivity.class);

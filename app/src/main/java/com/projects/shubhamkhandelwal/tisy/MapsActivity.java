@@ -36,6 +36,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -63,9 +64,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
-import com.google.android.gms.maps.StreetViewPanorama;
-import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -192,8 +190,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nameSearch = new String();
 
 
-
-
         zoomFit = false;
 
         // initializing Class Objects
@@ -268,7 +264,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 note.setTitle(dataSnapshot.child("title").getValue().toString());
                 note.setDesc(dataSnapshot.child("desc").getValue().toString());
                 note.setKey(dataSnapshot.child("key").getValue().toString());
-                LatLng latLng = new LatLng(Double.parseDouble(dataSnapshot.child("latlng/latitude").getValue().toString()),Double.parseDouble(dataSnapshot.child("latlng/longitude").getValue().toString()));
+                LatLng latLng = new LatLng(Double.parseDouble(dataSnapshot.child("latlng/latitude").getValue().toString()), Double.parseDouble(dataSnapshot.child("latlng/longitude").getValue().toString()));
                 note.setLatlng(latLng);
 
                 checkPointCoordinateMap.put(dataSnapshot.getKey(), note);
@@ -443,7 +439,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         allInOneDialog.show();
     }
 
-    void showMapTypeOptionDialog(){
+    void showMapTypeOptionDialog() {
         final Dialog mapTypeDialog = new Dialog(this, R.style.event_info_dialog_style);
         mapTypeDialog.setContentView(R.layout.dialog_map_type_option_layout);
         ImageButton defaultMapTypeImageButton, terrainMapTypeImageButton, satelliteMapTypeImageButton, hybridMapTypeImageButton;
@@ -457,14 +453,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 mapTypeDialog.dismiss();
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+                setMapType(Constants.TYPE_MAP_NORMAL);
             }
         });
         terrainMapTypeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mapTypeDialog.dismiss();
-                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+                setMapType(Constants.TYPE_MAP_TERRAIN);
 
             }
         });
@@ -472,7 +470,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 mapTypeDialog.dismiss();
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+                setMapType(Constants.TYPE_MAP_SATELLITE);
 
             }
         });
@@ -480,7 +479,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 mapTypeDialog.dismiss();
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                setMapType(Constants.TYPE_MAP_HYBRID);
 
             }
         });
@@ -490,6 +489,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapTypeDialog.setCanceledOnTouchOutside(true);
         mapTypeDialog.show();
     }
+
     void showMapStyleOptionsDialog() {
 
         final Dialog mapStyleDialog = new Dialog(this, R.style.event_info_dialog_style);
@@ -557,6 +557,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         window.setGravity(Gravity.CENTER);
         mapStyleDialog.setCanceledOnTouchOutside(true);
         mapStyleDialog.show();
+    }
+
+    void setMapType(int type) {
+
+        if (type == Constants.TYPE_MAP_NORMAL) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        } else if (type == Constants.TYPE_MAP_SATELLITE) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        } else if (type == Constants.TYPE_MAP_TERRAIN) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        } else if (type == Constants.TYPE_MAP_HYBRID) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+
+        storeMapType(type);
+
+    }
+
+    void storeMapType(int type) {
+        SharedPreferences mapStylePreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+        SharedPreferences.Editor mapStyleEditor = mapStylePreference.edit();
+        mapStyleEditor.putInt("type", type);
+        mapStyleEditor.apply();
     }
 
     void setMapStyle(int type) {
@@ -632,80 +658,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 showCheckPointAddOptionDialog(place.getLatLng(), place.getName().toString());
-               // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+                // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             }
         }
     }
-
-
 
     void sendMemberRequest() {
 
         final Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
         sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
 
-        final EditText sendJoinRequestEventIdEditText;
-        final Button sendJoinRequestButton;
-        final Button searchOptionChoiceButton;
+
+
         RecyclerView eventJoinRequestSendRecyclerView;
-        sendJoinRequestEventIdEditText = (EditText) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_edit_text);
-        sendJoinRequestButton = (Button) sendMemberRequestDialog.findViewById(R.id.dialog_send_join_request_button);
-        searchOptionChoiceButton = (Button) sendMemberRequestDialog.findViewById(R.id.search_option_choice_button);
-        searchOptionChoiceButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton searchButton = (ImageButton) sendMemberRequestDialog.findViewById(R.id.search_choice_dialog_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendMemberRequestDialog.dismiss();
-                showSearchOptionDialog();
+                showSearchOptionDialog(sendMemberRequestDialog.getContext());
             }
         });
-        sendJoinRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String userId = sendJoinRequestEventIdEditText.getText().toString();
-                if (userId == null || userId.isEmpty()) {
-                    //TODO: show snackbar here
-                } else {
-                    if (userId.equals(username)) {
-                        //TODO: show snackbar here
-                        sendJoinRequestEventIdEditText.setText("");
-                    } else {
-                        Firebase userIdCheckFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + userId);
-                        userIdCheckFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    Firebase sendRequestFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
-                                    HashMap<String, Object> sendRequestUsername = new HashMap<String, Object>();
-                                    sendRequestUsername.put(userId, username);
-                                    sendRequestFirebase.updateChildren(sendRequestUsername, new Firebase.CompletionListener() {
-                                        @Override
-                                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                            Firebase userSentRequestUpdateFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + userId);
-                                            HashMap<String, Object> userSentRequestUpdate = new HashMap<String, Object>();
-                                            userSentRequestUpdate.put(Constants.currentEventId, username);
-                                            userSentRequestUpdateFirebase.updateChildren(userSentRequestUpdate, new Firebase.CompletionListener() {
-                                                @Override
-                                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                                    sendJoinRequestEventIdEditText.setText("");
-                                                    //TODO: showsnackbar here
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(FirebaseError firebaseError) {
-
-                            }
-                        });
-                    }
-                }
-            }
-        });
-
-
         eventJoinRequestSendRecyclerView = (RecyclerView) sendMemberRequestDialog.findViewById(R.id.dialog_event_join_request_sent_recycler_view);
         eventJoinRequestSendRecyclerView.setLayoutManager(new LinearLayoutManager(sendMemberRequestDialog.getContext()));
         eventJoinRequestSendRecyclerView.setHasFixedSize(true);
@@ -721,11 +694,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    void showSearchOptionDialog() {
+    void showSearchOptionDialog(Context context) {
 
         final EditText searchEditText;
         ImageButton searchButton;
-        final Dialog searchOptionDialog = new Dialog(this, R.style.event_info_dialog_style);
+        final Dialog searchOptionDialog = new Dialog(context, R.style.event_info_dialog_style);
         searchOptionDialog.setContentView(R.layout.dialog_search_option_layout);
 
         searchEditText = (EditText) searchOptionDialog.findViewById(R.id.search_option_choice_dialog_edit_text);
@@ -734,6 +707,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchOptionChoiceRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(searchOptionDialog.getContext());
         searchOptionChoiceRecyclerView.setLayoutManager(linearLayoutManager);
+        searchEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_ENTER) {
+                    {
+                        nameSearch = searchEditText.getText().toString();
+                        if (!nameSearch.isEmpty()) {
+                            searchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
+                            searchOptionChoiceRecyclerView.setAdapter(searchResultsRecyclerViewAdapter);
+                        }
+                    }
+                }
+                return false;
+            }
+        });
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -860,7 +848,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         titleTextView = (TextView) eventInfoDialog.findViewById(R.id.event_title_text_view);
 
         editMembersImageButton = (ImageButton) eventInfoDialog.findViewById(R.id.editMembersImageButton);
-        if(!Constants.eventAdmin){
+        if (!Constants.eventAdmin) {
             editMembersImageButton.setVisibility(View.INVISIBLE);
         }
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
@@ -981,6 +969,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         initializeMapStyle();
+        initializeMapType();
         GPSEnabledCheck();
     }
 
@@ -991,6 +980,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             setMapStyle(styleType);
         }
     }
+
+    void initializeMapType() {
+        SharedPreferences mapSharedPreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+        int styleType = mapSharedPreference.getInt("type", 0);
+        if (!(styleType == 0)) {
+            setMapType(styleType);
+        }
+    }
+
 
     void GPSEnabledCheck() {
         // check for GPS is enabled, if not show snackbar, else just call the location Action
@@ -1239,7 +1237,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             });
         } else {
-            Firebase removeMember = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members/" + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) );
+            Firebase removeMember = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members/" + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
             removeMember.removeValue(new Firebase.CompletionListener() {
                 @Override
                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -1406,7 +1404,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
-     void updateUserCurrentLocation(final Location location) {
+    void updateUserCurrentLocation(final Location location) {
         final Firebase updateUserCurrentLocationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
         updateUserCurrentLocationFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1664,7 +1662,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         checkPointCoordinateMap.remove(mapKey);
         zoomFitMembers();
     }
-    void showCheckPointAddOptionDialog(final LatLng latLng, String title){
+
+    void showCheckPointAddOptionDialog(final LatLng latLng, String title) {
         final Dialog addCheckPointDialog = new Dialog(this, R.style.event_info_dialog_style);
         addCheckPointDialog.setContentView(R.layout.dialog_add_check_point);
         final EditText checkpointTitle = (EditText) addCheckPointDialog.findViewById(R.id.checkpoint_title_edit_text);
@@ -1679,7 +1678,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String desc = checkPointDescription.getText().toString();
                 String title = checkpointTitle.getText().toString();
 
-                if(!desc.isEmpty() || title.isEmpty()){
+                if (!desc.isEmpty() || title.isEmpty()) {
                     saveCheckPoint(title, desc, latLng);
                     addCheckPointDialog.dismiss();
                 }
@@ -1697,7 +1696,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         addCheckPointDialog.setCanceledOnTouchOutside(true);
         addCheckPointDialog.show();
     }
-    void saveCheckPoint(String title, String desc, LatLng latlng){
+
+    void saveCheckPoint(String title, String desc, LatLng latlng) {
         Note note = new Note();
         note.setTitle(title);
         note.setDesc(desc);
@@ -1709,12 +1709,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         newCheckPoint.setValue(note);
 
     }
-    void showCheckPointDialog(final String markerTag){
+
+    void showCheckPointDialog(final String markerTag) {
         final Dialog showCheckPointDialog = new Dialog(this, R.style.event_info_dialog_style);
         showCheckPointDialog.setContentView(R.layout.dialog_show_checkpoint_layout);
 
         EditText titleEditText, descriptionEditText;
-        Button  deleteCheckPointButton;
+        Button deleteCheckPointButton;
 
         titleEditText = (EditText) showCheckPointDialog.findViewById(R.id.show_checkpoint_title_edit_text);
         descriptionEditText = (EditText) showCheckPointDialog.findViewById(R.id.show_checkpoint_description_edit_text);
@@ -1740,10 +1741,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         showCheckPointDialog.setCanceledOnTouchOutside(true);
         showCheckPointDialog.show();
     }
+
     @Override
     public boolean onMarkerClick(Marker marker) {
         String markerTag = (String) marker.getTag();
-        if(markerTag!=null) {
+        if (markerTag != null) {
             if (markerTag.equals(Constants.START_LOCATION_TAG) || markerTag.equals(Constants.DESTINATION_LOCATION_TAG)) {
                 showStreetViewSnackBar(marker);
             } else {
@@ -1779,15 +1781,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
 //                streetViewPanorama.setPosition(new LatLng(latitude, longitude));
 //                if (streetViewPanorama.getLocation() != null) {
-                    Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
-                    intent.putExtra("latitude", latitude);
-                    intent.putExtra("longitude", longitude);
-                    startActivity(intent);
+        Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
+        intent.putExtra("latitude", latitude);
+        intent.putExtra("longitude", longitude);
+        startActivity(intent);
 //                } else {
 //                    // TODO: show dialog to say streetview unavailable and finish() on OK
 //                    showStreetViewNotAvailableSnackBar();
 //                }
-            }
+    }
 
 
     void showStreetViewNotAvailableSnackBar() {

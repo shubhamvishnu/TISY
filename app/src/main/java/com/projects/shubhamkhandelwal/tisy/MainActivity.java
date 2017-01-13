@@ -16,6 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +38,7 @@ import com.firebase.client.ValueEventListener;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+import com.projects.shubhamkhandelwal.tisy.Classes.ActiveEventsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
@@ -58,7 +61,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final static String JOIN_EVENT_TAG = "Join Event";
     public final static String ALL_EVENTS_TAG = "All Events";
     public final static String REQUESTS_TAG = "Requests";
-    public final static String STREETVIEW_TAG = "StreetView";
+    public final static String MY_ACCOUNT_TAG = "My Account";
     public final static String TRACK_TAG = "My Tracks";
 
 
@@ -89,6 +92,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
             startService(new Intent(getBaseContext(), LocationListenerService.class));
+            showAllEventsDialog();
         } else {
             intent = new Intent(MainActivity.this, Login.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -147,6 +151,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addMenuItem(R.color.customColor3, R.drawable.create_main, CREATE_EVENT_TAG, R.color.customColor0,this)
                 .addMenuItem(R.color.customColor5, R.drawable.requests_main, REQUESTS_TAG, R.color.customColor0,this)
                 .addMenuItem(R.color.customColor6,  R.drawable.my_tracks_main, TRACK_TAG, R.color.customColor0,this)
+                .addMenuItem(R.color.customColor4, R.drawable.default_profile_image_icon, MY_ACCOUNT_TAG, R.color.customColor0, this)
                 //you can choose menu layout animation
                 //设置动画类型
                 .animationType(SpringFloatingActionMenu.ANIMATION_TYPE_TUMBLR)
@@ -172,9 +177,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     }
                 })
                 .build();
-
-
-
     }
 
 
@@ -200,8 +202,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (label.equals(REQUESTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_REQUESTS);
         }
-        if (label.equals(STREETVIEW_TAG)) {
-          toStreetViewActivity();
+        if (label.equals(MY_ACCOUNT_TAG)) {
+            initializeUserInformation();
         }
     }
     void toStreetViewActivity(){
@@ -215,22 +217,37 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         intent.putExtra("username", username);
         startActivity(intent);
     }
+    void showAllEventsDialog() {
 
+        RecyclerView activeEventsRecyclerView;
+        ActiveEventsRecyclerViewAdapter activeEventsRecyclerViewAdapter;
+
+        activeEventsRecyclerView = (RecyclerView) findViewById(R.id.active_events_recycler_view);
+        activeEventsRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        activeEventsRecyclerView.setLayoutManager(linearLayoutManager);
+
+        activeEventsRecyclerViewAdapter = new ActiveEventsRecyclerViewAdapter(this);
+        activeEventsRecyclerView.setAdapter(activeEventsRecyclerViewAdapter);
+
+    }
     /**
      * fetches information about the user.
      * after fetching-user information dialog is shown.
      */
     void initializeUserInformation() {
-        activeEventCount = 0; // total number of events user is a part of currently.
-        createdEventCount = 0; // total number of events user has created.
-        joinedEventCount = 0; // total number of events user has joined.
-        userPhotoUri = new String(); // holds the profile photo image url.
 
         Firebase userInfoFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
         userInfoFirebase.keepSynced(true);
         userInfoFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                activeEventCount = 0; // total number of events user is a part of currently.
+                createdEventCount = 0; // total number of events user has created.
+                joinedEventCount = 0; // total number of events user has joined.
+                userPhotoUri = new String(); // holds the profile photo image url.
+
                 userPhotoUri = dataSnapshot.child("userPhotoUri").getValue().toString();
                 activeEventCount = dataSnapshot.child("activeEvent").getChildrenCount();
 

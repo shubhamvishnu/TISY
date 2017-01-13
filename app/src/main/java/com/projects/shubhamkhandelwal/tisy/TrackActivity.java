@@ -85,7 +85,14 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         builder = new LatLngBounds.Builder();
         locationLogList = new ArrayList<>();
 
-        username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            username =  extras.getString("username");
+            Toast.makeText(TrackActivity.this, "extras : " + username, Toast.LENGTH_SHORT).show();
+        }else{
+            username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
+        }
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.track_map);
         mapFragment.getMapAsync(this);
@@ -197,14 +204,14 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
     void saveNote(LatLng location, String locationTitle, String locationDesc) {
-        Firebase saveNoteFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + TimeStamp.getRawTime());
+        Firebase saveNoteFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/");
         saveNoteFirebase.keepSynced(true);
         LocationNote locationNote = new LocationNote(locationTitle, locationDesc, String.valueOf(location.latitude), String.valueOf(location.longitude));
         saveNoteFirebase.push().setValue(locationNote);
     }
 
     void showNotes() {
-        Firebase saveNoteFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + TimeStamp.getRawTime());
+        Firebase saveNoteFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/");
         saveNoteFirebase.keepSynced(true);
         saveNoteFirebase.addChildEventListener(new ChildEventListener() {
             @Override
@@ -252,7 +259,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             marker.setTag(mapEntry.getKey());
             builder.include(mapEntry.getValue().getLatlng());
         }
-        zoomFit();
     }
 
 
@@ -287,6 +293,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         locationLogList = new ArrayList<>();
         initLatLngs();
         showNotes();
+        zoomFit();
     }
 
     String getCustomColor(int customColor) {
@@ -365,7 +372,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             positionMarkerBitmap = applyCustomBitmapColor(positionMarkerBitmap, getCustomColor(hour));
             mMap.addMarker(new MarkerOptions().position(coordinate).title("Here at " + locationLog.getHourAndMinute()).icon(BitmapDescriptorFactory.fromBitmap(positionMarkerBitmap)));
         }
-        zoomFit();
     }
 
     void zoomFit() {
@@ -431,4 +437,9 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        deleteJunkTracks();
+    }
 }

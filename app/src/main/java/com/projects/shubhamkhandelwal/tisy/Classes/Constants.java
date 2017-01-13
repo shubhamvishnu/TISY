@@ -34,6 +34,11 @@ public class Constants {
     public static int TYPE_MAP_STYLE_DARK = 8004;
     public static int TYPE_MAP_STYLE_SILVER = 8005;
 
+    public static int TYPE_MAP_NORMAL = 9000;
+    public static int TYPE_MAP_SATELLITE = 9001;
+    public static int TYPE_MAP_HYBRID = 9002;
+    public static int TYPE_MAP_TERRAIN = 9003;
+
 
 
 }
