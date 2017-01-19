@@ -28,6 +28,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     Firebase firebase;
     Context context;
     List<String> eventIdList;
+    List<String> userList;
     String username;
     private LayoutInflater inflator;
     ProgressDialog progressDialog;
@@ -35,7 +36,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
         this.context = context;
         inflator = LayoutInflater.from(context);
         eventIdList = new ArrayList<>();
-
+        userList = new ArrayList<>();
         username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);
         initProgressDialog();
         loadRequests();
@@ -68,6 +69,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 int position = eventIdList.size();
                 eventIdList.add(dataSnapshot.getKey());
+                userList.add(dataSnapshot.getValue().toString());
                 notifyItemInserted(position);
             }
 
@@ -80,6 +82,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 int position = eventIdList.indexOf(dataSnapshot.getKey());
                 eventIdList.remove(position);
+                userList.remove(position);
                 notifyItemRemoved(position);
                 if(progressDialog.isShowing()){
                     progressDialog.dismiss();
@@ -108,6 +111,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     @Override
     public void onBindViewHolder(ReceivedRequestsRecyclerViewHolder holder, int position) {
         holder.eventIdTextView.setText(eventIdList.get(position));
+        holder.userTextView.setText(userList.get(position));
     }
 
     @Override
@@ -156,6 +160,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
     public class ReceivedRequestsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView eventIdTextView;
+        TextView userTextView;
         ImageButton acceptRequestImageButton, declineRequestImageButton;
 
         public ReceivedRequestsRecyclerViewHolder(View itemView) {
@@ -163,6 +168,8 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
             eventIdTextView = (TextView) itemView.findViewById(R.id.event_id_requested_text_view);
             acceptRequestImageButton = (ImageButton) itemView.findViewById(R.id.accept_request_image_button);
             declineRequestImageButton = (ImageButton) itemView.findViewById(R.id.decline_request_image_button);
+            userTextView = (TextView) itemView.findViewById(R.id.user_name_requested_text_view);
+
             acceptRequestImageButton.setOnClickListener(this);
             declineRequestImageButton.setOnClickListener(this);
         }

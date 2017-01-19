@@ -2,6 +2,8 @@ package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -74,6 +76,8 @@ public class CreateEvent extends Activity {
     CoordinatorLayout coordinatorLayout;
     Map<String, Object> members;
 
+    ProgressDialog progressDialog;
+
     // number of events created by this user
     int eventCount;
     // intialization for place picker dialog
@@ -134,9 +138,9 @@ public class CreateEvent extends Activity {
         iconResourceId = -1;
 
 
-
         // generate the eventId; calls the generate() function
         generateEventId();
+        initProgressDialog();
 
         sLocationEditImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,45 +264,66 @@ public class CreateEvent extends Activity {
                         if (destLocation == null || startLocation == null || startLocationDesc == null || destLocationDesc == null || destLocation.isEmpty() || startLocation.isEmpty() || startLocationDesc.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
                             Toast.makeText(CreateEvent.this, "please mention all the event details", Toast.LENGTH_SHORT).show();
                         } else {
+                            if (checkInternetConnection()) {
+                                progressDialog.show();
+                                if (sLocationDescEditText.getText().toString().isEmpty() || dLocationDescEditText.getText().toString().isEmpty()) {
+                                    sLocationDescEditText.setText(eventInfo.getsLocationDesc());
+                                    dLocationDescEditText.setText(eventInfo.getdLocationDesc());
+                                } else {
+                                    eventInfo.setsLocationDesc(sLocationDescEditText.getText().toString());
+                                    eventInfo.setdLocationDesc(dLocationDescEditText.getText().toString());
+                                }
+                                // TODO: check for eventID being empty
 
-                            if (sLocationDescEditText.getText().toString().isEmpty() || dLocationDescEditText.getText().toString().isEmpty()) {
-                                sLocationDescEditText.setText(eventInfo.getsLocationDesc());
-                                dLocationDescEditText.setText(eventInfo.getdLocationDesc());
-                            } else {
-                                eventInfo.setsLocationDesc(sLocationDescEditText.getText().toString());
-                                eventInfo.setdLocationDesc(dLocationDescEditText.getText().toString());
+                                if (!checkInternetConnection()) {
+                                    Toast.makeText(CreateEvent.this, "no internet connection", Toast.LENGTH_SHORT).show();
+                                } else {
+
+                                    // creating reference with the new eventID
+                                    firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventId);
+                                    Map<String, Object> newEvent = new HashMap<String, Object>();
+                                    newEvent.put("admin", getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
+                                    newEvent.put("info", eventInfo);
+                                    newEvent.put("members", members);
+                                    newEvent.put("dIcon", iconResourceId);
+                                    newEvent.put("desc", eventDescription);
+                                    newEvent.put("title", eventTitle);
+                                    newEvent.put("time", TimeStamp.getTime());
+                                    firebase.setValue(newEvent, new Firebase.CompletionListener() {
+                                        @Override
+                                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                            updateEvent();
+                                        }
+                                    });
+                                }
+
                             }
-                            // TODO: check for eventID being empty
-
-                            if (!checkInternetConnection()) {
-                                Toast.makeText(CreateEvent.this, "no internet connection", Toast.LENGTH_SHORT).show();
-                            } else {
-
-                                // creating reference with the new eventID
-                                firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventId);
-                                Map<String, Object> newEvent = new HashMap<String, Object>();
-                                newEvent.put("admin", getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
-                                newEvent.put("info", eventInfo);
-                                newEvent.put("members", members);
-                                newEvent.put("dIcon", iconResourceId);
-                                newEvent.put("desc", eventDescription);
-                                newEvent.put("title", eventTitle);
-                                newEvent.put("time", TimeStamp.getTime());
-                                firebase.setValue(newEvent, new Firebase.CompletionListener() {
-                                    @Override
-                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                        updateEvent();
-                                    }
-                                });
-                            }
-
-
                         }
 
                     } else {
                         Toast.makeText(CreateEvent.this, "some problem has occured. please try again later", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+        });
+    }
+
+    void initProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("making changes...");
+        progressDialog.setMessage("Working on it!");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
             }
         });
     }
@@ -957,6 +982,7 @@ public class CreateEvent extends Activity {
         iconResourceId = destinationIconInit.initDestinationIconResourceID(v.getId());
         showDLocationView();
     }
+
     void showDLocationView() {
         if (iconResourceId != -1) {
             loadDestinationIcon();
@@ -1134,7 +1160,7 @@ public class CreateEvent extends Activity {
                         Constants.dIconResourceId = iconResourceId;
                         // TODO: include a completion listener and update the eventCount for the user
 
-                        next();
+                        storeMapConfig();
                     }
                 });
                 // public static String currentEventId to reference the eventID of the currenly active event
@@ -1143,17 +1169,30 @@ public class CreateEvent extends Activity {
         });
 
     }
-    void storeMapStyle() {
+
+    void storeMapConfig() {
         SharedPreferences mapStylePreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
         SharedPreferences.Editor mapStyleEditor = mapStylePreference.edit();
-        mapStyleEditor.putInt("style", Constants.TYPE_MAP_STYLE_AUBERGINE);
-        mapStyleEditor.putInt("type", Constants.TYPE_MAP_SATELLITE);
+        int style = mapStylePreference.getInt("style", 0);
+        if (!(style == 0)) {
+            mapStyleEditor.putInt("style", Constants.TYPE_MAP_STYLE_AUBERGINE);
+        }
+        int type = mapStylePreference.getInt("type", 0);
+        if (!(type == 0)) {
+            mapStyleEditor.putInt("type", Constants.TYPE_MAP_SATELLITE);
+        }
         mapStyleEditor.apply();
+
+        next();
     }
+
     void next() {
 
         intent = new Intent(CreateEvent.this, MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
         startActivity(intent);
         finish();
     }

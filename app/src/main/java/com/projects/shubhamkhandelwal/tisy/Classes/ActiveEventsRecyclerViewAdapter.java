@@ -2,12 +2,14 @@ package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
@@ -17,6 +19,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.projects.shubhamkhandelwal.tisy.MapsActivity;
 import com.projects.shubhamkhandelwal.tisy.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,9 +130,13 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
         holder.activeEventRequests.setText(activeEventIds.get(position).getRequests());
         holder.activeEventTimeCreated.setText(activeEventIds.get(position).getTimeCreated());
 
-
         holder.activeMembersRecyclerViewAdapter = new ActiveMembersRecyclerViewAdapter(context, activeEventIds.get(position).getMemberList());
         holder.activeEventMemberRecyclerView.setAdapter(holder.activeMembersRecyclerViewAdapter);
+
+//        String[] destCoordinates = info.getdLocation().split(",");
+//        String[] startCoordinates = info.getsLocation().split(",");
+
+        Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getsLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+info.getsLocation()+"&markers=color:red%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.login_background).into(holder.activeEventCardImageView);
     }
 
     @Override
@@ -148,6 +155,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
         Button activeTrackEventButton;
         RecyclerView activeEventMemberRecyclerView;
         ActiveMembersRecyclerViewAdapter activeMembersRecyclerViewAdapter;
+        ImageView activeEventCardImageView;
 
         View view;
 
@@ -163,6 +171,8 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             activeEventAssociation = (TextView) itemView.findViewById(R.id.active_event_association_text_view);
             activeTrackEventButton = (Button) itemView.findViewById(R.id.active_event_track_button);
             activeEventMemberRecyclerView = (RecyclerView) itemView.findViewById(R.id.active_event_member_recycler_view);
+            activeEventCardImageView = (ImageView) itemView.findViewById(R.id.active_event_card_background_image_view);
+
             activeEventMemberRecyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager
                     = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);

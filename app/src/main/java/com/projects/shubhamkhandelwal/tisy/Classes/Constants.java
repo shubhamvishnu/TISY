@@ -17,11 +17,13 @@ public class Constants {
 
     public static int dIconResourceId = -1;
 
-    public static int TYPE_CREATE_EVENTS = 1000;
-    public static int TYPE_ALL_EVENTS = 1001;
-    public static int TYPE_ALL_REQUESTS = 1002;
-    public static int TYPE_REQUESTS = 1003;
-    public static int TYPE_DELETE_MEMBERS = 1004;
+
+    public static int TYPE_ALL_EVENTS = 1000;
+    public static int TYPE_DELETE_MEMBERS = 1001;
+    public static int TYPE_RECEIVED_REQUESTS = 1002;
+    public static int TYPE_SENT_REQUESTS = 1003;
+
+
 
     public static String START_LOCATION_TAG = "start_location_marker";
     public static String DESTINATION_LOCATION_TAG = "destination_location_marker";

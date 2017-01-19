@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,9 +60,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // FAB sub-action button tags; to identify which sub-action button was clicked.
 
     public final static String CREATE_EVENT_TAG = "Create Event";
-    public final static String JOIN_EVENT_TAG = "Join Event";
     public final static String ALL_EVENTS_TAG = "All Events";
-    public final static String REQUESTS_TAG = "Requests";
+    public final static String SENT_REQUESTS_TAG = "Sent Requests";
+    public final static String RECEIVED_REQUESTS_TAG = "Received Requests";
+
     public final static String MY_ACCOUNT_TAG = "My Account";
     public final static String TRACK_TAG = "My Tracks";
 
@@ -78,12 +81,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Firebase firebase; // reference for the firebase object.
     CoordinatorLayout coordinatorLayoutMainActivity; // reference of the coordinator layout view in the activity_main.xml.
     ImageButton centerFAB; // reference for center main FAB button.
-
+    ImageView mainActivityBackgroundImageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+
+        mainActivityBackgroundImageView = (ImageView) findViewById(R.id.main_activity_backgound_image_view);
+        Picasso.with(this).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location=28.6618976,77.2273958&size="+height+"x"+width+"&maptype=satellite&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.login_background).into(mainActivityBackgroundImageView);
 
         /**
          * checks if the user has logged in or not.
@@ -149,7 +161,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 //添加菜单按钮参数依次是背景颜色,图标,标签,标签的颜色,点击事件
                 .addMenuItem(R.color.customColor2, R.drawable.all_event_main, ALL_EVENTS_TAG, R.color.customColor0,this)
                 .addMenuItem(R.color.customColor3, R.drawable.create_main, CREATE_EVENT_TAG, R.color.customColor0,this)
-                .addMenuItem(R.color.customColor5, R.drawable.requests_main, REQUESTS_TAG, R.color.customColor0,this)
+                .addMenuItem(R.color.customColor5, R.drawable.requests_main, RECEIVED_REQUESTS_TAG, R.color.customColor0,this)
+                .addMenuItem(R.color.customColor5, R.drawable.requests_main, SENT_REQUESTS_TAG, R.color.customColor0,this)
                 .addMenuItem(R.color.customColor6,  R.drawable.my_tracks_main, TRACK_TAG, R.color.customColor0,this)
                 .addMenuItem(R.color.customColor4, R.drawable.default_profile_image_icon, MY_ACCOUNT_TAG, R.color.customColor0, this)
                 //you can choose menu layout animation
@@ -199,8 +212,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
 
         }
-        if (label.equals(REQUESTS_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_REQUESTS);
+        if (label.equals(RECEIVED_REQUESTS_TAG)) {
+            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
+        }
+        if (label.equals(SENT_REQUESTS_TAG)) {
+            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_SENT_REQUESTS);
         }
         if (label.equals(MY_ACCOUNT_TAG)) {
             initializeUserInformation();
@@ -217,6 +233,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         intent.putExtra("username", username);
         startActivity(intent);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showAllEventsDialog();
+    }
+
     void showAllEventsDialog() {
 
         RecyclerView activeEventsRecyclerView;

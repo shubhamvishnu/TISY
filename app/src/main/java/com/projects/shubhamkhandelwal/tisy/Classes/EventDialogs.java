@@ -32,12 +32,15 @@ public class EventDialogs {
         if (type == Constants.TYPE_ALL_EVENTS) {
             dialog.setContentView(R.layout.activity_all_events_actvity);
             showAllEventsDialog(context, dialog);
-        } else if (type == Constants.TYPE_REQUESTS) {
+        } else if (type == Constants.TYPE_SENT_REQUESTS) {
             dialog.setContentView(R.layout.dialog_requests_layout);
-            showRequests(context, dialog);
+            showSentRequestDialog(context, dialog);
         } else if (type == Constants.TYPE_DELETE_MEMBERS) {
             dialog.setContentView(R.layout.dialog_delete_event_members_layout);
             showMembersDialog(context, dialog);
+        }else if(type == Constants.TYPE_RECEIVED_REQUESTS){
+            dialog.setContentView(R.layout.dialog_received_requests_layout);
+            showReceivedRequestDialog(context, dialog);
         }
 
         Window window = dialog.getWindow();
@@ -89,10 +92,7 @@ public class EventDialogs {
         deleteEventMemberRecyclerView.setAdapter(eventMembersRecyclerViewAdapater);
     }
 
-    void showRequests(final Context context, final Dialog dialog) {
-        Button joinRequestButton = (Button) dialog.findViewById(R.id.dialog_join_request_button);
-
-
+    void showReceivedRequestDialog(final Context context, final Dialog dialog){
         // received requests
 
         RecyclerView receivedRequestRecyclerView;
@@ -106,9 +106,10 @@ public class EventDialogs {
 
         receivedRequestsRecyclerViewAdapter = new ReceivedRequestsRecyclerViewAdapter(context);
         receivedRequestRecyclerView.setAdapter(receivedRequestsRecyclerViewAdapter);
+    }
 
-        // sent requests
-
+    void showSentRequestDialog(final Context context, final Dialog dialog){
+        Button joinRequestButton = (Button) dialog.findViewById(R.id.dialog_join_request_button);
         RecyclerView joinEventRequestsRecyclerView;
         JoinEventRequestsRecyclerViewAdapter joinEventRequestsRecyclerViewAdapter;
 
@@ -129,6 +130,27 @@ public class EventDialogs {
                 joinRequestDialog(context);
             }
         });
+    }
+    void showRequests(final Context context, final Dialog dialog) {
+
+
+//        // received requests
+//
+//        RecyclerView receivedRequestRecyclerView;
+//        ReceivedRequestsRecyclerViewAdapter receivedRequestsRecyclerViewAdapter;
+//
+//        receivedRequestRecyclerView = (RecyclerView) dialog.findViewById(R.id.dialog_received_requests_recycler_view);
+//        receivedRequestRecyclerView.setHasFixedSize(true);
+//
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
+//        receivedRequestRecyclerView.setLayoutManager(linearLayoutManager);
+//
+//        receivedRequestsRecyclerViewAdapter = new ReceivedRequestsRecyclerViewAdapter(context);
+//        receivedRequestRecyclerView.setAdapter(receivedRequestsRecyclerViewAdapter);
+
+        // sent requests
+
+
     }
 
     void joinRequestDialog(Context context) {

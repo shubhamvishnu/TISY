@@ -82,7 +82,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         fromDialog = false;
 
         tagNoteMap = new HashMap<>();
-        builder = new LatLngBounds.Builder();
+
         locationLogList = new ArrayList<>();
 
         Bundle extras = getIntent().getExtras();
@@ -213,37 +213,26 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     void showNotes() {
         Firebase saveNoteFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/");
         saveNoteFirebase.keepSynced(true);
-        saveNoteFirebase.addChildEventListener(new ChildEventListener() {
+        saveNoteFirebase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                LatLng latLng = new LatLng(Double.parseDouble(dataSnapshot.child("latitude").getValue().toString()), Double.parseDouble(dataSnapshot.child("longitude").getValue().toString()));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                tagNoteMap = new HashMap<Integer, Note>();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    LatLng latLng = new LatLng(Double.parseDouble(snapshot.child("latitude").getValue().toString()), Double.parseDouble(snapshot.child("longitude").getValue().toString()));
+                    Note note = new Note();
+                    note.setDesc(snapshot.child("description").getValue().toString());
+                    note.setTitle(snapshot.child("title").getValue().toString());
+                    note.setKey(snapshot.getKey());
+                    note.setLatlng(latLng);
 
-                Note note = new Note();
-                note.setDesc(dataSnapshot.child("description").getValue().toString());
-                note.setTitle(dataSnapshot.child("title").getValue().toString());
-                note.setKey(dataSnapshot.getKey());
-                note.setLatlng(latLng);
 
-                int tag = tagNoteMap.size();
-                tagNoteMap.put(tag, note);
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon, 150, 150))));
+                    marker.setTag(note.getKey());
 
-                showNotesOnMap();
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                    int tag = tagNoteMap.size();
+                    tagNoteMap.put(tag, note);
+                }
+                zoomFit();
             }
 
             @Override
@@ -251,14 +240,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
             }
         });
-    }
-    void showNotesOnMap(){
-
-        for(Map.Entry<Integer, Note> mapEntry : tagNoteMap.entrySet()) {
-            Marker marker = mMap.addMarker(new MarkerOptions().position(mapEntry.getValue().getLatlng()).title(mapEntry.getValue().getTitle()).snippet(mapEntry.getValue().getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon, 150, 150))));
-            marker.setTag(mapEntry.getKey());
-            builder.include(mapEntry.getValue().getLatlng());
-        }
     }
 
 
@@ -287,13 +268,12 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
     void init() {
-        builder = new LatLngBounds.Builder();
+
         mMap.clear();
         tagNoteMap = new HashMap<>();
         locationLogList = new ArrayList<>();
         initLatLngs();
         showNotes();
-        zoomFit();
     }
 
     String getCustomColor(int customColor) {
@@ -305,28 +285,22 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
     void initLatLngs() {
+
         Firebase initLatLng = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" + TimeStamp.getRawTime());
         initLatLng.keepSynced(true);
-        initLatLng.addChildEventListener(new ChildEventListener() {
+        initLatLng.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                locationLogList.add(dataSnapshot.getValue(LocationLog.class));
-                showTrack();
-            }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                locationLogList = new ArrayList<LocationLog>();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    LocationLog locationLog = snapshot.getValue(LocationLog.class);
+                    locationLogList.add(locationLog);
+                    int hour = Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]);
+                    LatLng coordinate = new LatLng(Double.parseDouble(locationLog.getLatitude()), Double.parseDouble(locationLog.getLongitude()));
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                    mMap.addMarker(new MarkerOptions().position(coordinate).title("Here at " + locationLog.getHourAndMinute()).icon(BitmapDescriptorFactory.fromBitmap(getTracksIcon(hour))));
+                }
+                zoomFit();
             }
 
             @Override
@@ -358,23 +332,24 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
 
-    void showTrack() {
-        // int initialHour = Integer.parseInt(locationLogList.get(0).getHourAndMinute().split(":")[0]);
+    Bitmap getTracksIcon(int hour){
         Bitmap positionMarkerBitmap = InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.footstep_image_icon, 72, 72);
-        for (int i = 0; i < locationLogList.size(); i++) {
-            LocationLog locationLog = locationLogList.get(i);
-            int hour = Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]);
-
-            LatLng coordinate = new LatLng(Double.parseDouble(locationLog.getLatitude()), Double.parseDouble(locationLog.getLongitude()));
-            builder.include(coordinate);
-
-
-            positionMarkerBitmap = applyCustomBitmapColor(positionMarkerBitmap, getCustomColor(hour));
-            mMap.addMarker(new MarkerOptions().position(coordinate).title("Here at " + locationLog.getHourAndMinute()).icon(BitmapDescriptorFactory.fromBitmap(positionMarkerBitmap)));
-        }
+        positionMarkerBitmap = applyCustomBitmapColor(positionMarkerBitmap, getCustomColor(hour));
+        return positionMarkerBitmap;
     }
 
     void zoomFit() {
+        builder = new LatLngBounds.Builder();
+
+        for(Map.Entry entry : tagNoteMap.entrySet()){
+            Note note = (Note) entry.getValue();
+            builder.include(note.getLatlng());
+        }
+        for(int i = 0; i < locationLogList.size(); i++){
+            LatLng latLng = new LatLng(Double.parseDouble(locationLogList.get(i).getLatitude()), Double.parseDouble(locationLogList.get(i).getLongitude()));
+            builder.include(latLng);
+        }
+
         LatLngBounds bounds = builder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
