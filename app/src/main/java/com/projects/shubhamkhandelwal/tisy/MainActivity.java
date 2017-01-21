@@ -1,6 +1,7 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -61,12 +63,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public final static String CREATE_EVENT_TAG = "Create Event";
     public final static String ALL_EVENTS_TAG = "All Events";
-    public final static String SENT_REQUESTS_TAG = "Sent Requests";
-    public final static String RECEIVED_REQUESTS_TAG = "Received Requests";
-
+    public final static String SENT_REQUESTS_TAG = "Synergize";
+    public final static String RECEIVED_REQUESTS_TAG = "Invites";
     public final static String MY_ACCOUNT_TAG = "My Account";
-    public final static String TRACK_TAG = "My Tracks";
+    public final static String PLACES_TAG = "My Places";
 
+    ProgressDialog progressDialog;
 
     long activeEventCount; // number of active event of the user.
     long createdEventCount; // number of events created; count of no. of events the user is the admin of.
@@ -93,9 +95,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         int width = size.x;
         int height = size.y;
 
-
         mainActivityBackgroundImageView = (ImageView) findViewById(R.id.main_activity_backgound_image_view);
-        Picasso.with(this).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location=28.6618976,77.2273958&size="+height+"x"+width+"&maptype=satellite&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.login_background).into(mainActivityBackgroundImageView);
+
+      //  Picasso.with(this).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?center=28.6618976,77.2273958&scale=2&size="+640+"x"+640+"&zoom=4&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.login_background).into(mainActivityBackgroundImageView);
 
         /**
          * checks if the user has logged in or not.
@@ -105,6 +107,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (loginCheck.contains("login")) {
             startService(new Intent(getBaseContext(), LocationListenerService.class));
             showAllEventsDialog();
+            initProgressDialog();
         } else {
             intent = new Intent(MainActivity.this, Login.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -149,9 +152,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         final com.melnykov.fab.FloatingActionButton fab = new com.melnykov.fab.FloatingActionButton(this);
         fab.setType(com.melnykov.fab.FloatingActionButton.TYPE_NORMAL);
         fab.setImageResource(R.drawable.option_main);
-        fab.setColorPressedResId(R.color.customColor4);
-        fab.setColorNormalResId(R.color.customColor7);
-        fab.setColorRippleResId(R.color.customColor8);
+        fab.setColorPressedResId(R.color.colorPrimaryDark);
+        fab.setColorNormalResId(R.color.colorPrimaryDark);
+        fab.setColorRippleResId(R.color.colorPrimaryDark);
         fab.setShadow(true);
 
 
@@ -159,18 +162,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .fab(fab)
                 //add menu item via addMenuItem(bgColor,icon,label,label color,onClickListener)
                 //添加菜单按钮参数依次是背景颜色,图标,标签,标签的颜色,点击事件
-                .addMenuItem(R.color.customColor2, R.drawable.all_event_main, ALL_EVENTS_TAG, R.color.customColor0,this)
-                .addMenuItem(R.color.customColor3, R.drawable.create_main, CREATE_EVENT_TAG, R.color.customColor0,this)
-                .addMenuItem(R.color.customColor5, R.drawable.requests_main, RECEIVED_REQUESTS_TAG, R.color.customColor0,this)
-                .addMenuItem(R.color.customColor5, R.drawable.requests_main, SENT_REQUESTS_TAG, R.color.customColor0,this)
-                .addMenuItem(R.color.customColor6,  R.drawable.my_tracks_main, TRACK_TAG, R.color.customColor0,this)
-                .addMenuItem(R.color.customColor4, R.drawable.default_profile_image_icon, MY_ACCOUNT_TAG, R.color.customColor0, this)
+                .addMenuItem(R.color.main_activity_create_event, R.drawable.create_event_icon, CREATE_EVENT_TAG, android.R.color.white,this)
+                .addMenuItem(R.color.main_activity_option_user_info, R.drawable.info_icon, MY_ACCOUNT_TAG, android.R.color.white, this)
+                .addMenuItem(R.color.main_activity_option_synergize, R.drawable.synergize_icon, SENT_REQUESTS_TAG, android.R.color.white,this)
+                .addMenuItem(R.color.main_activity_my_places_tag,  R.drawable.my_places_location_marker_icon, PLACES_TAG, android.R.color.white,this)
+                .addMenuItem(R.color.main_activity_option_invite, R.drawable.invite_icon, RECEIVED_REQUESTS_TAG, android.R.color.white,this)
                 //you can choose menu layout animation
                 //设置动画类型
                 .animationType(SpringFloatingActionMenu.ANIMATION_TYPE_TUMBLR)
                 //setup reveal color while the menu opening
                 //设置reveal效果的颜色
-                .revealColor(R.color.colorPrimary)
+                .revealColor(R.color.colorPrimaryDark)
                 //set FAB location, only support bottom center and bottom right
                 //设置FAB的位置,只支持底部居中和右下角的位置
                 .gravity(Gravity.RIGHT | Gravity.BOTTOM)
@@ -192,7 +194,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .build();
     }
 
+    void initProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Loging out!");
+        progressDialog.setMessage("Working on it...");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
 
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
+    }
 
     @Override
     public void onClick(View view) {
@@ -200,17 +220,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         MenuItemView menuItemView = (MenuItemView) view;
         String label = menuItemView.getLabelTextView().getText().toString();
 
-
         if (label.equals(CREATE_EVENT_TAG)) {
             intent = new Intent(MainActivity.this, CreateEvent.class);
             startActivity(intent);
         }
-        if (label.equals(TRACK_TAG)) {
+        if (label.equals(PLACES_TAG)) {
             toTrackActivity();
         }
         if (label.equals(ALL_EVENTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
-
         }
         if (label.equals(RECEIVED_REQUESTS_TAG)) {
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
@@ -230,7 +248,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
     void toTrackActivity(){
         Intent intent = new Intent(MainActivity.this, TrackActivity.class);
-        intent.putExtra("username", username);
         startActivity(intent);
     }
 
@@ -307,6 +324,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView createdEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.created_events_count_text_view);
         TextView joinedEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.joined_events_count_text_view);
         CircleImageView profileImageView = (CircleImageView) userAccountDialog.findViewById(R.id.profile_image_circle_image_view);
+        Button logoutButton = (Button) userAccountDialog.findViewById(R.id.logout_button);
 
         Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
@@ -327,11 +345,35 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 userAccountDialog = null;
             }
         });
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userAccountDialog.dismiss();
+                progressDialog.show();
+                logout();
+            }
+        });
         userAccountDialog.show();
 
     }
 
+void logout(){
+   getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE).edit().clear().apply();
+    getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE).edit().clear().apply();
+    getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).edit().clear().apply();
+    getSharedPreferences(SharedPreferencesName.CHATS_READ_COUNT, MODE_PRIVATE).edit().clear().apply();
 
+    if(progressDialog.isShowing()){
+       progressDialog.dismiss();
+    }
+
+    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
+    finish();
+
+
+}
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);

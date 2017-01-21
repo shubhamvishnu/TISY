@@ -94,84 +94,109 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="Number of active events:   "
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+                    <TextView
 
-                <TextView
-                    android:id="@+id/active_events_count_text_view"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:gravity="center"
-                    android:textColor="@android:color/white" />
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="active events: "
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                       />
+                        <TextView
+
+                            android:layout_gravity="center"
+                            android:id="@+id/active_events_count_text_view"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/floating_sub_action_button_selector"
+                            android:gravity="center"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+                    <TextView
+
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+
+                        android:text="events created:"
+                        android:textColor="@android:color/white"
+
+                        android:textStyle="bold"
+                      />
+                        <TextView
+
+                            android:layout_gravity="center"
+                            android:id="@+id/created_events_count_text_view"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/floating_sub_action_button_selector"
+                            android:gravity="center"
+                            android:textColor="@android:color/white" />
+                        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+                    <TextView
+
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+
+                        android:text="events joined: "
+                        android:textColor="@android:color/white"
+
+                        android:textStyle="bold" />
+                        <TextView
+                            android:layout_gravity="center"
+                            android:id="@+id/joined_events_count_text_view"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/floating_sub_action_button_selector"
+                            android:gravity="center"
+                            android:textColor="@android:color/white" />
+                        </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/logout_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="logout"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="Number of events created: "
                     android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/created_events_count_text_view"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/floating_sub_action_button_selector"
                     android:gravity="center"
-                    android:textColor="@android:color/white" />
+                    android:background="@android:color/transparent"/>
+
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="Number of events joined:    "
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/joined_events_count_text_view"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/floating_sub_action_button_selector"
-                    android:gravity="center"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>

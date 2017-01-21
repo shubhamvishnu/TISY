@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -19,6 +20,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.projects.shubhamkhandelwal.tisy.MapsActivity;
 import com.projects.shubhamkhandelwal.tisy.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -118,12 +121,12 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
     }
 
     @Override
-    public void onBindViewHolder(ActiveEventsRecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(final ActiveEventsRecyclerViewHolder holder, final int position) {
         holder.activeEventTitleTextView.setText(activeEventIds.get(position).getTitle());
         holder.activeEventAssociation.setText(activeEventIds.get(position).getAssociation());
         holder.activeEventIdTextView.setText(activeEventIds.get(position).getEventId());
 
-        EventInfo info = activeEventIds.get(position).getEventInfo();
+        final EventInfo info = activeEventIds.get(position).getEventInfo();
 
         holder.activeEventsLocationDesc.setText(info.getsLocationDesc());
         holder.activeEventdLocationDesc.setText(info.getdLocationDesc());
@@ -136,7 +139,18 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
 //        String[] destCoordinates = info.getdLocation().split(",");
 //        String[] startCoordinates = info.getsLocation().split(",");
 
-        Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getsLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+info.getsLocation()+"&markers=color:red%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.login_background).into(holder.activeEventCardImageView);
+        Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getsLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+info.getsLocation()+"&markers=color:red%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).networkPolicy(NetworkPolicy.OFFLINE).into(holder.activeEventCardImageView, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(context, "loaded offline", Toast.LENGTH_SHORT).show();
+                Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getsLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+info.getsLocation()+"&markers=color:red%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.login_background).into(holder.activeEventCardImageView);
+            }
+        });
     }
 
     @Override

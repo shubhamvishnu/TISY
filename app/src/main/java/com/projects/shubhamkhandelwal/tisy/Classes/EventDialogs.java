@@ -61,7 +61,7 @@ public class EventDialogs {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (!snapshot.getKey().trim().equals(username)) {
+                        if (!snapshot.getKey().equals(username)) {
                             members.add(snapshot.getKey());
                         }
                     }

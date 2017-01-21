@@ -6,52 +6,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TrackActivity">
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/track_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:context="com.projects.shubhamkhandelwal.tisy.TrackActivity" >
-    </fragment>
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:background="@color/colorPrimaryDark"-->
-            <!--android:id="@+id/date_track_activity_recycler_view"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="50dp"-->
-            <!--/>-->
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:scrollbarAlwaysDrawHorizontalTrack="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/track_activity_add_note"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/note_pin_marker_icon" />
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/track_activity_show_calendar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/calendar_icon" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/track_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:context="com.projects.shubhamkhandelwal.tisy.TrackActivity">
+        </fragment>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/track_activity_add_note"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="10dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/note_pin_marker_icon" />
+
+            <ImageButton
+                android:id="@+id/track_activity_zoom_fit_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/zoomfit_image_icon" />
 
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>

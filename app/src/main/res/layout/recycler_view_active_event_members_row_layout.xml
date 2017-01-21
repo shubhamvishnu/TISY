@@ -8,7 +8,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="6dp"
-    android:textSize="16dp"
-    android:background="@drawable/join_event_background"
+    android:textSize="12dp"
+    android:background="@drawable/active_members_recycler_view_item_background"
     android:textColor="@android:color/white"/>
+
 </LinearLayout>

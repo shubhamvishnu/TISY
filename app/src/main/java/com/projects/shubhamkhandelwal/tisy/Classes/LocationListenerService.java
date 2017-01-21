@@ -41,7 +41,7 @@ public class LocationListenerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         username = getBaseContext().getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
-        Toast.makeText(getBaseContext(), "service called" + username, Toast.LENGTH_SHORT).show();
+
         init();
         return START_STICKY;
     }
@@ -49,7 +49,7 @@ public class LocationListenerService extends Service {
 
     void init() {
         customColor = 0;
-        Toast.makeText(getBaseContext(), "init called.", Toast.LENGTH_SHORT).show();
+
         locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new MyLocationListener();
@@ -159,7 +159,7 @@ public class LocationListenerService extends Service {
             locationLog.setCustomColor(customColor);
             locationLog.setHourAndMinute(hourAndMinute);
 
-            updateLocationLog(locationLog, dateMonthYear);
+            //updateLocationLog(locationLog, dateMonthYear);
 
 
         }

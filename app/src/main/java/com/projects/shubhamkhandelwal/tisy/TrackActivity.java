@@ -2,14 +2,18 @@ package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Paint;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -22,7 +26,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -39,29 +42,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
-import com.projects.shubhamkhandelwal.tisy.Classes.LocationLog;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationNote;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
+public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     GoogleMap mMap;
     String username;
-    List<LocationLog> locationLogList;
+    //List<LocationLog> locationLogList;
     ImageButton addNoteImageButton;
     ImageButton showCalendarImageButton;
     // intialization for place picker dialog
@@ -72,7 +70,9 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
     Map<Integer, Note> tagNoteMap;
     CoordinatorLayout trackCoordinatorLayout;
+    ImageButton trackActivityZoomFit;
     LatLngBounds.Builder builder;
+    public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
 
 
     @Override
@@ -83,13 +83,13 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
         tagNoteMap = new HashMap<>();
 
-        locationLogList = new ArrayList<>();
+        // locationLogList = new ArrayList<>();
 
         Bundle extras = getIntent().getExtras();
-        if(extras != null){
-            username =  extras.getString("username");
+        if (extras != null) {
+            username = extras.getString("username");
             Toast.makeText(TrackActivity.this, "extras : " + username, Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         }
 
@@ -98,7 +98,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
-        showCalendarImageButton = (ImageButton) findViewById(R.id.track_activity_show_calendar);
+        addNoteImageButton.setVisibility(View.INVISIBLE);
+
         trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
         addNoteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,33 +107,44 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 placePickerDialog();
             }
         });
-        initColors();
 
-
-    }
-    void deleteJunkTracks(){
-        final Firebase junkTracksFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" );
-        junkTracksFirebase.keepSynced(true);
-        junkTracksFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+        trackActivityZoomFit = (ImageButton) findViewById(R.id.track_activity_zoom_fit_icon);
+        trackActivityZoomFit.setVisibility(View.INVISIBLE);
+        trackActivityZoomFit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChildren()){
-                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        if(!snapshot.getKey().equals(TimeStamp.getRawTime())){
-                            Toast.makeText(TrackActivity.this, "deleted event date :" + snapshot.getKey(), Toast.LENGTH_SHORT).show();
-                            junkTracksFirebase.child(snapshot.getKey()).removeValue();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
+            public void onClick(View view) {
+                zoomFit();
             }
         });
+        //initColors();
+
+
     }
 
+    /* void deleteJunkTracks(){
+         final Firebase junkTracksFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" );
+         junkTracksFirebase.keepSynced(true);
+         junkTracksFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+             @Override
+             public void onDataChange(DataSnapshot dataSnapshot) {
+                 if(dataSnapshot.hasChildren()){
+                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                         if(!snapshot.getKey().equals(TimeStamp.getRawTime())){
+                             Toast.makeText(TrackActivity.this, "deleted event date :" + snapshot.getKey(), Toast.LENGTH_SHORT).show();
+                             junkTracksFirebase.child(snapshot.getKey()).removeValue();
+                         }
+                     }
+                 }
+             }
+
+             @Override
+             public void onCancelled(FirebaseError firebaseError) {
+
+             }
+         });
+     }
+
+ */
 
     // to call the placepicker dialog
     void placePickerDialog() {
@@ -217,7 +229,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 tagNoteMap = new HashMap<Integer, Note>();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     LatLng latLng = new LatLng(Double.parseDouble(snapshot.child("latitude").getValue().toString()), Double.parseDouble(snapshot.child("longitude").getValue().toString()));
                     Note note = new Note();
                     note.setDesc(snapshot.child("description").getValue().toString());
@@ -225,11 +237,11 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                     note.setKey(snapshot.getKey());
                     note.setLatlng(latLng);
 
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.my_places_location_marker_icon, 150, 150))));
 
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.note_pin_icon, 150, 150))));
-                    marker.setTag(note.getKey());
 
                     int tag = tagNoteMap.size();
+                    marker.setTag(tag);
                     tagNoteMap.put(tag, note);
                 }
                 zoomFit();
@@ -242,48 +254,232 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
-
-    void initColors() {
-        Constants.colors.add(this.getString(R.string.customColor0));
-        Constants.colors.add(this.getString(R.string.customColor1));
-        Constants.colors.add(this.getString(R.string.customColor2));
-        Constants.colors.add(this.getString(R.string.customColor3));
-        Constants.colors.add(this.getString(R.string.customColor4));
-        Constants.colors.add(this.getString(R.string.customColor5));
-        Constants.colors.add(this.getString(R.string.customColor6));
-        Constants.colors.add(this.getString(R.string.customColor7));
-        Constants.colors.add(this.getString(R.string.customColor8));
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Integer markerTag = (Integer) marker.getTag();
+        if (tagNoteMap.containsKey(markerTag)) {
+            showNoteDialog(markerTag);
+        }
+        return false;
     }
 
+    /*
+        void initColors() {
+            Constants.colors.add(this.getString(R.string.customColor0));
+            Constants.colors.add(this.getString(R.string.customColor1));
+            Constants.colors.add(this.getString(R.string.customColor2));
+            Constants.colors.add(this.getString(R.string.customColor3));
+            Constants.colors.add(this.getString(R.string.customColor4));
+            Constants.colors.add(this.getString(R.string.customColor5));
+            Constants.colors.add(this.getString(R.string.customColor6));
+            Constants.colors.add(this.getString(R.string.customColor7));
+            Constants.colors.add(this.getString(R.string.customColor8));
+        }
+    */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        initializeMapStyle();
+        initializeMapType();
+        GPSEnabledCheck();
+
+    }
+
+    void initializeMapStyle() {
+        SharedPreferences mapSharedPreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+        int styleType = mapSharedPreference.getInt("style", 0);
+        if (!(styleType == 0)) {
+            setMapStyle(styleType);
+        }
+    }
+
+    void setMapType(int type) {
+
+        if (type == Constants.TYPE_MAP_NORMAL) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        } else if (type == Constants.TYPE_MAP_SATELLITE) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
+        } else if (type == Constants.TYPE_MAP_TERRAIN) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        } else if (type == Constants.TYPE_MAP_HYBRID) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+
+    }
+
+    void setMapStyle(int type) {
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = false;
+            if (type == Constants.TYPE_MAP_STYLE_DEFAULT) {
+                success = mMap.setMapStyle(null);
+            } else if (type == Constants.TYPE_MAP_STYLE_AUBERGINE) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.aubergine_style_json));
+            } else if (type == Constants.TYPE_MAP_STYLE_NIGHT) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.night_style_json));
+
+            } else if (type == Constants.TYPE_MAP_STYLE_RETRO) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.retro_style_json));
+
+            } else if (type == Constants.TYPE_MAP_STYLE_DARK) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.dark_style_json));
+
+            } else if (type == Constants.TYPE_MAP_STYLE_SILVER) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.silver_style_json));
+            }
+            if (!success) {
+                Log.e("MapsActivityRaw", "Style parsing failed.");
+            }
+
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapsActivityRaw", "Can't find style.", e);
+        }
+
+
+    }
+
+    void initializeMapType() {
+        SharedPreferences mapSharedPreference = getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE);
+        int styleType = mapSharedPreference.getInt("type", 0);
+        if (!(styleType == 0)) {
+            setMapType(styleType);
+        }
+    }
+
+    void GPSEnabledCheck() {
+        // check for GPS is enabled, if not show snackbar, else just call the location Action
+        LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (mMap != null) {
+                mMap.setPadding(0, 0, 0, 200);
+            }
+            showSnackBar();
+        } else {
+            initializeMap();
+        }
+    }
+
+    void initializeMap() {
+        checkUserPermission();
+        mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setIndoorLevelPickerEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
-        init();
-        mMap.setOnMarkerClickListener(this);
+
+    }
+    void showPermissionSnackBar() {
+
+        Snackbar snackbar = Snackbar
+                .make(trackCoordinatorLayout, "enable location permission", Snackbar.LENGTH_INDEFINITE)
+                .setAction("SETTINGS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mMap != null) {
+                            mMap.setPadding(0, 0, 0, 0);
+                        }
+                        openSettings();
+                    }
+                });
+
+        snackbar.setActionTextColor(Color.parseColor("#009688"));
+        snackbar.show();
+    }
+
+    void openSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent, REQUEST_PERMISSION_SETTINGS);
+    }
+void checkUserPermission(){
+        // enable user location
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (mMap != null) {
+                mMap.setPadding(0, 0, 0, 200);
+            }
+            showPermissionSnackBar();
+        } else {
+            addNoteImageButton.setVisibility(View.VISIBLE);
+            init();
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location location) {
+
+                }
+            });
+    }
+}
+    void showSnackBar() {
+        Snackbar snackbar = Snackbar
+                .make(trackCoordinatorLayout, "enable location setting", Snackbar.LENGTH_INDEFINITE)
+                .setAction("SETTINGS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openGPSSettings();
+                    }
+                });
+        snackbar.setCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (mMap != null) {
+                    mMap.setPadding(0, 0, 0, 0);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+
+
+            }
+        });
+        snackbar.setActionTextColor(Color.parseColor("#009688"));
+        snackbar.show();
+    }
+
+    void openGPSSettings() {
+        if (mMap != null) {
+            mMap.setPadding(0, 0, 0, 0);
+        }
+        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
     }
 
     void init() {
 
         mMap.clear();
         tagNoteMap = new HashMap<>();
-        locationLogList = new ArrayList<>();
-        initLatLngs();
+        //      locationLogList = new ArrayList<>();
+        //     initLatLngs();
         showNotes();
     }
 
-    String getCustomColor(int customColor) {
+   /* String getCustomColor(int customColor) {
         if (customColor > 8) {
             customColor = customColor % 8;
             Log.d("custom color : ", "" + customColor);
         }
         return Constants.colors.get(customColor);
-    }
-
+    } */
+/*
     void initLatLngs() {
 
         Firebase initLatLng = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" + TimeStamp.getRawTime());
@@ -330,25 +526,25 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
         return myBit;
     }
+*/
 
-
-    Bitmap getTracksIcon(int hour){
-        Bitmap positionMarkerBitmap = InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.footstep_image_icon, 72, 72);
-        positionMarkerBitmap = applyCustomBitmapColor(positionMarkerBitmap, getCustomColor(hour));
-        return positionMarkerBitmap;
-    }
-
+    /*   Bitmap getTracksIcon(int hour){
+           Bitmap positionMarkerBitmap = InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.footstep_image_icon, 72, 72);
+           positionMarkerBitmap = applyCustomBitmapColor(positionMarkerBitmap, getCustomColor(hour));
+           return positionMarkerBitmap;
+       }
+   */
     void zoomFit() {
         builder = new LatLngBounds.Builder();
 
-        for(Map.Entry entry : tagNoteMap.entrySet()){
+        for (Map.Entry entry : tagNoteMap.entrySet()) {
             Note note = (Note) entry.getValue();
             builder.include(note.getLatlng());
         }
-        for(int i = 0; i < locationLogList.size(); i++){
-            LatLng latLng = new LatLng(Double.parseDouble(locationLogList.get(i).getLatitude()), Double.parseDouble(locationLogList.get(i).getLongitude()));
-            builder.include(latLng);
-        }
+//        for(int i = 0; i < locationLogList.size(); i++){
+//            LatLng latLng = new LatLng(Double.parseDouble(locationLogList.get(i).getLatitude()), Double.parseDouble(locationLogList.get(i).getLongitude()));
+//            builder.include(latLng);
+//        }
 
         LatLngBounds bounds = builder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
@@ -358,14 +554,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         mMap.animateCamera(cameraUpdate);
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Integer markerTag = (Integer) marker.getTag();
-        if (tagNoteMap.containsKey(markerTag)) {
-            showNoteDialog(markerTag);
-        }
-        return false;
-    }
 
     void showNoteDialog(final int markerTag) {
         final Dialog dialog = new Dialog(this, R.style.event_dialogs);
@@ -415,6 +603,30 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        deleteJunkTracks();
+        //   deleteJunkTracks();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mMap != null) {
+            GPSEnabledCheck();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            finish();
+        } else {
+           toMainActivity();
+        }
+    }
+void toMainActivity(){
+    Intent intent = new Intent(TrackActivity.this, MainActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
+    finish();
+}
 }

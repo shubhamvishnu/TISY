@@ -1,68 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_margin="16dp"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/all_events_card_view"
+    <!--<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+    <!--android:id="@+id/all_events_card_view"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:minHeight="50dp"-->
+    <!--card_view:cardBackgroundColor="@android:color/white"-->
+    <!--card_view:cardCornerRadius="1dp"-->
+    <!--card_view:cardElevation="4dp"-->
+    <!--card_view:cardPreventCornerOverlap="false"-->
+    <!--card_view:cardUseCompatPadding="true">-->
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:minHeight="50dp"
-        card_view:cardBackgroundColor="@android:color/white"
-        card_view:cardCornerRadius="1dp"
-        card_view:cardElevation="4dp"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:cardUseCompatPadding="true">
-        <RelativeLayout
+        android:layout_height="240dp"
+        >
+
+        <ImageView
+            android:id="@+id/active_event_card_background_image_view"
             android:layout_width="fill_parent"
-            android:layout_height="250dp">
-            <ImageView
-                android:id="@+id/active_event_card_background_image_view"
-                android:src="@drawable/login_background"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="fitXY"/>
+            android:layout_height="fill_parent"
+
+            android:scaleType="fitXY" />
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-<!--<LinearLayout-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="1"-->
-    <!--android:orientation="vertical">-->
-    <!--<TextView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textSize="12dp"-->
-        <!--android:textStyle="normal"-->
-        <!--android:textColor="@android:color/white"-->
-        <!--android:text="Title:"/>-->
+                <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:orientation="vertical">-->
+                <!--<TextView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textSize="12dp"-->
+                <!--android:textStyle="normal"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:text="Title:"/>-->
                 <TextView
-                    android:textColor="@android:color/white"
                     android:id="@+id/active_event_title_text_view"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@android:color/white"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
-<!--</LinearLayout>-->
+                <!--</LinearLayout>-->
                 <TextView
-                    android:textColor="@android:color/white"
                     android:id="@+id/active_event_association_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:textColor="@android:color/white"
                     android:textSize="12dp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -70,61 +75,62 @@
 
             <TextView
 
-                android:textColor="@color/colorAccent"
                 android:id="@+id/active_event_id_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
 
-                android:textColor="@color/colorAccent"
                 android:id="@+id/active_event_sLocationDesc"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
                 android:textSize="16dp" />
 
             <TextView
 
-                android:textColor="@color/colorAccent"
                 android:id="@+id/active_event_dLocationDesc"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
                 android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/active_event_requests"
-                android:textColor="@color/colorAccent"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
                 android:textSize="16dp" />
 
             <TextView
 
-                android:textColor="@color/colorAccent"
                 android:id="@+id/active_event_time_created"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
                 android:textSize="12dp" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/active_event_member_recycler_view"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <Button
                 android:id="@+id/active_event_track_button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="right"
                 android:padding="8dp"
                 android:text="TRACK"
-                android:background="@android:color/transparent"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:gravity="right"/>
+                android:textSize="16dp"
+                android:textStyle="bold" />
         </LinearLayout>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+    </RelativeLayout>
+    <!--</android.support.v7.widget.CardView>-->
 </LinearLayout>

@@ -15,6 +15,12 @@
     <color name="customColor7">#6082B6</color>
     <color name="customColor8">#455A64</color>
     <color name="customColor9">#96e74c3c</color>
+    <color name="main_activity_create_event">#5DDDD3</color>
+    <color name="main_activity_my_places_tag">#FF7452</color>
+    <color name="main_activity_option_user_info">#FF7452</color>
+    <color name="main_activity_option_synergize">#0E7886</color>
+    <color name="main_activity_option_invite">#0E7886</color>
+
 
 
 
