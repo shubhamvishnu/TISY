@@ -166,7 +166,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
         TextView activeEventRequests;
         TextView activeEventTimeCreated;
         TextView activeEventAssociation;
-        Button activeTrackEventButton;
+
         RecyclerView activeEventMemberRecyclerView;
         ActiveMembersRecyclerViewAdapter activeMembersRecyclerViewAdapter;
         ImageView activeEventCardImageView;
@@ -183,7 +183,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             activeEventRequests = (TextView) itemView.findViewById(R.id.active_event_requests);
             activeEventTimeCreated = (TextView) itemView.findViewById(R.id.active_event_time_created);
             activeEventAssociation = (TextView) itemView.findViewById(R.id.active_event_association_text_view);
-            activeTrackEventButton = (Button) itemView.findViewById(R.id.active_event_track_button);
+
             activeEventMemberRecyclerView = (RecyclerView) itemView.findViewById(R.id.active_event_member_recycler_view);
             activeEventCardImageView = (ImageView) itemView.findViewById(R.id.active_event_card_background_image_view);
 
@@ -199,7 +199,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             activeEventRequests.setOnClickListener(this);
             activeEventTimeCreated.setOnClickListener(this);
             activeEventAssociation.setOnClickListener(this);
-            activeTrackEventButton.setOnClickListener(this);
+
             view.setOnClickListener(this);
         }
 

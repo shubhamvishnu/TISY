@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:padding="16dp"
                 android:text="Sent Requests"
                 android:textColor="@android:color/white"
                 android:textSize="20dp"
-                android:layout_weight="1"
                 android:textStyle="bold|italic" />
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/search_choice_dialog_button"
-        android:layout_width="36dp"
-        android:layout_gravity="center"
-        android:layout_height="36dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        android:tint="@android:color/white"
-        app:srcCompat="@drawable/add" />
-</LinearLayout>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/dialog_event_join_request_sent_recycler_view"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:scrollbarAlwaysDrawVerticalTrack="true"
-                android:scrollbars="vertical"
-                android:layout_gravity="center">
-            </android.support.v7.widget.RecyclerView>
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/search_choice_dialog_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/add" />
         </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dialog_event_join_request_sent_recycler_view"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 </LinearLayout>

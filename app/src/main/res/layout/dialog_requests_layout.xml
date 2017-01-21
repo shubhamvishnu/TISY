@@ -2,12 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/no_request_layout"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/no_request_image_icon"
+                    android:layout_width="150dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_height="150dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/no_sent_request_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Join an Event!"/>
+            </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -26,6 +61,7 @@
                 />
 
             <TextView
+                android:id="@+id/sent_requests_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Sent Requests:"
@@ -44,5 +80,6 @@
 
 
         </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 </LinearLayout>

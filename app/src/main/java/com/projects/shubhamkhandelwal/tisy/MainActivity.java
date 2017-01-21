@@ -32,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -151,10 +152,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         final com.melnykov.fab.FloatingActionButton fab = new com.melnykov.fab.FloatingActionButton(this);
         fab.setType(com.melnykov.fab.FloatingActionButton.TYPE_NORMAL);
-        fab.setImageResource(R.drawable.option_main);
-        fab.setColorPressedResId(R.color.colorPrimaryDark);
-        fab.setColorNormalResId(R.color.colorPrimaryDark);
-        fab.setColorRippleResId(R.color.colorPrimaryDark);
+        fab.setImageResource(R.drawable.edit_slocation_icon);
+        fab.setColorPressedResId(R.color.main_activity_create_event);
+        fab.setColorNormalResId(R.color.main_activity_create_event);
+        fab.setColorRippleResId(R.color.main_activity_create_event);
         fab.setShadow(true);
 
 
@@ -173,6 +174,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 //setup reveal color while the menu opening
                 //设置reveal效果的颜色
                 .revealColor(R.color.colorPrimaryDark)
+
                 //set FAB location, only support bottom center and bottom right
                 //设置FAB的位置,只支持底部居中和右下角的位置
                 .gravity(Gravity.RIGHT | Gravity.BOTTOM)
@@ -181,14 +183,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     public void onMenuOpen() {
                         //set FAB icon when the menu opened
                         //设置FAB的icon当菜单打开的时候
-                        fab.setImageResource(R.drawable.option_main);
+                        fab.setImageResource(R.drawable.close_icon);
                     }
 
                     @Override
                     public void onMenuClose() {
                         //set back FAB icon when the menu closed
                         //设置回FAB的图标当菜单关闭的时候
-                        fab.setImageResource(R.drawable.option_main);
+                        fab.setImageResource(R.drawable.edit_slocation_icon);
                     }
                 })
                 .build();
@@ -258,18 +260,38 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     void showAllEventsDialog() {
+        final RecyclerView activeEventsRecyclerView = (RecyclerView) findViewById(R.id.active_events_recycler_view);
 
-        RecyclerView activeEventsRecyclerView;
-        ActiveEventsRecyclerViewAdapter activeEventsRecyclerViewAdapter;
+        Firebase checkForEvent = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent");
+        checkForEvent.keepSynced(true);
+        checkForEvent.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    activeEventsRecyclerView.setVisibility(View.VISIBLE);
+                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.no_active_event_relative_layout);
+                    relativeLayout.setVisibility(View.INVISIBLE);
 
-        activeEventsRecyclerView = (RecyclerView) findViewById(R.id.active_events_recycler_view);
-        activeEventsRecyclerView.setHasFixedSize(true);
+                    activeEventsRecyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        activeEventsRecyclerView.setLayoutManager(linearLayoutManager);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+                    activeEventsRecyclerView.setLayoutManager(linearLayoutManager);
 
-        activeEventsRecyclerViewAdapter = new ActiveEventsRecyclerViewAdapter(this);
-        activeEventsRecyclerView.setAdapter(activeEventsRecyclerViewAdapter);
+                    ActiveEventsRecyclerViewAdapter activeEventsRecyclerViewAdapter = new ActiveEventsRecyclerViewAdapter(MainActivity.this);
+                    activeEventsRecyclerView.setAdapter(activeEventsRecyclerViewAdapter);
+                }else{
+                    activeEventsRecyclerView.setVisibility(View.INVISIBLE);
+                    RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.no_active_event_relative_layout);
+                    relativeLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
 
     }
     /**

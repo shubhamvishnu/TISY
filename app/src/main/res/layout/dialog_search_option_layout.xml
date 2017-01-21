@@ -10,13 +10,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="8dp">
 
         <EditText
             android:id="@+id/search_option_choice_dialog_edit_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:singleLine="true"
             android:layout_weight="1"
             android:gravity="center"
             android:hint="Search using name or username"

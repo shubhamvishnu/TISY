@@ -12,6 +12,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -38,7 +40,7 @@ public class EventDialogs {
         } else if (type == Constants.TYPE_DELETE_MEMBERS) {
             dialog.setContentView(R.layout.dialog_delete_event_members_layout);
             showMembersDialog(context, dialog);
-        }else if(type == Constants.TYPE_RECEIVED_REQUESTS){
+        } else if (type == Constants.TYPE_RECEIVED_REQUESTS) {
             dialog.setContentView(R.layout.dialog_received_requests_layout);
             showReceivedRequestDialog(context, dialog);
         }
@@ -92,35 +94,88 @@ public class EventDialogs {
         deleteEventMemberRecyclerView.setAdapter(eventMembersRecyclerViewAdapater);
     }
 
-    void showReceivedRequestDialog(final Context context, final Dialog dialog){
+    void showReceivedRequestDialog(final Context context, final Dialog dialog) {
         // received requests
 
-        RecyclerView receivedRequestRecyclerView;
-        ReceivedRequestsRecyclerViewAdapter receivedRequestsRecyclerViewAdapter;
+        final RecyclerView receivedRequestRecyclerView = (RecyclerView) dialog.findViewById(R.id.dialog_received_requests_recycler_view);
+        final TextView invitesTextView = (TextView) dialog.findViewById(R.id.inivites_text_view);
+        final LinearLayout linearLayout = (LinearLayout) dialog.findViewById(R.id.no_invites_layout);
+        Firebase checkInvites = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + username);
+        checkInvites.keepSynced(true);
+        checkInvites.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    linearLayout.setVisibility(View.INVISIBLE);
+                    invitesTextView.setVisibility(View.VISIBLE);
+                    receivedRequestRecyclerView.setVisibility(View.VISIBLE);
 
-        receivedRequestRecyclerView = (RecyclerView) dialog.findViewById(R.id.dialog_received_requests_recycler_view);
-        receivedRequestRecyclerView.setHasFixedSize(true);
+                    ReceivedRequestsRecyclerViewAdapter receivedRequestsRecyclerViewAdapter;
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
-        receivedRequestRecyclerView.setLayoutManager(linearLayoutManager);
+                    receivedRequestRecyclerView.setHasFixedSize(true);
 
-        receivedRequestsRecyclerViewAdapter = new ReceivedRequestsRecyclerViewAdapter(context);
-        receivedRequestRecyclerView.setAdapter(receivedRequestsRecyclerViewAdapter);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
+                    receivedRequestRecyclerView.setLayoutManager(linearLayoutManager);
+
+                    receivedRequestsRecyclerViewAdapter = new ReceivedRequestsRecyclerViewAdapter(context);
+                    receivedRequestRecyclerView.setAdapter(receivedRequestsRecyclerViewAdapter);
+                } else {
+                    linearLayout.setVisibility(View.VISIBLE);
+                    invitesTextView.setVisibility(View.INVISIBLE);
+                    receivedRequestRecyclerView.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+
     }
 
-    void showSentRequestDialog(final Context context, final Dialog dialog){
+    void showSentRequestDialog(final Context context, final Dialog dialog) {
+        final LinearLayout noRequestLinearLayout = (LinearLayout) dialog.findViewById(R.id.no_request_layout);
+        final TextView sentRequestsTextView = (TextView) dialog.findViewById(R.id.sent_requests_text_view);
         Button joinRequestButton = (Button) dialog.findViewById(R.id.dialog_join_request_button);
-        RecyclerView joinEventRequestsRecyclerView;
-        JoinEventRequestsRecyclerViewAdapter joinEventRequestsRecyclerViewAdapter;
+        final RecyclerView joinEventRequestsRecyclerView = (RecyclerView) dialog.findViewById(R.id.dialog_sent_requests_recycler_view);
 
-        joinEventRequestsRecyclerView = (RecyclerView) dialog.findViewById(R.id.dialog_sent_requests_recycler_view);
-        joinEventRequestsRecyclerView.setHasFixedSize(true);
+        Firebase checkRequests = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
+        checkRequests.keepSynced(true);
+        checkRequests.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    noRequestLinearLayout.setVisibility(View.INVISIBLE);
+                    sentRequestsTextView.setVisibility(View.VISIBLE);
+                    joinEventRequestsRecyclerView.setVisibility(View.VISIBLE);
+                    JoinEventRequestsRecyclerViewAdapter joinEventRequestsRecyclerViewAdapter;
 
-        LinearLayoutManager linearLayoutManagerSentRequests = new LinearLayoutManager(dialog.getContext());
-        joinEventRequestsRecyclerView.setLayoutManager(linearLayoutManagerSentRequests);
 
-        joinEventRequestsRecyclerViewAdapter = new JoinEventRequestsRecyclerViewAdapter(context);
-        joinEventRequestsRecyclerView.setAdapter(joinEventRequestsRecyclerViewAdapter);
+                    joinEventRequestsRecyclerView.setHasFixedSize(true);
+
+                    LinearLayoutManager linearLayoutManagerSentRequests = new LinearLayoutManager(dialog.getContext());
+                    joinEventRequestsRecyclerView.setLayoutManager(linearLayoutManagerSentRequests);
+
+                    joinEventRequestsRecyclerViewAdapter = new JoinEventRequestsRecyclerViewAdapter(context);
+                    joinEventRequestsRecyclerView.setAdapter(joinEventRequestsRecyclerViewAdapter);
+
+
+                } else {
+
+                    noRequestLinearLayout.setVisibility(View.VISIBLE);
+                    sentRequestsTextView.setVisibility(View.INVISIBLE);
+                    joinEventRequestsRecyclerView.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
 
         joinRequestButton.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +186,7 @@ public class EventDialogs {
             }
         });
     }
+
     void showRequests(final Context context, final Dialog dialog) {
 
 
@@ -172,7 +228,7 @@ public class EventDialogs {
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if (i == KeyEvent.KEYCODE_ENTER) {
                     String nameSearch = searchEditText.getText().toString();
-                    if (!nameSearch.isEmpty()) {
+                    if (!nameSearch.trim().isEmpty()) {
                         JoinRequestSearchResultRecyclerViewAdapter joinRequestSearchResultRecyclerViewAdapter = new JoinRequestSearchResultRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
                         joinRequestSearchResultRecyclerView.setAdapter(joinRequestSearchResultRecyclerViewAdapter);
                     }

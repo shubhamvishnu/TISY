@@ -51,29 +51,25 @@ import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationNote;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
-import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+    public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
     GoogleMap mMap;
     String username;
-    //List<LocationLog> locationLogList;
+
     ImageButton addNoteImageButton;
-    ImageButton showCalendarImageButton;
-    // intialization for place picker dialog
+
     int PLACE_PICKER_REQUEST = 1;
     PlacePicker.IntentBuilder placePickerBuilder;
     EditText addNoteTitleEditText;
     Boolean fromDialog;
-
     Map<Integer, Note> tagNoteMap;
     CoordinatorLayout trackCoordinatorLayout;
     ImageButton trackActivityZoomFit;
     LatLngBounds.Builder builder;
-    public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +78,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         fromDialog = false;
 
         tagNoteMap = new HashMap<>();
-
-        // locationLogList = new ArrayList<>();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -116,35 +110,10 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 zoomFit();
             }
         });
-        //initColors();
 
 
     }
 
-    /* void deleteJunkTracks(){
-         final Firebase junkTracksFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" );
-         junkTracksFirebase.keepSynced(true);
-         junkTracksFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-             @Override
-             public void onDataChange(DataSnapshot dataSnapshot) {
-                 if(dataSnapshot.hasChildren()){
-                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                         if(!snapshot.getKey().equals(TimeStamp.getRawTime())){
-                             Toast.makeText(TrackActivity.this, "deleted event date :" + snapshot.getKey(), Toast.LENGTH_SHORT).show();
-                             junkTracksFirebase.child(snapshot.getKey()).removeValue();
-                         }
-                     }
-                 }
-             }
-
-             @Override
-             public void onCancelled(FirebaseError firebaseError) {
-
-             }
-         });
-     }
-
- */
 
     // to call the placepicker dialog
     void placePickerDialog() {
@@ -229,22 +198,24 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 tagNoteMap = new HashMap<Integer, Note>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    LatLng latLng = new LatLng(Double.parseDouble(snapshot.child("latitude").getValue().toString()), Double.parseDouble(snapshot.child("longitude").getValue().toString()));
-                    Note note = new Note();
-                    note.setDesc(snapshot.child("description").getValue().toString());
-                    note.setTitle(snapshot.child("title").getValue().toString());
-                    note.setKey(snapshot.getKey());
-                    note.setLatlng(latLng);
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        LatLng latLng = new LatLng(Double.parseDouble(snapshot.child("latitude").getValue().toString()), Double.parseDouble(snapshot.child("longitude").getValue().toString()));
+                        Note note = new Note();
+                        note.setDesc(snapshot.child("description").getValue().toString());
+                        note.setTitle(snapshot.child("title").getValue().toString());
+                        note.setKey(snapshot.getKey());
+                        note.setLatlng(latLng);
 
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.my_places_location_marker_icon, 150, 150))));
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.my_places_location_marker_icon, 150, 150))));
 
 
-                    int tag = tagNoteMap.size();
-                    marker.setTag(tag);
-                    tagNoteMap.put(tag, note);
+                        int tag = tagNoteMap.size();
+                        marker.setTag(tag);
+                        tagNoteMap.put(tag, note);
+                    }
+                    zoomFit();
                 }
-                zoomFit();
             }
 
             @Override
@@ -263,23 +234,10 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         return false;
     }
 
-    /*
-        void initColors() {
-            Constants.colors.add(this.getString(R.string.customColor0));
-            Constants.colors.add(this.getString(R.string.customColor1));
-            Constants.colors.add(this.getString(R.string.customColor2));
-            Constants.colors.add(this.getString(R.string.customColor3));
-            Constants.colors.add(this.getString(R.string.customColor4));
-            Constants.colors.add(this.getString(R.string.customColor5));
-            Constants.colors.add(this.getString(R.string.customColor6));
-            Constants.colors.add(this.getString(R.string.customColor7));
-            Constants.colors.add(this.getString(R.string.customColor8));
-        }
-    */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        tagNoteMap = new HashMap<>();
         initializeMapStyle();
         initializeMapType();
         GPSEnabledCheck();
@@ -385,6 +343,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setAllGesturesEnabled(true);
 
     }
+
     void showPermissionSnackBar() {
 
         Snackbar snackbar = Snackbar
@@ -409,7 +368,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         intent.setData(uri);
         startActivityForResult(intent, REQUEST_PERMISSION_SETTINGS);
     }
-void checkUserPermission(){
+
+    void checkUserPermission() {
         // enable user location
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (mMap != null) {
@@ -418,6 +378,7 @@ void checkUserPermission(){
             showPermissionSnackBar();
         } else {
             addNoteImageButton.setVisibility(View.VISIBLE);
+            trackActivityZoomFit.setVisibility(View.VISIBLE);
             init();
             mMap.setMyLocationEnabled(true);
             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -426,8 +387,9 @@ void checkUserPermission(){
 
                 }
             });
+        }
     }
-}
+
     void showSnackBar() {
         Snackbar snackbar = Snackbar
                 .make(trackCoordinatorLayout, "enable location setting", Snackbar.LENGTH_INDEFINITE)
@@ -467,91 +429,27 @@ void checkUserPermission(){
 
         mMap.clear();
         tagNoteMap = new HashMap<>();
-        //      locationLogList = new ArrayList<>();
-        //     initLatLngs();
         showNotes();
     }
 
-   /* String getCustomColor(int customColor) {
-        if (customColor > 8) {
-            customColor = customColor % 8;
-            Log.d("custom color : ", "" + customColor);
-        }
-        return Constants.colors.get(customColor);
-    } */
-/*
-    void initLatLngs() {
-
-        Firebase initLatLng = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" + TimeStamp.getRawTime());
-        initLatLng.keepSynced(true);
-        initLatLng.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                locationLogList = new ArrayList<LocationLog>();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    LocationLog locationLog = snapshot.getValue(LocationLog.class);
-                    locationLogList.add(locationLog);
-                    int hour = Integer.parseInt(locationLog.getHourAndMinute().split(":")[0]);
-                    LatLng coordinate = new LatLng(Double.parseDouble(locationLog.getLatitude()), Double.parseDouble(locationLog.getLongitude()));
-
-                    mMap.addMarker(new MarkerOptions().position(coordinate).title("Here at " + locationLog.getHourAndMinute()).icon(BitmapDescriptorFactory.fromBitmap(getTracksIcon(hour))));
-                }
-                zoomFit();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-    }
-
-    Bitmap applyCustomBitmapColor(Bitmap myBitmap, String color) {
-
-        Paint pnt = new Paint();
-        Bitmap myBit = myBitmap;
-
-        Canvas myCanvas = new Canvas(myBit);
-        int myColor = myBit.getPixel(0, 0);
-
-        // Set the colour to replace.
-        // TODO: change color later
-        ColorFilter filter = new LightingColorFilter(myColor, Color.parseColor(color));
-
-        pnt.setColorFilter(filter);
-
-        // Draw onto new bitmap. result Bitmap is newBit
-        myCanvas.drawBitmap(myBit, 0, 0, pnt);
-
-        return myBit;
-    }
-*/
-
-    /*   Bitmap getTracksIcon(int hour){
-           Bitmap positionMarkerBitmap = InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.footstep_image_icon, 72, 72);
-           positionMarkerBitmap = applyCustomBitmapColor(positionMarkerBitmap, getCustomColor(hour));
-           return positionMarkerBitmap;
-       }
-   */
     void zoomFit() {
-        builder = new LatLngBounds.Builder();
+        if (tagNoteMap != null && tagNoteMap.size() > 0) {
 
-        for (Map.Entry entry : tagNoteMap.entrySet()) {
-            Note note = (Note) entry.getValue();
-            builder.include(note.getLatlng());
+
+            builder = new LatLngBounds.Builder();
+
+            for (Map.Entry entry : tagNoteMap.entrySet()) {
+                Note note = (Note) entry.getValue();
+                builder.include(note.getLatlng());
+            }
+
+            LatLngBounds bounds = builder.build();
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+            int padding = (int) (width * 0.10); // offset from edges of the map 12% of screen
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+            mMap.animateCamera(cameraUpdate);
         }
-//        for(int i = 0; i < locationLogList.size(); i++){
-//            LatLng latLng = new LatLng(Double.parseDouble(locationLogList.get(i).getLatitude()), Double.parseDouble(locationLogList.get(i).getLongitude()));
-//            builder.include(latLng);
-//        }
-
-        LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.10); // offset from edges of the map 12% of screen
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-        mMap.animateCamera(cameraUpdate);
     }
 
 
@@ -584,7 +482,7 @@ void checkUserPermission(){
     }
 
     void deleteNote(String key, final Dialog dialog, final int markerTag) {
-        Firebase deleteNote = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + TimeStamp.getRawTime() + "/" + key);
+        Firebase deleteNote = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationNote/" + key);
         deleteNote.keepSynced(true);
         deleteNote.removeValue(new Firebase.CompletionListener() {
             @Override
@@ -603,7 +501,6 @@ void checkUserPermission(){
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //   deleteJunkTracks();
     }
 
     @Override
@@ -620,13 +517,14 @@ void checkUserPermission(){
         if (extras != null) {
             finish();
         } else {
-           toMainActivity();
+            toMainActivity();
         }
     }
-void toMainActivity(){
-    Intent intent = new Intent(TrackActivity.this, MainActivity.class);
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-    startActivity(intent);
-    finish();
-}
+
+    void toMainActivity() {
+        Intent intent = new Intent(TrackActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
 }

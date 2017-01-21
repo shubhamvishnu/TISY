@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:background="@color/colorPrimary"
+    android:layout_marginBottom="6dp"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <!--<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
@@ -19,14 +19,13 @@
     <!--card_view:cardUseCompatPadding="true">-->
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="240dp"
-        >
+        android:layout_height="270dp">
 
         <ImageView
             android:id="@+id/active_event_card_background_image_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-
+            android:alpha="0.7"
             android:scaleType="fitXY" />
 
         <LinearLayout
@@ -36,8 +35,10 @@
             android:padding="8dp">
 
             <LinearLayout
+
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:orientation="horizontal">
                 <!--<LinearLayout-->
                 <!--android:layout_width="0dp"-->
@@ -52,12 +53,28 @@
                 <!--android:textColor="@android:color/white"-->
                 <!--android:text="Title:"/>-->
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/active_event_item_description_background"
+                    android:padding="6dp"
+                    android:text="event name:"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="#2f4f4f" />
+
+                <TextView
                     android:id="@+id/active_event_title_text_view"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/white"
+android:layout_weight="1" android:singleLine="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+
                     android:textSize="20dp"
+                    android:padding="6dp"
+                    android:layout_marginRight="4dp"
                     android:textStyle="bold" />
 
                 <!--</LinearLayout>-->
@@ -66,51 +83,130 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="@drawable/active_members_recycler_view_item_background"
                     android:gravity="center"
+                    android:padding="6dp"
                     android:textColor="@android:color/white"
                     android:textSize="12dp"
                     android:textStyle="bold" />
             </LinearLayout>
 
-
-            <TextView
-
-                android:id="@+id/active_event_id_text_view"
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="1dp"
+                android:orientation="horizontal">
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/active_event_item_description_background"
+                    android:padding="6dp"
+                    android:text="event ID:"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="#2f4f4f" />
 
-                android:id="@+id/active_event_sLocationDesc"
+                <TextView
+
+                    android:id="@+id/active_event_id_text_view"
+                    android:layout_width="wrap_content"
+
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+
+                    android:singleLine="true"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18dp"
+                    android:padding="6dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="16dp" />
+                android:layout_marginBottom="1dp"
+                android:orientation="horizontal">
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
 
-                android:id="@+id/active_event_dLocationDesc"
+                    android:background="@drawable/active_event_item_description_background"
+                    android:padding="6dp"
+                    android:text="start:"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="#2f4f4f" />
+
+                <TextView
+
+                    android:padding="6dp"
+                    android:id="@+id/active_event_sLocationDesc"
+                    android:singleLine="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="16dp" />
+                android:layout_marginBottom="1dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+
+                    android:background="@drawable/active_event_item_description_background"
+                    android:padding="6dp"
+                    android:text="destination:"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:textColor="#2f4f4f" />
+
+                <TextView
+
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+
+                    android:padding="6dp"
+                    android:id="@+id/active_event_dLocationDesc"
+                    android:layout_width="wrap_content"
+                    android:singleLine="true"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="16dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/active_event_requests"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginBottom="1dp"
+                android:padding="6dp"
                 android:textSize="16dp" />
 
             <TextView
-
+                android:layout_marginBottom="1dp"
                 android:id="@+id/active_event_time_created"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@android:color/white"
+                android:background="@drawable/created_time_background"
+                android:padding="6dp"
                 android:textSize="12dp" />
 
             <android.support.v7.widget.RecyclerView
@@ -118,18 +214,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/active_event_track_button"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:gravity="right"
-                android:padding="8dp"
-                android:text="TRACK"
-                android:textColor="@color/colorAccent"
-                android:textSize="16dp"
-                android:textStyle="bold" />
+
         </LinearLayout>
     </RelativeLayout>
     <!--</android.support.v7.widget.CardView>-->

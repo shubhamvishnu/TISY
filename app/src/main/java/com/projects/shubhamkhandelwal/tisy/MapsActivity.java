@@ -713,7 +713,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (i == KeyEvent.KEYCODE_ENTER) {
                     {
                         nameSearch = searchEditText.getText().toString();
-                        if (!nameSearch.isEmpty()) {
+                        if (!nameSearch.trim().isEmpty() ) {
                             searchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
                             searchOptionChoiceRecyclerView.setAdapter(searchResultsRecyclerViewAdapter);
                         }
