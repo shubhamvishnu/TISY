@@ -2,235 +2,324 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:grid="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical">
 
 
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <!--<HorizontalScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:fillViewport="true">-->
 
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:columnCount="2"
-            android:padding="8dp"
-            android:rowCount="4"
-            grid:alignmentMode="alignBounds">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-
-            <LinearLayout
+            <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_gravity="center"
+                android:columnCount="2"
+                android:padding="8dp"
+                android:rowCount="5"
+                grid:alignmentMode="alignBounds">
 
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_chat_icon"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/chat_image_icon" />
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Conversations "
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
-            </LinearLayout>
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_chat_icon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/chat_image_icon" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_zoom_fit_icon"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/zoomfit_image_icon" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Conversations "
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Zoom-Fit"
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_event_info"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/info_icon" />
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_add_new_checkpoint"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/checkpoint_image_icon" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Event Info    "
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Add Checkpoint"
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_change_mode_icon"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/map_mode_image_icon" />
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_zoom_fit_icon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/zoomfit_image_icon" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Map Mode"
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Zoom-Fit "
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/map_type_option_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/map_type_option_icon"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/map_type_option_image_icon" />
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_add_new_checkpoint"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/checkpoint_image_icon" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Map Type "
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Add Checkpoint"
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/send_request_option_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_add_new_member"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:textSize="16dp"
-                    app:srcCompat="@drawable/send_invite_image_icon" />
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_change_mode_icon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/map_mode_image_icon" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Send Invite       "
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Map Style"
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/map_type_option_layout"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <LinearLayout
-                android:id="@+id/requests_option_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/map_type_option_icon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/map_type_option_image_icon" />
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/dialog_request_icon"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:elevation="20dp"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/received_request_image_icon" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Map Type  "
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Requests "
-                    android:textColor="@android:color/white"
-                    android:textSize="16dp" />
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/send_request_option_layout"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-        </GridLayout>
-        <!--</HorizontalScrollView>-->
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_add_new_member"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        android:textSize="16dp"
+                        app:srcCompat="@drawable/send_invite_image_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Send Invite     "
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/requests_option_layout"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_request_icon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/received_request_image_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Requests    "
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suggestion_option_layout"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_suggestion_image_button"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/suggestion_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Have a Suggestion"
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/leave_event_option_layout"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/dialog_leave_event_image_button"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/leave_event_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Leave Event    "
+                        android:textColor="@android:color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+            </GridLayout>
+
+        </LinearLayout>
+
     </ScrollView>
-    <!--</LinearLayout>-->
 
 </LinearLayout>

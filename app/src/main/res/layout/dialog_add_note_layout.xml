@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:singleLine="true"
+            android:layout_gravity="center"
             android:hint="Title"
             android:gravity="center"
             android:textColor="@android:color/white"
@@ -63,6 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:hint="Write a note"
+        android:layout_gravity="center"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textCursorDrawable="@drawable/edit_text_curson_color_style"
@@ -72,6 +74,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatImageButton

@@ -124,8 +124,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     RecyclerView eventRequestRecyclerView; // received requests recyclerview
     RequestsRecyclerAdapter requestsRecyclerAdapter; // received requests recyclerview adapter
 
+    int emoticon = 0;
+
     // View Objects
-    ImageButton eventInfoImageButton; // Event information button
     CoordinatorLayout coordinatorLayout;
 
     // event infomation variables
@@ -181,9 +182,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // initializing objects and variables
         // initalizing view objects
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        eventInfoImageButton = (ImageButton) findViewById(R.id.eventInfoImageButton);
 
+        ImageButton allInOneImageIcon = (ImageButton) findViewById(R.id.allInOneOptionImageButton);
 
+        allInOneImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkGPS();
+            }
+        });
         // initializing variable
         //initializing String variables
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
@@ -211,32 +218,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // set view object color
-        eventInfoImageButton.setColorFilter(Color.parseColor("#0C70A5"));
-
-        eventInfoImageButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        eventInfoImageButton.setColorFilter(Color.parseColor("#084D73"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        eventInfoImageButton.setColorFilter(Color.parseColor("#0C70A5"));
-                        break;
-                }
-                return false;
-            }
-        });
-
-
-        eventInfoImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // show event information dialog
-                eventInfoDialog();
-            }
-        });
         init();
     }
 
@@ -374,7 +355,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
         ImageButton changeMapStyleImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_change_mode_icon);
         ImageButton mapTypeImageButton = (ImageButton) allInOneDialog.findViewById(R.id.map_type_option_icon);
-
+        ImageButton infoImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_event_info);
+        ImageButton leaveEventImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_leave_event_image_button);
+        ImageButton suggestionImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_suggestion_image_button);
         requestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.requests_option_layout);
         sendRequestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.send_request_option_layout);
 
@@ -382,6 +365,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             requestsLayout.setVisibility(View.INVISIBLE);
             sendRequestsLayout.setVisibility(View.INVISIBLE);
         }
+        suggestionImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                showSuggestionDialog();
+            }
+        });
+        leaveEventImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                exitEvent();
+            }
+        });
+        infoImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allInOneDialog.dismiss();
+                eventInfoDialog();
+            }
+        });
         mapTypeImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -670,7 +674,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
 
 
-
         RecyclerView eventJoinRequestSendRecyclerView;
         ImageButton searchButton = (ImageButton) sendMemberRequestDialog.findViewById(R.id.search_choice_dialog_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -714,7 +717,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (i == KeyEvent.KEYCODE_ENTER) {
                     {
                         nameSearch = searchEditText.getText().toString();
-                        if (!nameSearch.trim().isEmpty() ) {
+                        if (!nameSearch.trim().isEmpty()) {
                             searchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
                             searchOptionChoiceRecyclerView.setAdapter(searchResultsRecyclerViewAdapter);
                         }
@@ -880,6 +883,111 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoDialog.setCanceledOnTouchOutside(true);
         eventInfoDialog.show();
 
+    }
+
+    void showSuggestionDialog() {
+        final Dialog suggestionDialog = new Dialog(this, R.style.event_info_dialog_style);
+        suggestionDialog.setContentView(R.layout.dialog_suggestion_layout);
+
+
+        final LinearLayout lovelyLinearLayout, happyLinearLayout, sadLinearLayout, confusedLinearLayout;
+        lovelyLinearLayout = (LinearLayout) suggestionDialog.findViewById(R.id.lovely_linear_layout);
+        happyLinearLayout = (LinearLayout) suggestionDialog.findViewById(R.id.happy_linear_layout);
+        confusedLinearLayout = (LinearLayout) suggestionDialog.findViewById(R.id.confused_linear_layout);
+        sadLinearLayout = (LinearLayout) suggestionDialog.findViewById(R.id.sad_linear_layout);
+
+
+        final EditText suggestionEditText = (EditText) suggestionDialog.findViewById(R.id.suggestion_edit_text);
+        final ImageButton lovelyImageIcon, happyImageIcon, confusedImageIcon, sadImageIcon;
+        lovelyImageIcon = (ImageButton) suggestionDialog.findViewById(R.id.lovely_emoticon);
+        happyImageIcon = (ImageButton) suggestionDialog.findViewById(R.id.happy_emoticon);
+        confusedImageIcon = (ImageButton) suggestionDialog.findViewById(R.id.pokerface_emoticon);
+        sadImageIcon = (ImageButton) suggestionDialog.findViewById(R.id.sad_emoticon);
+
+        ImageButton sendSuggestionImageButton, cancelSuggestionImageButton;
+        sendSuggestionImageButton = (ImageButton) suggestionDialog.findViewById(R.id.send_suggestion_button);
+
+        cancelSuggestionImageButton = (ImageButton) suggestionDialog.findViewById(R.id.cancel_suggestion_image_button);
+
+        cancelSuggestionImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                suggestionDialog.dismiss();
+            }
+        });
+
+
+        lovelyImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emoticon = 1;
+                happyLinearLayout.setVisibility(View.INVISIBLE);
+                sadLinearLayout.setVisibility(View.INVISIBLE);
+                confusedLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        happyImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emoticon = 2;
+                lovelyLinearLayout.setVisibility(View.INVISIBLE);
+                sadLinearLayout.setVisibility(View.INVISIBLE);
+                confusedLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        confusedImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emoticon = 3;
+                happyLinearLayout.setVisibility(View.INVISIBLE);
+                sadLinearLayout.setVisibility(View.INVISIBLE);
+                lovelyLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        sadImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emoticon = 4;
+                happyLinearLayout.setVisibility(View.INVISIBLE);
+                lovelyLinearLayout.setVisibility(View.INVISIBLE);
+                confusedLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+        sendSuggestionImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (emoticon == 0) {
+                    Toast.makeText(MapsActivity.this, "Kindly give us your feedback!", Toast.LENGTH_SHORT).show();
+                } else {
+                    suggestionDialog.dismiss();
+                    String suggestion = emoticon + " - " + suggestionEditText.getText().toString().trim();
+                    sendSuggestion(suggestion);
+                }
+            }
+        });
+
+        Window window = suggestionDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        suggestionDialog.setCanceledOnTouchOutside(true);
+        suggestionDialog.show();
+
+    }
+
+    void sendSuggestion(String suggestion){
+        Firebase suggestionFirebase = new Firebase(FirebaseReferences.FIREBASE_SUGGESTION);
+        HashMap<String, Object> suggestionMap = new HashMap<>();
+        suggestionMap.put("username", username);
+        suggestionMap.put("suggestion", suggestion);
+        suggestionFirebase.push().setValue(suggestionMap, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                Toast.makeText(MapsActivity.this, "Thank you!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     void showChatsDialog() {
@@ -1280,11 +1388,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (id == R.id.leave_event_menu_item) {
             exitEvent();
         }
-        if (id == R.id.all_option_menu_item) {
-            // show other options dialog
-            checkGPS();
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -1663,10 +1766,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         addCheckPointDialog.setContentView(R.layout.dialog_add_check_point);
         final EditText checkpointTitle = (EditText) addCheckPointDialog.findViewById(R.id.checkpoint_title_edit_text);
         ImageButton checkPointEditLocation = (ImageButton) addCheckPointDialog.findViewById(R.id.checkpoint_edit_location_image_button);
-        Button saveCheckPointButton = (Button) addCheckPointDialog.findViewById(R.id.save_checkpoint_button);
+        ImageButton saveCheckPointButton = (ImageButton) addCheckPointDialog.findViewById(R.id.save_checkpoint_button);
+        ImageButton cancelCheckPoint = (ImageButton) addCheckPointDialog.findViewById(R.id.cancel_add_checkpoint_image_button);
         final EditText checkPointDescription = (EditText) addCheckPointDialog.findViewById(R.id.checkpoint_description_edit_text);
 
+
         checkpointTitle.setText(title);
+        cancelCheckPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCheckPointDialog.dismiss();
+            }
+        });
         saveCheckPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1709,18 +1820,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final Dialog showCheckPointDialog = new Dialog(this, R.style.event_info_dialog_style);
         showCheckPointDialog.setContentView(R.layout.dialog_show_checkpoint_layout);
 
-        EditText titleEditText, descriptionEditText;
-        Button deleteCheckPointButton;
-
-        titleEditText = (EditText) showCheckPointDialog.findViewById(R.id.show_checkpoint_title_edit_text);
-        descriptionEditText = (EditText) showCheckPointDialog.findViewById(R.id.show_checkpoint_description_edit_text);
+        TextView titleEditText, descriptionEditText;
+        ImageButton deleteCheckPointButton;
+        ImageButton cancelCheckPointImageButton;
+        cancelCheckPointImageButton = (ImageButton) showCheckPointDialog.findViewById(R.id.cancel_show_checkpoint_image_button);
+        titleEditText = (TextView) showCheckPointDialog.findViewById(R.id.show_checkpoint_title_edit_text);
+        descriptionEditText = (TextView) showCheckPointDialog.findViewById(R.id.show_checkpoint_description_edit_text);
 
         final Note note = checkPointCoordinateMap.get(markerTag);
         titleEditText.setText(note.getTitle());
         descriptionEditText.setText(note.getDesc());
 
-        deleteCheckPointButton = (Button) showCheckPointDialog.findViewById(R.id.show_delete_checkpoint_button);
+        deleteCheckPointButton = (ImageButton) showCheckPointDialog.findViewById(R.id.delete_checkpoint_button);
 
+        cancelCheckPointImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCheckPointDialog.dismiss();
+            }
+        });
         deleteCheckPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

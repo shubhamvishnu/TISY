@@ -27,16 +27,17 @@
             android:layout_marginTop="50dp"
             android:orientation="vertical">
 
+
             <ImageButton
-                android:id="@+id/eventInfoImageButton"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
+                android:id="@+id/allInOneOptionImageButton"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_margin="10dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
                 android:elevation="6dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/event_info_icon" />
+                android:src="@drawable/menu_icon" />
 
         </LinearLayout>
     </RelativeLayout>

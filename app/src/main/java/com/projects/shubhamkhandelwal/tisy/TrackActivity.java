@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -469,7 +468,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         titleTextView = (TextView) dialog.findViewById(R.id.show_note_title);
         descTextView = (TextView) dialog.findViewById(R.id.show_note_desc);
         deleteNoteButton = (ImageButton) dialog.findViewById(R.id.delete_note_button);
-cancelImageButton = (ImageButton) dialog.findViewById(R.id.cancel_show_note_image_button);
+        cancelImageButton = (ImageButton) dialog.findViewById(R.id.cancel_show_note_image_button);
         titleTextView.setText(tagNoteMap.get(markerTag).getTitle());
         descTextView.setText(tagNoteMap.get(markerTag).getDesc());
 

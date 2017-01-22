@@ -2,12 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:grid="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <!--<HorizontalScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:fillViewport="true">-->
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="2"
+        android:padding="8dp"
+        android:rowCount="3"
+        grid:alignmentMode="alignBounds">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/default_mode"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
@@ -20,15 +42,21 @@ android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="Default Mode"
+        android:text="Default"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="8dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/aubergine_mode"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
@@ -42,15 +70,21 @@ android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="Ainergine Mode"
-        android:textAllCaps="true"
+        android:text="Ainergine"
+        
         android:textColor="@android:color/white"
-        android:textSize="8dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/dark_mode"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
@@ -64,15 +98,21 @@ android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="Dark Mode"
+        android:text="Dark"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="8dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/night_mode"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
@@ -86,16 +126,21 @@ android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="Night Mode"
+        android:text="Night"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="8dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
-
+</LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/retro_mode"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
@@ -109,15 +154,21 @@ android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="Retro Mode"
+        android:text="Retro"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="8dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/silver_mode"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
@@ -133,12 +184,13 @@ android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="Silver Mode"
+        android:text="Silver"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="8dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
+        </LinearLayout>
 
-
+</GridLayout></ScrollView>
 
 </LinearLayout>

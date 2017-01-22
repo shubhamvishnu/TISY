@@ -6,11 +6,7 @@
 
     <item android:id="@+id/leave_event_menu_item"
         android:title="leave event" />
-    <item
-        android:id="@+id/all_option_menu_item"
-        android:icon="@drawable/all_icons_in_one"
-        android:title="Options"
-        app:showAsAction="ifRoom"/>
+
 
 
 </menu>
