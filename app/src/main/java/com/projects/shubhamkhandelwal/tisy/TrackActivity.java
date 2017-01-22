@@ -148,12 +148,17 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     void showAddNoteDialog(final LatLng location, final String locationTitle) {
         final Dialog dialog = new Dialog(this, R.style.event_dialogs);
         dialog.setContentView(R.layout.dialog_add_note_layout);
-
+        ImageButton cancelImageButton = (ImageButton) dialog.findViewById(R.id.cancel_add_note_image_button);
         ImageButton editLocationImageButton = (ImageButton) dialog.findViewById(R.id.note_edit_location_image_button);
         addNoteTitleEditText = (EditText) dialog.findViewById(R.id.note_title_edit_text);
         final EditText noteDescriptionEditText = (EditText) dialog.findViewById(R.id.note_description_edit_text);
-        Button saveNoteButton = (Button) dialog.findViewById(R.id.save_note_button);
-
+        ImageButton saveNoteButton = (ImageButton) dialog.findViewById(R.id.save_note_button);
+        cancelImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         if (!(locationTitle == null || locationTitle.isEmpty())) {
             addNoteTitleEditText.setText(locationTitle);
         }
@@ -458,15 +463,22 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         dialog.setContentView(R.layout.dialog_show_note_layout);
 
         TextView titleTextView, descTextView;
-        Button deleteNoteButton;
+        ImageButton deleteNoteButton;
+        ImageButton cancelImageButton;
 
         titleTextView = (TextView) dialog.findViewById(R.id.show_note_title);
         descTextView = (TextView) dialog.findViewById(R.id.show_note_desc);
-        deleteNoteButton = (Button) dialog.findViewById(R.id.delete_note_button);
-
+        deleteNoteButton = (ImageButton) dialog.findViewById(R.id.delete_note_button);
+cancelImageButton = (ImageButton) dialog.findViewById(R.id.cancel_show_note_image_button);
         titleTextView.setText(tagNoteMap.get(markerTag).getTitle());
         descTextView.setText(tagNoteMap.get(markerTag).getDesc());
 
+        cancelImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         deleteNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

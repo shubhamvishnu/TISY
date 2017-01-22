@@ -268,6 +268,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 note.setLatlng(latLng);
 
                 checkPointCoordinateMap.put(dataSnapshot.getKey(), note);
+                zoomFitMembers();
             }
 
             @Override
@@ -1136,7 +1137,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 notificationBuilder.setSmallIcon(R.drawable.sample_notification_icon);
                 notificationBuilder.setContentTitle("Requests");
                 notificationBuilder.setContentText(numberOfRequests + " of them would love to join " + Constants.currentEventId);
-
                 Intent notificationIntent = new Intent(this, MainActivity.class);
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                 // Adds the back stack for the Intent (but not the Intent itself)
@@ -1149,17 +1149,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
                 notificationBuilder.setContentIntent(notificationPendingIntent);
-
                 if (added) {
-
                     Uri defaultNotificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     notificationBuilder.setSound(defaultNotificationSoundUri);
-
                 }
                 notificationBuilder.setAutoCancel(true);
-
                 notificationManager.notify(Constants.EVENT_REQUEST_NOTIFICATION_ID , notificationBuilder.build());
-
             }
         }
     */
@@ -1752,35 +1747,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 showCheckPointDialog(markerTag);
             }
         }
-//        Integer clickCount = (Integer) marker.getTag();
-//        if (clickCount != null) {
-//            if (clickCount == Constants.START_LOCATION_TAG | clickCount == Constants.DESTINATION_LOCATION_TAG) {
-//                showStreetViewSnackBar(marker);
-//            } else {
-//                for (int i = 1; i <= checkPointCoordinateMap.size(); i++) {
-//                    if (clickCount == i) {
-//                        Toast.makeText(MapsActivity.this, "i:" + i, Toast.LENGTH_SHORT).show();
-//                        showCheckPointEditOption(i);
-//                    }
-//
-//                }
-//            }
-//
-//        }
         return false;
     }
 
     void showStreetView(final Double latitude, final Double longitude) {
-//
-//        StreetViewPanoramaFragment streetViewPanoramaFragment =
-//                (StreetViewPanoramaFragment) getFragmentManager()
-//                        .findFragmentById(R.id.streetviewpanorama);
-//
-//        streetViewPanoramaFragment.getStreetViewPanoramaAsync(new OnStreetViewPanoramaReadyCallback() {
-//            @Override
-//            public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
-//                streetViewPanorama.setPosition(new LatLng(latitude, longitude));
-//                if (streetViewPanorama.getLocation() != null) {
         Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
         intent.putExtra("latitude", latitude);
         intent.putExtra("longitude", longitude);
