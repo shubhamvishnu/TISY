@@ -22,24 +22,23 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 <LinearLayout
+
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical">
-
-            <GridLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:columnCount="2"
-                android:padding="8dp"
-                android:rowCount="2"
-                grid:alignmentMode="alignBounds">
+    <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="16dp">
 
                 <LinearLayout
                     android:id="@+id/lovely_linear_layout"
                     android:layout_width="wrap_content"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
@@ -70,6 +69,7 @@
                     android:id="@+id/happy_linear_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">
                     <android.support.v7.widget.AppCompatImageButton
@@ -95,7 +95,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
                 <LinearLayout
-
+                    android:gravity="center"
                     android:id="@+id/confused_linear_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
                 <LinearLayout
-
+                    android:gravity="center"
                     android:id="@+id/sad_linear_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -151,7 +151,8 @@
                         android:textSize="16dp"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </GridLayout>
+
+    </org.apmem.tools.layouts.FlowLayout>
 
     <EditText
         android:id="@+id/suggestion_edit_text"

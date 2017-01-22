@@ -45,6 +45,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -897,6 +898,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sadLinearLayout = (LinearLayout) suggestionDialog.findViewById(R.id.sad_linear_layout);
 
 
+
         final EditText suggestionEditText = (EditText) suggestionDialog.findViewById(R.id.suggestion_edit_text);
         final ImageButton lovelyImageIcon, happyImageIcon, confusedImageIcon, sadImageIcon;
         lovelyImageIcon = (ImageButton) suggestionDialog.findViewById(R.id.lovely_emoticon);
@@ -921,9 +923,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 emoticon = 1;
-                happyLinearLayout.setVisibility(View.INVISIBLE);
-                sadLinearLayout.setVisibility(View.INVISIBLE);
-                confusedLinearLayout.setVisibility(View.INVISIBLE);
+                lovelyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                happyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                sadLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                confusedLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+
             }
         });
 
@@ -931,27 +935,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 emoticon = 2;
-                lovelyLinearLayout.setVisibility(View.INVISIBLE);
-                sadLinearLayout.setVisibility(View.INVISIBLE);
-                confusedLinearLayout.setVisibility(View.INVISIBLE);
+                happyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                lovelyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                sadLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                confusedLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+
+
             }
         });
         confusedImageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 emoticon = 3;
-                happyLinearLayout.setVisibility(View.INVISIBLE);
-                sadLinearLayout.setVisibility(View.INVISIBLE);
-                lovelyLinearLayout.setVisibility(View.INVISIBLE);
+                confusedLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                happyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                sadLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                lovelyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+
             }
         });
         sadImageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 emoticon = 4;
-                happyLinearLayout.setVisibility(View.INVISIBLE);
-                lovelyLinearLayout.setVisibility(View.INVISIBLE);
-                confusedLinearLayout.setVisibility(View.INVISIBLE);
+                sadLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                happyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                lovelyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                confusedLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+
             }
         });
 
