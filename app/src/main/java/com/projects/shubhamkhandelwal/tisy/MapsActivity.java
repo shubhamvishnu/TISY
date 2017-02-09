@@ -923,10 +923,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 emoticon = 1;
-                lovelyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
-                happyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                sadLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                confusedLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                lovelyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                happyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                sadLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                confusedLinearLayout.setBackgroundColor(Color.TRANSPARENT);
 
             }
         });
@@ -935,10 +935,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 emoticon = 2;
-                happyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
-                lovelyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                sadLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                confusedLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                happyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                lovelyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                sadLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                confusedLinearLayout.setBackgroundColor(Color.TRANSPARENT);
 
 
             }
@@ -947,10 +947,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 emoticon = 3;
-                confusedLinearLayout.setBackgroundColor(Color.TRANSPARENT);
-                happyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                sadLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                lovelyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                confusedLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                happyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                sadLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                lovelyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
 
             }
         });
@@ -958,10 +958,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 emoticon = 4;
-                sadLinearLayout.setBackgroundColor(Color.TRANSPARENT);
-                happyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                lovelyLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                confusedLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                sadLinearLayout.setBackgroundColor(Color.parseColor("#d3d3d3"));
+                happyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                lovelyLinearLayout.setBackgroundColor(Color.TRANSPARENT);
+                confusedLinearLayout.setBackgroundColor(Color.TRANSPARENT);
 
             }
         });
@@ -1209,6 +1209,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         joinRequests = new ArrayList<>();
         numberOfRequests = 0;
         Firebase requestsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/requested");
+        requestsFirebase.keepSynced(true);
         requestsFirebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -1673,7 +1674,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
             Bitmap tempBitmap = bitmapDrawable.getBitmap();
             Bitmap startLocationBitmap = applyCustomBitmapColor(Bitmap.createScaledBitmap(tempBitmap, 200, 200, false), "#5d8aa8");
-            destinationIconBitmap = applyCustomBitmapColor(destinationIconBitmap, "#5d8aa8");
+
             startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromBitmap(startLocationBitmap)).snippet(eventInfo.getsLocationDesc()));
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));
             startMarker.setTag(Constants.START_LOCATION_TAG);

@@ -1,6 +1,8 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -123,10 +125,26 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
     void removeRequest(final int position) {
-        Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId +"/"+ sentRequestsList.get(position));
-        removeRequest.removeValue();
+        Firebase removeRequestUser = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + sentRequestsList.get(position) + "/" + Constants.currentEventId);
+        removeRequestUser.keepSynced(true);
+        removeRequestUser.removeValue(new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId + "/" + sentRequestsList.get(position));
+                removeRequest.keepSynced(true);
+                removeRequest.removeValue();
+            }
+        });
+
     }
 
+    boolean checkInternetConnection() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+
+    }
 
     public class SentEventJoinRequestRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView usernameTitleTextView;
@@ -145,10 +163,13 @@ public class SentEventJoinRequestRecyclerViewAdapter extends RecyclerView.Adapte
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.remove_sent_request_image_button: {
-                    removeRequest(getPosition());
+                    if (checkInternetConnection()) {
+                        removeRequest(getPosition());
+                    }
                     break;
                 }
             }
         }
     }
+
 }

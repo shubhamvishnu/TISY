@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,8 +37,8 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
     List<String> profileURLsList = new ArrayList<>();
     Firebase firebase;
     Context context;
-    private LayoutInflater inflator;
     ProgressDialog progressDialog;
+    private LayoutInflater inflator;
 
     public RequestsRecyclerAdapter(android.content.Context context, List<RequestsDetails> requestDetails) {
         this.context = context;
@@ -45,7 +47,8 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
         fetchProfileURLS();
         initProgressDialog();
     }
-    void initProgressDialog(){
+
+    void initProgressDialog() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("making changes...");
@@ -64,6 +67,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
             }
         });
     }
+
     void fetchProfileURLS() {
         profileURLsList = new ArrayList<>();
         for (int i = 0; i < requestDetails.size(); i++) {
@@ -72,7 +76,9 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
             profileFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    int position = profileURLsList.size();
                     profileURLsList.add(dataSnapshot.getValue().toString());
+                    notifyItemInserted(position);
                 }
 
                 @Override
@@ -115,7 +121,7 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                         requestDetails.remove(position);
                         profileURLsList.remove(position);
                         notifyItemRemoved(position);
-                        if(progressDialog.isShowing()){
+                        if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
                     }
@@ -127,29 +133,34 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
 
     void addMember(final int position) {
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/requested/" + requestDetails.get(position).getUsername());
+        firebase.keepSynced(true);
         firebase.removeValue(new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members/");
+                firebase.keepSynced(true);
                 final Map<String, Object> updateMember = new HashMap<String, Object>();
                 updateMember.put(requestDetails.get(position).getUsername(), "0.0,0.0");
                 firebase.updateChildren(updateMember, new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+
                         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + requestDetails.get(position).getUsername() + "/" + Constants.currentEventId);
+                        firebase.keepSynced(true);
                         firebase.removeValue(new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                 firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + requestDetails.get(position).getUsername() + "/activeEvent");
                                 Map<String, Object> updateUserDetails = new HashMap<>();
                                 updateUserDetails.put(Constants.currentEventId, "joined");
+                                firebase.keepSynced(true);
                                 firebase.updateChildren(updateUserDetails, new Firebase.CompletionListener() {
                                     @Override
                                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                         requestDetails.remove(position);
                                         profileURLsList.remove(position);
                                         notifyItemRemoved(position);
-                                        if(progressDialog.isShowing()){
+                                        if (progressDialog.isShowing()) {
                                             progressDialog.dismiss();
                                         }
                                     }
@@ -161,6 +172,15 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
 
             }
         });
+    }
+
+    boolean checkInternetConnection() {
+
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+
     }
 
     class RequestsRecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -212,7 +232,10 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                     int position = getPosition();
                     if (position >= 0 && requestDetails.size() > 0 && position < requestDetails.size()) {
                         progressDialog.show();
-                        addMember(position);
+
+                        if (checkInternetConnection()) {
+                            addMember(position);
+                        }
                     }
                 }
             });
@@ -222,7 +245,9 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
                     int position = getPosition();
                     if (position >= 0 && requestDetails.size() > 0 && position < requestDetails.size()) {
                         progressDialog.show();
-                        deleteRequest(position);
+                        if (checkInternetConnection()) {
+                            deleteRequest(position);
+                        }
                     }
                 }
             });

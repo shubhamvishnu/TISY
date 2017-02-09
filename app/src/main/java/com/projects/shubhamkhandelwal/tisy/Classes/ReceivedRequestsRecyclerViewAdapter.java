@@ -122,10 +122,12 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     void removeRequest(final int position) {
         progressDialog.show();
         firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + eventIdList.get(position) + "/" + username);
+        firebase.keepSynced(true);
         firebase.removeValue(new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + username + "/" + eventIdList.get(position));
+                firebase.keepSynced(true);
                 firebase.removeValue(new Firebase.CompletionListener() {
                     @Override
                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -139,12 +141,14 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     void addUser(final int position) {
         progressDialog.show();
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventIdList.get(position) + "/members");
+        firebase.keepSynced(true);
         final Map<String, Object> updateMember = new HashMap<String, Object>();
         updateMember.put(username, "0.0,0.0");
         firebase.updateChildren(updateMember, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent");
+                firebase.keepSynced(true);
                 Map<String, Object> updateUserDetails = new HashMap<>();
                 updateUserDetails.put(eventIdList.get(position), "joined");
                 firebase.updateChildren(updateUserDetails, new Firebase.CompletionListener() {

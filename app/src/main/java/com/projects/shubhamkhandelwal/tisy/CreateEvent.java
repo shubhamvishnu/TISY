@@ -63,6 +63,7 @@ public class CreateEvent extends Activity {
     Button dLocation;
     Button createEventButton;
     Button dIconButton;
+    Button editDestinationIconButton;
     EditText sLocationDescEditText;
     EditText dLocationDescEditText;
     EditText descriptionEditText;
@@ -114,6 +115,7 @@ public class CreateEvent extends Activity {
         dLocation = (Button) findViewById(R.id.dlocation);
         createEventButton = (Button) findViewById(R.id.createEventButton);
         dIconButton = (Button) findViewById(R.id.dIconButton);
+        editDestinationIconButton = (Button) findViewById(R.id.edit_destination_icon_button);
 
         sLocationDescEditText = (EditText) findViewById(R.id.sLocationDescEditText);
         dLocationDescEditText = (EditText) findViewById(R.id.dLocationDescEditText);
@@ -124,6 +126,8 @@ public class CreateEvent extends Activity {
         sLocationEditImageButton = (ImageButton) findViewById(R.id.editSLocationImageButton);
         dLocationEditImageButton = (ImageButton) findViewById(R.id.editDLocationImageButton);
         dLocationIconImageButton = (ImageButton) findViewById(R.id.dLocationIconImageButton);
+
+
         sLocationLinearLayout = (LinearLayout) findViewById(R.id.sLocationLinearLayout);
         dLocationLinearLayout = (LinearLayout) findViewById(R.id.dLocationLinearLayout);
         dLocationIconLinearLayout = (LinearLayout) findViewById(R.id.dLocationIconLinearLayout);
@@ -205,6 +209,12 @@ public class CreateEvent extends Activity {
                 showDestinationIconDialog();
 
 
+            }
+        });
+        editDestinationIconButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDestinationIconDialog();
             }
         });
         // TODO: change the locationPreference value intialization using switch case (optional)
@@ -1044,20 +1054,21 @@ public class CreateEvent extends Activity {
                             sLocation.setVisibility(View.INVISIBLE);
                             // show the start location description text
                             sLocationLinearLayout.setVisibility(View.VISIBLE);
-                            sLocationDescEditText.setText(eventInfo.getsLocationDesc());
-
+                            sLocationDescEditText.setText("(Coord:");
+                            sLocationDescEditText.append(eventInfo.getsLocationDesc());
+                            sLocationDescEditText.append(")");
                         }
                         break;
                     case 2:
                         eventInfo.setdLocation(String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
                         eventInfo.setdLocationDesc(locationDesc);
                         if (!(locationDesc.isEmpty())) {
-
                             dLocation.setVisibility(View.INVISIBLE);
                             dLocationLinearLayout.setVisibility(View.VISIBLE);
                             // show the destination location description text
-                            dLocationDescEditText.setText(eventInfo.getdLocationDesc());
-
+                            dLocationDescEditText.setText("(Coord:");
+                            dLocationDescEditText.append(eventInfo.getdLocationDesc());
+                            dLocationDescEditText.append(")");
 
                         }
                         break;

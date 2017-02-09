@@ -132,24 +132,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          *      contains two view items-ImageButton and TextView; These two view are added inside a linear layout.
          */
 
-//        // FAB for user account information view.
-//        ImageView userAccountImageIcon = new ImageView(this); // Create an icon imageview.
-//        userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-//        userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
-//
-//        // create menu
-//        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this) //builder for the user account information FAB.
-//                .setContentView(userAccountImageIcon)
-//                .setBackgroundDrawable(R.drawable.floating_action_button_selector)
-//                .build();
-//        userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // initializes user information upon request to view the user information
-//                initializeUserInformation();
-//            }
-//        });
+        // FAB for user account information view.
+       /* ImageView userAccountImageIcon = new ImageView(this); // Create an icon imageview.
+        userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
 
+        // create menu
+        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this) //builder for the user account information FAB.
+                .setContentView(userAccountImageIcon)
+                .setBackgroundDrawable(R.drawable.floating_action_button_selector)
+                .build();
+        userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // initializes user information upon request to view the user information
+                //initializeUserInformation();
+                intent = new Intent(MainActivity.this, CreateEvent.class);
+                startActivity(intent);
+            }
+        });
+*/
         final com.melnykov.fab.FloatingActionButton fab = new com.melnykov.fab.FloatingActionButton(this);
         fab.setType(com.melnykov.fab.FloatingActionButton.TYPE_NORMAL);
         fab.setImageResource(R.drawable.edit_slocation_icon);
@@ -194,6 +196,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     }
                 })
                 .build();
+
     }
 
     void initProgressDialog() {

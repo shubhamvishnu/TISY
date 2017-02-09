@@ -52,7 +52,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_walking" />
 
 
@@ -78,7 +78,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_swimming" />
 
                 <TextView
@@ -103,7 +103,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
 
                     app:srcCompat="@drawable/destination_spa" />
 
@@ -129,7 +129,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_gym" />
 
                 <TextView
@@ -242,7 +242,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_drinks" />
 
                 <TextView
@@ -267,7 +267,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_casino" />
 
                 <TextView
@@ -292,7 +292,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination__zoo" />
 
                 <TextView
@@ -317,7 +317,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_icon_amusement_park" />
 
                 <TextView
@@ -342,7 +342,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_bowling_alley" />
 
                 <TextView
@@ -367,7 +367,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_aquarium" />
 
                 <TextView
@@ -392,7 +392,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_night_club" />
 
                 <TextView
@@ -417,7 +417,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_icon_gaming" />
 
                 <TextView
@@ -459,7 +459,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_cafe" />
 
                 <TextView
@@ -484,7 +484,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_icon_restaurant" />
 
                 <TextView
@@ -509,7 +509,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_dinning" />
 
                 <TextView
@@ -534,7 +534,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_pizza" />
 
                 <TextView
@@ -576,7 +576,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_hotel" />
 
                 <TextView
@@ -601,7 +601,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_university" />
 
                 <TextView
@@ -626,7 +626,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_library" />
 
                 <TextView
@@ -651,7 +651,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_museum" />
 
                 <TextView
@@ -676,7 +676,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_stadium" />
 
                 <TextView
@@ -701,7 +701,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_school" />
 
                 <TextView
@@ -726,7 +726,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_beauty_salon" />
 
                 <TextView
@@ -816,7 +816,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_pharmacy" />
 
                 <TextView
@@ -841,7 +841,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_hospital" />
 
                 <TextView
@@ -882,7 +882,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_worship" />
 
                 <TextView
@@ -923,7 +923,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_mall" />
 
                 <TextView
@@ -948,7 +948,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_book_store" />
 
                 <TextView
@@ -973,7 +973,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_liquor_store" />
 
                 <TextView
@@ -998,7 +998,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_convenience_store" />
 
                 <TextView
@@ -1023,7 +1023,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_laundry" />
 
                 <TextView
@@ -1048,7 +1048,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_grocery_store" />
 
                 <TextView
@@ -1073,7 +1073,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_print_shop" />
 
                 <TextView
@@ -1114,7 +1114,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_parking" />
 
                 <TextView
@@ -1139,7 +1139,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_airport" />
 
                 <TextView
@@ -1165,7 +1165,7 @@
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
 
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_train_station" />
 
                 <TextView
@@ -1190,7 +1190,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_bus_station" />
 
                 <TextView
@@ -1215,7 +1215,7 @@
                     android:adjustViewBounds="true"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    android:tint="@android:color/white"
+                    
                     app:srcCompat="@drawable/destination_subway_station" />
 
                 <TextView

@@ -187,7 +187,7 @@ public class LocationListenerService extends Service {
 
         @Override
         public void onProviderDisabled(String s) {
-            Toast.makeText(getBaseContext(), "onProviderDisabled"+ s, Toast.LENGTH_SHORT).show();
+
         }
     }
 }
