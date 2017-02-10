@@ -45,7 +45,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -898,7 +897,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sadLinearLayout = (LinearLayout) suggestionDialog.findViewById(R.id.sad_linear_layout);
 
 
-
         final EditText suggestionEditText = (EditText) suggestionDialog.findViewById(R.id.suggestion_edit_text);
         final ImageButton lovelyImageIcon, happyImageIcon, confusedImageIcon, sadImageIcon;
         lovelyImageIcon = (ImageButton) suggestionDialog.findViewById(R.id.lovely_emoticon);
@@ -988,7 +986,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    void sendSuggestion(String suggestion){
+    void sendSuggestion(String suggestion) {
         Firebase suggestionFirebase = new Firebase(FirebaseReferences.FIREBASE_SUGGESTION);
         HashMap<String, Object> suggestionMap = new HashMap<>();
         suggestionMap.put("username", username);
