@@ -249,7 +249,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 note.setLatlng(latLng);
 
                 checkPointCoordinateMap.put(dataSnapshot.getKey(), note);
-                zoomFitMembers();
             }
 
             @Override
@@ -1570,6 +1569,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void eventMembersUpdate() {
         Firebase membersUpdateFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+        membersUpdateFirebase.keepSynced(true);
         membersUpdateFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1601,6 +1601,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (Map.Entry<String, Object> member : members.entrySet()) {
 
             Firebase fetchUserNames = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + member.getKey() + "/name");
+            fetchUserNames.keepSynced(true);
             fetchUserNames.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1682,44 +1683,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         int i = 1;
         int memberPositionTracker = -1;
-        for (Map.Entry<String, Object> member : members.entrySet()) {
-            ++memberPositionTracker;
-            Bitmap markerBubbleBitmap = null;
-            String[] coordinates = member.getValue().toString().split(",");
+        if (!(members == null && members.isEmpty())) {
+            for (Map.Entry<String, Object> member : members.entrySet()) {
+                ++memberPositionTracker;
+                Bitmap markerBubbleBitmap = null;
+                String[] coordinates = member.getValue().toString().split(",");
 
-            Marker marker = null;
-            IconGenerator iconGenerator = new IconGenerator(this);
+                Marker marker = null;
+                IconGenerator iconGenerator = new IconGenerator(this);
 
-            switch (i) {
-                case 1: {
-                    iconGenerator.setStyle(IconGenerator.STYLE_RED);
-                    break;
+                switch (i) {
+                    case 1: {
+                        iconGenerator.setStyle(IconGenerator.STYLE_RED);
+                        break;
+                    }
+                    case 2: {
+                        iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
+                        break;
+                    }
+                    case 3: {
+                        iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
+                        break;
+                    }
+                    case 4: {
+                        iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
+                        break;
+                    }
+                    case 5: {
+                        iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
+                        break;
+                    }
                 }
-                case 2: {
-                    iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
-                    break;
-                }
-                case 3: {
-                    iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
-                    break;
-                }
-                case 4: {
-                    iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
-                    break;
-                }
-                case 5: {
-                    iconGenerator.setStyle(IconGenerator.STYLE_PURPLE);
-                    break;
-                }
-            }
 
-            markerBubbleBitmap = iconGenerator.makeIcon(namesList.get(memberPositionTracker));
-            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerBubbleBitmap)));
-            ++i;
-            builder.include(marker.getPosition());
-            memberLocationMarkers.put(member.getKey(), marker);
-            if (i > 5) {
-                i = 1;
+                markerBubbleBitmap = iconGenerator.makeIcon(namesList.get(memberPositionTracker));
+                marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))).title(member.getKey()).icon(BitmapDescriptorFactory.fromBitmap(markerBubbleBitmap)));
+                ++i;
+                builder.include(marker.getPosition());
+                memberLocationMarkers.put(member.getKey(), marker);
+                if (i > 5) {
+                    i = 1;
+                }
             }
         }
         if (zoomFit) {

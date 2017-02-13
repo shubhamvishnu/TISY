@@ -211,7 +211,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                         note.setKey(snapshot.getKey());
                         note.setLatlng(latLng);
 
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.my_places_location_marker_icon, 150, 150))));
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(TrackActivity.this, R.drawable.my_places_location_marker_icon, 200, 200))));
 
 
                         int tag = tagNoteMap.size();
