@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
@@ -187,16 +188,16 @@ public class RequestsRecyclerAdapter extends RecyclerView.Adapter<RequestsRecycl
 
         TextView usernameTextView;
         TextView descriptionTextView;
-        Button addUserButton;
-        Button deleteUserButton;
+        ImageButton addUserButton;
+        ImageButton deleteUserButton;
         CircleImageView profileImageCircleImageView;
 
         public RequestsRecyclerViewHolder(View itemView) {
             super(itemView);
             usernameTextView = (TextView) itemView.findViewById(R.id.username_recycler_view_text_view);
             descriptionTextView = (TextView) itemView.findViewById(R.id.description_recycler_view_text_view);
-            addUserButton = (Button) itemView.findViewById(R.id.add_user_recycler_view_button);
-            deleteUserButton = (Button) itemView.findViewById(R.id.delete_user_recycler_view_button);
+            addUserButton = (ImageButton) itemView.findViewById(R.id.add_user_recycler_view_button);
+            deleteUserButton = (ImageButton) itemView.findViewById(R.id.delete_user_recycler_view_button);
             profileImageCircleImageView = (CircleImageView) itemView.findViewById(R.id.profile_image_recycler_circle_image_view);
             deleteUserButton.setOnTouchListener(new View.OnTouchListener() {
                 @Override

@@ -184,7 +184,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
         ImageButton allInOneImageIcon = (ImageButton) findViewById(R.id.allInOneOptionImageButton);
-
         allInOneImageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1401,17 +1400,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void checkGPS() {
-        // check for GPS is enabled, if not show snackbar, else just call the location Action
-        LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            if (mMap != null) {
-                mMap.setPadding(0, 0, 0, 200);
-            }
-            showSnackBar();
-        } else {
+        if (mMap != null) {
             showAllInOneDialog();
         }
-    }
+
+
+}
 
     @Override
     protected void onResume() {

@@ -56,6 +56,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
                     final String association = dataSnapshot.getValue().toString();
 
                     Firebase eventInfo = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + activeEventId);
+                    eventInfo.keepSynced(true);
                     eventInfo.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
