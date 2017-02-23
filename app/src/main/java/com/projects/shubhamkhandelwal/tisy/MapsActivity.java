@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -75,7 +74,6 @@ import com.google.maps.android.ui.IconGenerator;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
-import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventMembersRecyclerViewAdapater;
@@ -646,7 +644,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void addCheckPointDialog() {
-        placePickerDialog();
+        if (checkInternetConnection()) {
+            placePickerDialog();
+        }else{
+            Toast.makeText(MapsActivity.this, "No internet connection, please try again later.", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     void placePickerDialog() {
@@ -665,7 +668,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                showCheckPointAddOptionDialog(place.getLatLng(), place.getName().toString());
+                if (checkInternetConnection()) {
+                    showCheckPointAddOptionDialog(place.getLatLng(), place.getName().toString());
+                } else {
+
+
+                    Toast.makeText(MapsActivity.this, "No internet connection, please try again later.", Toast.LENGTH_SHORT).show();
+                }
                 // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             }
         }
@@ -815,7 +824,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     ++memberUriCount;
                     memberProfileImageUrls.add(dataSnapshot.child("userPhotoUri").getValue().toString());
                     memberProfileName.add(dataSnapshot.child("name").getValue().toString());
-                        lastSeenInfo.add(dataSnapshot.child("lastSeen").getValue().toString());
+                    lastSeenInfo.add(dataSnapshot.child("lastSeen").getValue().toString());
                     if (membersList.size() == memberUriCount) {
                         progressDialog.dismiss();
 
@@ -876,7 +885,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         editMembersImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //    new EventDialogs().showDialog(MapsActivity.this, Constants.TYPE_DELETE_MEMBERS);
+                //    new EventDialogs().showDialog(MapsActivity.this, Constants.TYPE_DELETE_MEMBERS);
                 showMembersDialog();
             }
         });
@@ -1536,7 +1545,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 float[] distance = new float[2];
                 Location.distanceBetween(location.getLatitude(), location.getLongitude(), latLng.latitude, latLng.longitude, distance);
                 if (distance[0] <= 20) {
-                    Toast.makeText(MapsActivity.this, " distance0:" + distance[0] + " distance1:" + distance[1], Toast.LENGTH_SHORT).show();
+
 
                     if (!checkPointsReached.contains(checkpoint.getKey())) {
                         checkPointsReached.add(checkpoint.getKey());
@@ -1723,12 +1732,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             for (Map.Entry<String, Note> checkpointMapEntry : checkPointCoordinateMap.entrySet()) {
 
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.check_point_flag);
-                Bitmap tempBitmap = bitmapDrawable.getBitmap();
-                Bitmap checkPointBitmap = Bitmap.createScaledBitmap(tempBitmap, 170, 170, false);
-
                 Note note = checkpointMapEntry.getValue();
-                Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(note.getLatlng()).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(checkPointBitmap)));
+                Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(note.getLatlng()).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.check_points_icon, 300, 300))));
                 checkPointMarker.setTag(note.getKey());
                 zoomFitCheckPointCoordinates.add(checkPointMarker);
             }
@@ -1736,8 +1741,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (destinationIconBitmap != null) {
             String[] destCoordinates = eventInfo.getdLocation().split(",");
-
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
 
 
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));
@@ -1862,7 +1865,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String desc = checkPointDescription.getText().toString();
                 String title = checkpointTitle.getText().toString();
 
-                if (!desc.isEmpty() || title.isEmpty()) {
+                if (!desc.isEmpty() || title.isEmpty() || latLng.toString().isEmpty() || latLng == null) {
                     saveCheckPoint(title, desc, latLng);
                     addCheckPointDialog.dismiss();
                 }

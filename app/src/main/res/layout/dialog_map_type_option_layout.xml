@@ -1,105 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent">
+    xmlns:grid="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/map_type_default"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/map_type_default" />
-    <TextView
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Default"
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/map_type_terrain"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/map_type_terrain" />
-    <TextView
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Terrain"
 
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/map_type_satellite"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/map_type_satellite" />
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:columnCount="2"
+            android:padding="8dp"
+            android:rowCount="2"
+            grid:alignmentMode="alignBounds">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/map_type_default"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/map_type_default" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:background="@android:color/transparent"
+                android:text="Default"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+</LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/map_type_terrain"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/map_type_terrain" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:background="@android:color/transparent"
+
+                android:text="Terrain"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+</LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/map_type_satellite"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/map_type_satellite" />
 
 
-    <TextView
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Satellite"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:background="@android:color/transparent"
 
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/map_type_hybrid"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/map_type_hybrid" />
+                android:text="Satellite"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+</LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/map_type_hybrid"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="20dp"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/map_type_hybrid" />
 
-    <TextView
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Hybrid"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:background="@android:color/transparent"
 
-        android:layout_marginBottom="6dp"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-    </LinearLayout>
+                android:text="Hybrid"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+            </LinearLayout>
+        </GridLayout>
     </ScrollView>
 </LinearLayout>

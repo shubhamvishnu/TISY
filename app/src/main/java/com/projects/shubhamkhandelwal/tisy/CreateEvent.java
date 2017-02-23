@@ -242,17 +242,11 @@ public class CreateEvent extends Activity {
                     checkPermissions();
                 } else {
                     if (!eventId.isEmpty()) {
-                        if (destLocation == null || destLocationDesc == null || destLocation.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
+                        if (dLocationDescEditText.getText().toString().isEmpty() || destLocation == null || destLocationDesc == null || destLocation.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
                             Toast.makeText(CreateEvent.this, "please mention all the event details", Toast.LENGTH_SHORT).show();
                         } else {
                             if (checkInternetConnection()) {
                                 progressDialog.show();
-                                if (dLocationDescEditText.getText().toString().isEmpty()) {
-                                    dLocationDescEditText.setText(eventInfo.getdLocationDesc());
-                                } else {
-                                    eventInfo.setdLocationDesc(dLocationDescEditText.getText().toString());
-                                }
-                                // TODO: check for eventID being empty
 
                                 if (!checkInternetConnection()) {
                                     Toast.makeText(CreateEvent.this, "no internet connection", Toast.LENGTH_SHORT).show();
