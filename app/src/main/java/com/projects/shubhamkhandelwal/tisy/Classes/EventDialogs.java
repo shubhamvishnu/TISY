@@ -23,6 +23,7 @@ import com.projects.shubhamkhandelwal.tisy.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EventDialogs {
     List<String> members;
@@ -63,7 +64,7 @@ public class EventDialogs {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (!snapshot.getKey().equals(username)) {
+                        if (!Objects.equals(snapshot.getKey(), username)) {
                             members.add(snapshot.getKey());
                         }
                     }

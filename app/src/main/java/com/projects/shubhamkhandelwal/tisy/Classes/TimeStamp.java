@@ -21,6 +21,12 @@ public class TimeStamp {
         Date date = new Date();
         return dateFormat.format(date);
     }
+    public static String getLastSeen(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "dd-MM-yyyy", Locale.getDefault());
+        Date date = new Date();
+        return "last updated: " + dateFormat.format(date);
+    }
     public static String getHour(){
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "HH", Locale.getDefault());
@@ -33,4 +39,5 @@ public class TimeStamp {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
 }

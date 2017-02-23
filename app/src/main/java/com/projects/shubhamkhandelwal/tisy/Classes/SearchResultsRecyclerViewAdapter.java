@@ -20,6 +20,7 @@ import com.projects.shubhamkhandelwal.tisy.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -76,20 +77,33 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+
+                    // retrieve all the active events
                     for (DataSnapshot activeEventSnapshot : dataSnapshot.child(username).child("activeEvent").getChildren()) {
                         activeEventList.add(activeEventSnapshot.getKey());
                     }
+
+                    // traversing through all the user details
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name) || Pattern.compile(Pattern.quote(snapshot.getKey()), Pattern.CASE_INSENSITIVE).matcher(name).find() || Pattern.compile(Pattern.quote(snapshot.child("name").getValue().toString()), Pattern.CASE_INSENSITIVE).matcher(name).find()) {
-                            if (!snapshot.getKey().equals(username)) {
+
+                        // make sure it is not the same user being searched
+                        if(!Objects.equals(snapshot.getKey(), username)){
+
+                            // finds any trace of the searched keyword in any of ther user
+                            if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name) || Pattern.compile(Pattern.quote(snapshot.getKey()), Pattern.CASE_INSENSITIVE).matcher(name).find() || Pattern.compile(Pattern.quote(snapshot.child("name").getValue().toString()), Pattern.CASE_INSENSITIVE).matcher(name).find()) {
+
+                                // checking if the invite hasn't already been sent to the user
                                 Firebase sentRequestsFirebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId + "/");
                                 sentRequestsFirebase.keepSynced(true);
                                 sentRequestsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        // if the invite hasnt't been sent to the user
                                         if (!dataSnapshot.child(snapshot.getKey()).exists()) {
 
                                             Firebase userRequestsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + snapshot.getKey());
+                                            userRequestsFirebase.keepSynced(true);
                                             userRequestsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {

@@ -40,7 +40,14 @@
             android:textColor="@android:color/white"
             android:textSize="16dp"
             android:textStyle="bold" />
-
+        <TextView
+            android:id="@+id/last_seen_text_view_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textSize="16dp" />
         <TextView
             android:id="@+id/coordinate_snapshot_text_view_recycler_view"
             android:layout_width="fill_parent"
@@ -48,7 +55,7 @@
             android:paddingBottom="4dp"
             android:paddingLeft="24dp"
             android:textColor="#bcbcbc"
-            android:textSize="16dp" />
+            android:textSize="14dp" />
 
     </LinearLayout>
 <LinearLayout
@@ -60,6 +67,7 @@
         android:id="@+id/profileImageCircleImageView"
         android:layout_width="70dp"
         android:layout_height="70dp" />
+
 </LinearLayout>
 
 

@@ -193,7 +193,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     public void userAction() {
         // set the Firebase database reference
         firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS);
-
+        firebase.keepSynced(true);
         // listener for firebase
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -244,6 +244,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         } else {
             details.put("userPhotoUri", userPhotoUrl.toString());
         }
+        details.put("lastSeen", "unknown");
         // creating a new user
         firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
 

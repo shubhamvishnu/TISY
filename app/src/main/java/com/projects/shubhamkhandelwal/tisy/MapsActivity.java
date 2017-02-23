@@ -78,6 +78,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
+import com.projects.shubhamkhandelwal.tisy.Classes.EventMembersRecyclerViewAdapater;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
@@ -92,6 +93,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -133,6 +135,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> membersList; // members (username) in the event
     List<String> memberCoordinate; // coordinates (LatLng) of the members in the event
     List<String> memberProfileImageUrls; // profile Image URL of every member in the event
+    List<String> lastSeenInfo;
     List<String> memberProfileName; // member name for users in the event
     String timeStamp; // date and time of when the event was created
     String eventTitle; // title of the event
@@ -145,6 +148,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String nameSearch; // name/username/eventID searched for by the user
     RecyclerView searchOptionChoiceRecyclerView; // search option recyclerview
     SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter; // search option recyclerview adapter
+
+    List<String> eventMemberList;
 
     /**
      * converts the vector drawables to bitmap
@@ -204,6 +209,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // initializing Collection Objects
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
+        lastSeenInfo = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
         memberProfileName = new ArrayList<>();
         checkPointsReached = new ArrayList<>();
@@ -782,6 +788,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void loadProfileInfo() {
+        lastSeenInfo = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
         memberProfileName = new ArrayList<>();
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -811,7 +818,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     ++memberUriCount;
                     memberProfileImageUrls.add(dataSnapshot.child("userPhotoUri").getValue().toString());
                     memberProfileName.add(dataSnapshot.child("name").getValue().toString());
-
+                        lastSeenInfo.add(dataSnapshot.child("lastSeen").getValue().toString());
                     if (membersList.size() == memberUriCount) {
                         progressDialog.dismiss();
 
@@ -864,23 +871,90 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         timeStampTextView.setText(timeStamp);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
-        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName);
+        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName, lastSeenInfo);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
 
         editMembersImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new EventDialogs().showDialog(MapsActivity.this, Constants.TYPE_DELETE_MEMBERS);
+            //    new EventDialogs().showDialog(MapsActivity.this, Constants.TYPE_DELETE_MEMBERS);
+                showMembersDialog();
             }
         });
 
         Window window = eventInfoDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         eventInfoDialog.setCanceledOnTouchOutside(true);
         eventInfoDialog.show();
 
+    }
+
+    void showMembersDialog() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("fetching event members!");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.show();
+        eventMemberList = new ArrayList<>();
+        Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+        firebase.keepSynced(true);
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (!Objects.equals(snapshot.getKey(), username)) {
+                            eventMemberList.add(snapshot.getKey());
+                        }
+                    }
+                    progressDialog.dismiss();
+                    initDeleteEventMemberRecyclerView(eventMemberList);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+    }
+
+    void initDeleteEventMemberRecyclerView(List<String> members) {
+        final Dialog dialog = new Dialog(this, R.style.event_dialogs);
+        dialog.setContentView(R.layout.dialog_delete_event_members_layout);
+        RecyclerView deleteEventMemberRecyclerView;
+        EventMembersRecyclerViewAdapater eventMembersRecyclerViewAdapater;
+
+        deleteEventMemberRecyclerView = (RecyclerView) dialog.findViewById(R.id.delete_event_members_recycler_view);
+        deleteEventMemberRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
+        deleteEventMemberRecyclerView.setLayoutManager(linearLayoutManager);
+
+        eventMembersRecyclerViewAdapater = new EventMembersRecyclerViewAdapater(this, members);
+        deleteEventMemberRecyclerView.setAdapter(eventMembersRecyclerViewAdapater);
+        Window window = dialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(true);
     }
 
     void showSuggestionDialog() {
@@ -1405,7 +1479,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-}
+    }
 
     @Override
     protected void onResume() {
@@ -1569,6 +1643,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onDataChange(DataSnapshot dataSnapshot) {
                 members = new HashMap<>();
                 memberProfileImageUrls = new ArrayList<String>();
+                lastSeenInfo = new ArrayList<String>();
                 long numberOfMembers = 0;
                 if (dataSnapshot.exists()) {
                     numberOfMembers = dataSnapshot.getChildrenCount();

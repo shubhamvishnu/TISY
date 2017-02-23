@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -121,7 +120,7 @@ public class LocationListenerService extends Service {
 
     }
 
-    void updateUserPosition(String eventID,final Location location) {
+    void updateUserPosition(String eventID, final Location location) {
 
         final Firebase updateUserCurrentLocationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventID + "/members");
         updateUserCurrentLocationFirebase.keepSynced(true);
@@ -176,17 +175,32 @@ public class LocationListenerService extends Service {
 //            locationLog.setHourAndMinute(hourAndMinute);
 //
 //            updateLocationLog(locationLog, dateMonthYear);
+
         }
+
 
         @Override
         public void onProviderEnabled(String s) {
-           customColor++;
+
+
+            Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
+            updateLastKnowStatus.keepSynced(true);
+            Map<String, Object> lastSeenMap = new HashMap<>();
+            lastSeenMap.put("lastSeen", "Online");
+            updateLastKnowStatus.updateChildren(lastSeenMap);
 
 
         }
 
         @Override
         public void onProviderDisabled(String s) {
+
+            Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
+            updateLastKnowStatus.keepSynced(true);
+            Map<String, Object> lastSeenMap = new HashMap<>();
+            lastSeenMap.put("lastSeen", TimeStamp.getLastSeen());
+            updateLastKnowStatus.updateChildren(lastSeenMap);
+
 
         }
     }

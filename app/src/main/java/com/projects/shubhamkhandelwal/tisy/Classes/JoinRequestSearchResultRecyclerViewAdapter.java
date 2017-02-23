@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Shubham Khandelwal on 12/1/2016.
@@ -64,26 +65,36 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+
+                    // retrieving active events
                     for (DataSnapshot activeEventSnapshot : dataSnapshot.child(username).child("activeEvent").getChildren()) {
                         activeEventList.add(activeEventSnapshot.getKey());
                     }
 
+                    // traversing through all the users
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
                         // check if the name is not equal to username
-                        if (!snapshot.getKey().trim().contentEquals(username.trim())) {
+                        if (!Objects.equals(snapshot.getKey(), username)) {
+
                             // check if the name has activeEvents
                             if (snapshot.child("activeEvent").hasChildren()) {
+
                                 // iterate through the users events
                                 for (final DataSnapshot eventSnapshot : snapshot.child("activeEvent").getChildren()) {
+
                                     // check if eventID is equal to the name searched
-                                    if (eventSnapshot.getKey().contains(name) && eventSnapshot.getValue().toString().contains("created")) {
+                                    if (eventSnapshot.getKey().contains(name) && Objects.equals(eventSnapshot.getValue().toString(), "created")) {
+
                                         requestsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.exists()) {
                                                     int count = 0;
+
+                                                    // checking if the invite from that event isn't received
                                                     for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                                        if (eventSnapshot.getKey().equals(snapshot1.getKey())) {
+                                                        if (Objects.equals(eventSnapshot.getKey(), snapshot1.getKey())) {
                                                             count++;
                                                         }
                                                     }
