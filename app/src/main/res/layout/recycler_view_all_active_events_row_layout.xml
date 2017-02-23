@@ -124,38 +124,7 @@ android:layout_weight="1" android:singleLine="true"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
-
-                    android:background="@drawable/active_event_item_description_background"
-                    android:padding="6dp"
-                    android:text="start:"
-                    android:textAppearance="@android:style/TextAppearance.Small"
-                    android:textColor="#2f4f4f" />
-
-                <TextView
-
-                    android:padding="6dp"
-                    android:id="@+id/active_event_sLocationDesc"
-                    android:singleLine="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="16dp" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"

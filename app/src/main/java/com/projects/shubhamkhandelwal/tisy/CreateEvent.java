@@ -59,18 +59,18 @@ public class CreateEvent extends Activity {
     // temporary eventId
     String eventId;
     EventInfo eventInfo;
-    Button sLocation;
+    //Button sLocation;
     Button dLocation;
     Button createEventButton;
     Button dIconButton;
     Button editDestinationIconButton;
-    EditText sLocationDescEditText;
+    //EditText sLocationDescEditText;
     EditText dLocationDescEditText;
     EditText descriptionEditText;
     EditText titleEditText;
 
     TextView userIdTextView;
-    ImageButton sLocationEditImageButton;
+    //ImageButton sLocationEditImageButton;
     ImageButton dLocationEditImageButton;
     ImageButton dLocationIconImageButton;
     Intent intent;
@@ -90,7 +90,7 @@ public class CreateEvent extends Activity {
     int locationPreference = 0;
     PlacePicker.IntentBuilder builder;
     int iconResourceId;
-    LinearLayout sLocationLinearLayout;
+   // LinearLayout sLocationLinearLayout;
     LinearLayout dLocationLinearLayout;
     LinearLayout dLocationIconLinearLayout;
 
@@ -111,29 +111,28 @@ public class CreateEvent extends Activity {
         members = new HashMap<>();
 
         // intializing the view elements
-        sLocation = (Button) findViewById(R.id.slocation);
+
         dLocation = (Button) findViewById(R.id.dlocation);
         createEventButton = (Button) findViewById(R.id.createEventButton);
         dIconButton = (Button) findViewById(R.id.dIconButton);
         editDestinationIconButton = (Button) findViewById(R.id.edit_destination_icon_button);
 
-        sLocationDescEditText = (EditText) findViewById(R.id.sLocationDescEditText);
+
         dLocationDescEditText = (EditText) findViewById(R.id.dLocationDescEditText);
         descriptionEditText = (EditText) findViewById(R.id.descriptionEditText);
         titleEditText = (EditText) findViewById(R.id.title_edit_text);
 
         userIdTextView = (TextView) findViewById(R.id.userId);
-        sLocationEditImageButton = (ImageButton) findViewById(R.id.editSLocationImageButton);
+
         dLocationEditImageButton = (ImageButton) findViewById(R.id.editDLocationImageButton);
         dLocationIconImageButton = (ImageButton) findViewById(R.id.dLocationIconImageButton);
 
 
-        sLocationLinearLayout = (LinearLayout) findViewById(R.id.sLocationLinearLayout);
         dLocationLinearLayout = (LinearLayout) findViewById(R.id.dLocationLinearLayout);
         dLocationIconLinearLayout = (LinearLayout) findViewById(R.id.dLocationIconLinearLayout);
 
 
-        sLocationLinearLayout.setVisibility(View.INVISIBLE);
+
         dLocationLinearLayout.setVisibility(View.INVISIBLE);
         dLocationIconLinearLayout.setVisibility(View.INVISIBLE);
 
@@ -146,13 +145,6 @@ public class CreateEvent extends Activity {
         generateEventId();
         initProgressDialog();
 
-        sLocationEditImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                locationPreference = 1;
-                placePickerDialog();
-            }
-        });
 
         dLocationEditImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,20 +153,7 @@ public class CreateEvent extends Activity {
                 placePickerDialog();
             }
         });
-        sLocation.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        sLocation.setBackgroundColor(Color.parseColor("#26FFFFFF"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        sLocation.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-                        break;
-                }
-                return false;
-            }
-        });
+
         dLocation.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -218,13 +197,6 @@ public class CreateEvent extends Activity {
             }
         });
         // TODO: change the locationPreference value intialization using switch case (optional)
-        sLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                locationPreference = 1;
-                placePickerDialog();
-            }
-        });
 
         dLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,24 +235,21 @@ public class CreateEvent extends Activity {
 
                 String destLocation = eventInfo.getdLocation();
                 String destLocationDesc = eventInfo.getdLocationDesc();
-                String startLocation = eventInfo.getsLocation();
-                String startLocationDesc = eventInfo.getsLocationDesc();
+
                 String eventDescription = descriptionEditText.getText().toString();
                 String eventTitle = titleEditText.getText().toString();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     checkPermissions();
                 } else {
                     if (!eventId.isEmpty()) {
-                        if (destLocation == null || startLocation == null || startLocationDesc == null || destLocationDesc == null || destLocation.isEmpty() || startLocation.isEmpty() || startLocationDesc.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
+                        if (destLocation == null || destLocationDesc == null || destLocation.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
                             Toast.makeText(CreateEvent.this, "please mention all the event details", Toast.LENGTH_SHORT).show();
                         } else {
                             if (checkInternetConnection()) {
                                 progressDialog.show();
-                                if (sLocationDescEditText.getText().toString().isEmpty() || dLocationDescEditText.getText().toString().isEmpty()) {
-                                    sLocationDescEditText.setText(eventInfo.getsLocationDesc());
+                                if (dLocationDescEditText.getText().toString().isEmpty()) {
                                     dLocationDescEditText.setText(eventInfo.getdLocationDesc());
                                 } else {
-                                    eventInfo.setsLocationDesc(sLocationDescEditText.getText().toString());
                                     eventInfo.setdLocationDesc(dLocationDescEditText.getText().toString());
                                 }
                                 // TODO: check for eventID being empty
@@ -1046,19 +1015,6 @@ public class CreateEvent extends Activity {
                 LatLng latLng = place.getLatLng();
                 String locationDesc = place.getName().toString();
                 switch (locationPreference) {
-                    case 1:
-                        eventInfo.setsLocation(String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
-                        eventInfo.setsLocationDesc(locationDesc);
-                        if (!(locationDesc.isEmpty())) {
-
-                            sLocation.setVisibility(View.INVISIBLE);
-                            // show the start location description text
-                            sLocationLinearLayout.setVisibility(View.VISIBLE);
-                            sLocationDescEditText.setText("(Coord:");
-                            sLocationDescEditText.append(eventInfo.getsLocationDesc());
-                            sLocationDescEditText.append(")");
-                        }
-                        break;
                     case 2:
                         eventInfo.setdLocation(String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
                         eventInfo.setdLocationDesc(locationDesc);

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,8 +70,6 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
                                 memberList.add(snapshot.getKey());
                             }
                             EventInfo eventInfo = new EventInfo();
-                            eventInfo.setsLocation(dataSnapshot.child("info").child("sLocation").getValue().toString());
-                            eventInfo.setsLocationDesc(dataSnapshot.child("info").child("sLocationDesc").getValue().toString());
                             eventInfo.setdLocation(dataSnapshot.child("info").child("dLocation").getValue().toString());
                             eventInfo.setdLocationDesc(dataSnapshot.child("info").child("dLocationDesc").getValue().toString());
                             ActiveEventInfo activeEventInfo = new ActiveEventInfo(title, association, activeEventId, eventInfo, request, timeCreated, memberList);
@@ -129,7 +126,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
 
         final EventInfo info = activeEventIds.get(position).getEventInfo();
 
-        holder.activeEventsLocationDesc.setText(info.getsLocationDesc());
+
         holder.activeEventdLocationDesc.setText(info.getdLocationDesc());
         holder.activeEventRequests.setText(activeEventIds.get(position).getRequests());
         holder.activeEventTimeCreated.setText(activeEventIds.get(position).getTimeCreated());
@@ -140,7 +137,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
 //        String[] destCoordinates = info.getdLocation().split(",");
 //        String[] startCoordinates = info.getsLocation().split(",");
 
-        Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getsLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+info.getsLocation()+"&markers=color:red%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).networkPolicy(NetworkPolicy.OFFLINE).into(holder.activeEventCardImageView, new Callback() {
+        Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getdLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).networkPolicy(NetworkPolicy.OFFLINE).into(holder.activeEventCardImageView, new Callback() {
             @Override
             public void onSuccess() {
 
@@ -149,7 +146,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             @Override
             public void onError() {
                 Toast.makeText(context, "loaded offline", Toast.LENGTH_SHORT).show();
-                Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getsLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:S%7C"+info.getsLocation()+"&markers=color:red%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.login_background).into(holder.activeEventCardImageView);
+                Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location="+info.getdLocation()+"&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:D%7C"+info.getdLocation()+"&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.chennai_india_static_map).into(holder.activeEventCardImageView);
             }
         });
     }
@@ -161,7 +158,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
 
     class ActiveEventsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView activeEventIdTextView;
-        TextView activeEventsLocationDesc;
+
         TextView activeEventdLocationDesc;
         TextView activeEventTitleTextView;
         TextView activeEventRequests;
@@ -178,7 +175,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             super(itemView);
             view = itemView;
             activeEventIdTextView = (TextView) itemView.findViewById(R.id.active_event_id_text_view);
-            activeEventsLocationDesc = (TextView) itemView.findViewById(R.id.active_event_sLocationDesc);
+
             activeEventdLocationDesc = (TextView) itemView.findViewById(R.id.active_event_dLocationDesc);
             activeEventTitleTextView = (TextView) itemView.findViewById(R.id.active_event_title_text_view);
             activeEventRequests = (TextView) itemView.findViewById(R.id.active_event_requests);
@@ -194,7 +191,6 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Active
             activeEventMemberRecyclerView.setLayoutManager(layoutManager);
 
             activeEventIdTextView.setOnClickListener(this);
-            activeEventsLocationDesc.setOnClickListener(this);
             activeEventdLocationDesc.setOnClickListener(this);
             activeEventTitleTextView.setOnClickListener(this);
             activeEventRequests.setOnClickListener(this);

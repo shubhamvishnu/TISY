@@ -139,7 +139,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> memberProfileName; // member name for users in the event
     String timeStamp; // date and time of when the event was created
     String eventTitle; // title of the event
-    String startLocationTextView; // start location description of the event
+
     String destLocationTextView; // destination location description of the event
     String eventDescription; // event description
     int memberUriCount; // number of URL's fetched of the members
@@ -312,8 +312,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                eventInfo.setsLocation(dataSnapshot.child("sLocation").getValue().toString());
-                eventInfo.setsLocationDesc(dataSnapshot.child("sLocationDesc").getValue().toString());
+
                 eventInfo.setdLocation(dataSnapshot.child("dLocation").getValue().toString());
                 eventInfo.setdLocationDesc(dataSnapshot.child("dLocationDesc").getValue().toString());
             }
@@ -366,8 +365,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sendRequestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.send_request_option_layout);
 
         if (!Constants.eventAdmin) {
-            requestsLayout.setVisibility(View.INVISIBLE);
-            sendRequestsLayout.setVisibility(View.INVISIBLE);
+            requestsLayout.setVisibility(View.GONE);
+            sendRequestsLayout.setVisibility(View.GONE);
         }
         suggestionImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -764,8 +763,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for (DataSnapshot snapshot : dataSnapshot.child("info").getChildren()) {
                     if (snapshot.getKey().equals("dLocationDesc")) {
                         destLocationTextView = snapshot.getValue().toString();
-                    } else if (snapshot.getKey().equals("sLocationDesc")) {
-                        startLocationTextView = snapshot.getValue().toString();
                     }
                 }
                 eventDescription = dataSnapshot.child("desc").getValue().toString();
@@ -838,7 +835,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void showEventInfoDialog() {
 
         TextView eventIdDialogTextView;
-        TextView startLocationDialogTextView;
+
         TextView destLocationDialogTextView;
         TextView eventDescriptionTextView;
         TextView timeStampTextView;
@@ -850,7 +847,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventInfoDialog.setContentView(R.layout.dialog_event_info_layout);
 
         eventIdDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.event_id_info_text_view);
-        startLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.start_location_desc_text_view);
+
         destLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.dest_location_desc_text_view);
         eventDescriptionTextView = (TextView) eventInfoDialog.findViewById(R.id.event_desc_text_view);
         timeStampTextView = (TextView) eventInfoDialog.findViewById(R.id.time_stamp_text_view);
@@ -865,7 +862,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         titleTextView.setText(eventTitle);
         eventIdDialogTextView.setText(Constants.currentEventId);
-        startLocationDialogTextView.setText(startLocationTextView);
+
+
         destLocationDialogTextView.setText(destLocationTextView);
         eventDescriptionTextView.setText(eventDescription);
         timeStampTextView.setText(timeStamp);
@@ -1717,7 +1715,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     void updateMapMembers() {
-        Marker startMarker = null;
+
         Marker destinationMarker = null;
         mMap.clear();
         List<Marker> zoomFitCheckPointCoordinates = new ArrayList<>();
@@ -1738,14 +1736,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (destinationIconBitmap != null) {
             String[] destCoordinates = eventInfo.getdLocation().split(",");
-            String[] startCoordinates = eventInfo.getsLocation().split(",");
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
-            Bitmap tempBitmap = bitmapDrawable.getBitmap();
-            Bitmap startLocationBitmap = applyCustomBitmapColor(Bitmap.createScaledBitmap(tempBitmap, 200, 200, false), "#5d8aa8");
 
-            startMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(startCoordinates[0]), Double.parseDouble(startCoordinates[1]))).title("Start Location").icon(BitmapDescriptorFactory.fromBitmap(startLocationBitmap)).snippet(eventInfo.getsLocationDesc()));
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.start_location_icon);
+
+
             destinationMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destCoordinates[0]), Double.parseDouble(destCoordinates[1]))).title("Destination Location").icon(BitmapDescriptorFactory.fromBitmap(destinationIconBitmap)).snippet(eventInfo.getdLocationDesc()));
-            startMarker.setTag(Constants.START_LOCATION_TAG);
+
             destinationMarker.setTag(Constants.DESTINATION_LOCATION_TAG);
         }
         memberLocationMarkers = new HashMap<>();
@@ -1796,7 +1792,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (zoomFit) {
             if (destinationIconBitmap != null) {
-                builder.include(startMarker.getPosition());
+
                 builder.include(destinationMarker.getPosition());
             }
             if (!zoomFitCheckPointCoordinates.isEmpty()) {

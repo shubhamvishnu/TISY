@@ -47,7 +47,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
         initProgressDialog();
     }
 
-    void initProgressDialog(){
+    void initProgressDialog() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("making changes...");
@@ -70,7 +70,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
     void populateViewWithResults() {
         nameList = new ArrayList<>();
         eventIdList = new ArrayList<>();
-        final List<String> activeEventList = new ArrayList<>();
+        final List<String> activeEventMemberList = new ArrayList<>();
         Firebase searchResultFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS);
         searchResultFirebase.keepSynced(true);
         searchResultFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -78,16 +78,12 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
 
-                    // retrieve all the active events
-                    for (DataSnapshot activeEventSnapshot : dataSnapshot.child(username).child("activeEvent").getChildren()) {
-                        activeEventList.add(activeEventSnapshot.getKey());
-                    }
 
                     // traversing through all the user details
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                         // make sure it is not the same user being searched
-                        if(!Objects.equals(snapshot.getKey(), username)){
+                        if (!Objects.equals(snapshot.getKey(), username)) {
 
                             // finds any trace of the searched keyword in any of ther user
                             if (snapshot.getKey().contains(name) || snapshot.child("name").getValue().toString().contains(name) || Pattern.compile(Pattern.quote(snapshot.getKey()), Pattern.CASE_INSENSITIVE).matcher(name).find() || Pattern.compile(Pattern.quote(snapshot.child("name").getValue().toString()), Pattern.CASE_INSENSITIVE).matcher(name).find()) {
@@ -109,13 +105,31 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                                     if (!dataSnapshot.child(snapshot.getKey()).exists()) {
-                                                        if (!activeEventList.contains(snapshot.getKey())) {
 
-                                                            int position = eventIdList.size();
-                                                            eventIdList.add(snapshot.getKey());
-                                                            nameList.add(snapshot.child("name").getValue().toString());
-                                                            notifyItemInserted(position);
-                                                        }
+                                                        Firebase memberInfo = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+                                                        memberInfo.keepSynced(true);
+                                                        memberInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                                for (DataSnapshot eventMembersSnapshot : dataSnapshot.getChildren()) {
+                                                                    activeEventMemberList.add(eventMembersSnapshot.getKey());
+                                                                }
+                                                                if (!activeEventMemberList.contains(snapshot.getKey())) {
+                                                                    int position = eventIdList.size();
+                                                                    eventIdList.add(snapshot.getKey());
+                                                                    nameList.add(snapshot.child("name").getValue().toString());
+                                                                    notifyItemInserted(position);
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(FirebaseError firebaseError) {
+
+                                                            }
+                                                        });
+
+
                                                     }
                                                 }
 
@@ -189,7 +203,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
                                     eventIdList.remove(position);
                                     nameList.remove(position);
                                     notifyItemRemoved(position);
-                                    if(progressDialog.isShowing()){
+                                    if (progressDialog.isShowing()) {
                                         progressDialog.dismiss();
                                     }
                                 }
@@ -224,7 +238,7 @@ public class SearchResultsRecyclerViewAdapter extends RecyclerView.Adapter<Searc
             switch (view.getId()) {
                 case R.id.search_option_add_member_image_view: {
                     int position = getPosition();
-                    if (eventIdList.size() >  0 && position >= 0 && position < eventIdList.size()) {
+                    if (eventIdList.size() > 0 && position >= 0 && position < eventIdList.size()) {
                         progressDialog.show();
                         sendRequest(position);
                     }
