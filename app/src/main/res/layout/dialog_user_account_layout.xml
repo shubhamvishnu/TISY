@@ -10,21 +10,23 @@
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:orientation="vertical"
             android:padding="16dp">
 
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:background="@drawable/active_event_item_description_background"
                 android:gravity="center"
-                android:padding="16dp"
-                android:text="Profile Information"
-                android:textColor="@android:color/white"
-                android:textSize="18dp"
+                android:padding="12dp"
+                android:text="Profile information"
+                android:textColor="#2f4f4f"
+                android:textSize="16dp"
                 android:textStyle="normal" />
+
             <TextView
                 android:id="@+id/name_text_view"
                 android:layout_width="wrap_content"
@@ -41,51 +43,59 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image_circle_image_view"
                 android:layout_width="170dp"
-                android:layout_gravity="center"
                 android:layout_height="170dp"
+                android:layout_gravity="center"
                 android:padding="8dp" />
 
-
-           <LinearLayout    
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal"
-               android:layout_marginBottom="8dp">
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_gravity="center"
-                   android:gravity="center"
-                   android:padding="8dp"
-                   android:text="Username:"
-                   android:textColor="@android:color/white"
-                   android:textSize="16dp"
-                   android:textStyle="bold" />
-
-               <TextView
-                   android:id="@+id/user_id_text_view"
-                   android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:layout_gravity="center"
-                   android:background="@android:color/transparent"
-                   android:gravity="center"
-                   android:padding="8dp"
-                   android:layout_weight="1"
-                   android:textColor="@android:color/white"
-                   android:textSize="18dp"
-                   android:textStyle="normal|bold" />
-
-           </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/active_event_item_description_background"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="Username:"
+                    android:textColor="#2f4f4f"
+                    android:textSize="14dp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/user_id_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="6dp">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:background="@drawable/active_members_recycler_view_item_background"
                     android:weightSum="3">
 
                     <LinearLayout
@@ -99,19 +109,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:background="@drawable/active_event_item_description_background"
                             android:gravity="center"
+                            android:padding="6dp"
                             android:text="active events: "
-                            android:textColor="@android:color/white"
-                            android:textStyle="bold" />
+                            android:textColor="#2f4f4f"
+                            android:textSize="12dp"
+                            android:textStyle="normal" />
 
                         <TextView
 
                             android:id="@+id/active_events_count_text_view"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
                             android:layout_gravity="center"
-                            android:background="@drawable/floating_sub_action_button_selector"
+                            android:background="@drawable/floating_action_button_selector"
                             android:gravity="center"
+                            android:textSize="16dp"
+                            android:textStyle="bold"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
 
@@ -126,22 +141,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-
+                            android:background="@drawable/active_event_item_description_background"
                             android:gravity="center"
-
+                            android:padding="6dp"
                             android:text="events created:"
-                            android:textColor="@android:color/white"
 
-                            android:textStyle="bold" />
+                            android:textColor="#2f4f4f"
+                            android:textSize="12dp"
+
+                            android:textStyle="normal" />
 
                         <TextView
 
                             android:id="@+id/created_events_count_text_view"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/floating_sub_action_button_selector"
-                            android:gravity="center"
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_gravity="center" android:textSize="16dp"
+                            android:background="@drawable/floating_action_button_selector"
+                            android:gravity="center" android:textStyle="bold"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
 
@@ -156,42 +173,67 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-
+                            android:background="@drawable/active_event_item_description_background"
                             android:gravity="center"
-
+                            android:padding="6dp"
                             android:text="events joined: "
-                            android:textColor="@android:color/white"
 
-                            android:textStyle="bold" />
+                            android:textColor="#2f4f4f"
+                            android:textSize="12dp"
+
+                            android:textStyle="normal" />
 
                         <TextView
                             android:id="@+id/joined_events_count_text_view"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/floating_sub_action_button_selector"
-                            android:gravity="center"
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_gravity="center" android:textSize="16dp"
+                            android:background="@drawable/floating_action_button_selector"
+                            android:gravity="center" android:textStyle="bold"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
+            <!--<TextView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginBottom="6dp"-->
+                <!--android:background="@android:color/white" />-->
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:padding="8dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:textColor="@android:color/white"
+                    android:text="Want to know about us? Click here."/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
 
                 <Button
                     android:id="@+id/logout_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/created_time_background"
                     android:gravity="center"
-                    android:text="logout"
+                    android:text="Logout"
+                    android:padding="8dp"
+                    android:textAllCaps="false"
+                    android:textSize="14dp"
                     android:textColor="@android:color/white" />
 
             </LinearLayout>
+
 
         </LinearLayout>
 
