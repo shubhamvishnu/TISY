@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -69,6 +70,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     CoordinatorLayout trackCoordinatorLayout;
     ImageButton trackActivityZoomFit;
     LatLngBounds.Builder builder;
+    boolean turnOnGPS = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,10 +333,43 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             if (mMap != null) {
                 mMap.setPadding(0, 0, 0, 200);
             }
-            showSnackBar();
+            if (turnOnGPS) {
+                showGPSDialog();
+                turnOnGPS = false;
+            } else {
+                showSnackBar();
+            }
         } else {
             initializeMap();
         }
+    }
+
+    void showGPSDialog() {
+        final Dialog gpsDialog = new Dialog(this, R.style.event_info_dialog_style);
+        gpsDialog.setContentView(R.layout.dialog_turn_on_gps_layout);
+        ImageButton turnonGPSImageButton = (ImageButton) gpsDialog.findViewById(R.id.turn_on_gps_image_button);
+        Button turnOnGPSButton = (Button) gpsDialog.findViewById(R.id.turn_on_gps_button);
+        turnonGPSImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gpsDialog.dismiss();
+                openGPSSettings();
+            }
+        });
+        turnOnGPSButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gpsDialog.dismiss();
+                openGPSSettings();
+            }
+        });
+        Window window = gpsDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        gpsDialog.setCanceledOnTouchOutside(true);
+        gpsDialog.show();
+
+
     }
 
     void initializeMap() {

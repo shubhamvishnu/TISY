@@ -5,7 +5,9 @@
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:padding="8dp">
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/no_invites_layout"
@@ -39,14 +41,21 @@
     </LinearLayout>
     <TextView
         android:id="@+id/inivites_text_view"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Invites:"
-        android:textColor="@color/colorAccent"
-        android:textSize="20dp"
-        android:textStyle="bold|italic" />
+        android:padding="8dp"
+        android:textColor="#2f4f4f"
+        android:background="@drawable/active_event_item_description_background"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/inivites_text_view"
         android:id="@+id/dialog_received_requests_recycler_view"
         android:layout_width="fill_parent"
         android:layout_height="250dp"

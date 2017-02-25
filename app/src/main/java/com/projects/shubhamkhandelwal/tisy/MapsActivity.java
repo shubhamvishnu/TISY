@@ -124,6 +124,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     RecyclerView eventRequestRecyclerView; // received requests recyclerview
     RequestsRecyclerAdapter requestsRecyclerAdapter; // received requests recyclerview adapter
 
+    boolean showGPSOption = true;
+
     int emoticon = 0;
 
     // View Objects
@@ -646,7 +648,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     void addCheckPointDialog() {
         if (checkInternetConnection()) {
             placePickerDialog();
-        }else{
+        } else {
             Toast.makeText(MapsActivity.this, "No internet connection, please try again later.", Toast.LENGTH_SHORT).show();
 
         }
@@ -684,9 +686,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
         sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
+        final LinearLayout eventJoinRequestRecyclerViewLinearLayout = (LinearLayout) sendMemberRequestDialog.findViewById(R.id.event_join_request_recycler_view);
 
-
-        RecyclerView eventJoinRequestSendRecyclerView;
+        final LinearLayout noInvitesSentLinearLayout = (LinearLayout) sendMemberRequestDialog.findViewById(R.id.no_invites_sent_linear_layout);
         ImageButton searchButton = (ImageButton) sendMemberRequestDialog.findViewById(R.id.search_choice_dialog_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -695,11 +697,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 showSearchOptionDialog(sendMemberRequestDialog.getContext());
             }
         });
-        eventJoinRequestSendRecyclerView = (RecyclerView) sendMemberRequestDialog.findViewById(R.id.dialog_event_join_request_sent_recycler_view);
-        eventJoinRequestSendRecyclerView.setLayoutManager(new LinearLayoutManager(sendMemberRequestDialog.getContext()));
-        eventJoinRequestSendRecyclerView.setHasFixedSize(true);
-        SentEventJoinRequestRecyclerViewAdapter adapter = new SentEventJoinRequestRecyclerViewAdapter(this);
-        eventJoinRequestSendRecyclerView.setAdapter(adapter);
+
+
+        firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
+        firebase.keepSynced(true);
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    noInvitesSentLinearLayout.setVisibility(View.GONE);
+                    eventJoinRequestRecyclerViewLinearLayout.setVisibility(View.VISIBLE);
+
+                    RecyclerView eventJoinRequestSendRecyclerView = (RecyclerView) sendMemberRequestDialog.findViewById(R.id.dialog_event_join_request_sent_recycler_view);
+                    eventJoinRequestSendRecyclerView.setLayoutManager(new LinearLayoutManager(sendMemberRequestDialog.getContext()));
+                    eventJoinRequestSendRecyclerView.setHasFixedSize(true);
+
+                    SentEventJoinRequestRecyclerViewAdapter adapter = new SentEventJoinRequestRecyclerViewAdapter(MapsActivity.this);
+                    eventJoinRequestSendRecyclerView.setAdapter(adapter);
+
+                }else{
+                    noInvitesSentLinearLayout.setVisibility(View.VISIBLE);
+                    eventJoinRequestRecyclerViewLinearLayout.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
 
         Window window = sendMemberRequestDialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
@@ -1194,10 +1221,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (mMap != null) {
                 mMap.setPadding(0, 0, 0, 200);
             }
-            showSnackBar();
+            if (showGPSOption) {
+                showGPSDialog();
+                showGPSOption = false;
+            } else {
+                showSnackBar();
+            }
         } else {
             initializeMap();
         }
+    }
+
+    void showGPSDialog() {
+        final Dialog gpsDialog = new Dialog(this, R.style.event_info_dialog_style);
+        gpsDialog.setContentView(R.layout.dialog_turn_on_gps_layout);
+        ImageButton turnonGPSImageButton = (ImageButton) gpsDialog.findViewById(R.id.turn_on_gps_image_button);
+        Button turnOnGPSButton = (Button) gpsDialog.findViewById(R.id.turn_on_gps_button);
+        turnonGPSImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gpsDialog.dismiss();
+                openGPSSettings();
+            }
+        });
+        turnOnGPSButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gpsDialog.dismiss();
+                openGPSSettings();
+            }
+        });
+        Window window = gpsDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        gpsDialog.setCanceledOnTouchOutside(true);
+        gpsDialog.show();
+
+
     }
 
     void initializeMap() {
@@ -1213,7 +1273,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void showSnackBar() {
         Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "enable location setting", Snackbar.LENGTH_INDEFINITE)
+                .make(coordinatorLayout, "Turn on GPS", Snackbar.LENGTH_INDEFINITE)
                 .setAction("SETTINGS", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1362,13 +1422,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         requestsDialog = new Dialog(this, R.style.dialog_sent_request_detail);
         requestsDialog.setContentView(R.layout.recycler_view_requests_layout);
 
+        final LinearLayout noRequestsLinearLayout = (LinearLayout) requestsDialog.findViewById(R.id.no_requests_linear_layout);
+
         final Button closeEventRequestDialogButton = (Button) requestsDialog.findViewById(R.id.close_event_requests_dialog_button);
         eventRequestRecyclerView = (RecyclerView) requestsDialog.findViewById(R.id.event_requests_recycler_view);
         eventRequestRecyclerView.setHasFixedSize(true);
 
-        requestsRecyclerAdapter = new RequestsRecyclerAdapter(this, joinRequests);
-        eventRequestRecyclerView.setAdapter(requestsRecyclerAdapter);
-        eventRequestRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        if(joinRequests.size() == 0){
+            eventRequestRecyclerView.setVisibility(View.GONE);
+            noRequestsLinearLayout.setVisibility(View.VISIBLE);
+
+        }else{
+            noRequestsLinearLayout.setVisibility(View.INVISIBLE);
+            eventRequestRecyclerView.setVisibility(View.VISIBLE);
+
+            requestsRecyclerAdapter = new RequestsRecyclerAdapter(this, joinRequests);
+            eventRequestRecyclerView.setAdapter(requestsRecyclerAdapter);
+            eventRequestRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        }
 
         closeEventRequestDialogButton.setOnTouchListener(new View.OnTouchListener() {
             @Override

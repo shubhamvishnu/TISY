@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,9 +160,13 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         dialog.setContentView(R.layout.dialog_join_event_layout);
         TextView joinRequestIDTextView = (TextView) dialog.findViewById(R.id.join_request_event_id);
         final EditText joinRequestDescEditText = (EditText) dialog.findViewById(R.id.join_request_desc_edit_text);
-        Button joinRequestSendButton = (Button) dialog.findViewById(R.id.join_request_send_button);
-        joinRequestIDTextView.setText(eventID);
-        joinRequestSendButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton sendRequestImageButton, cancelRequestImageButton;
+
+
+        sendRequestImageButton = (ImageButton)  dialog.findViewById(R.id.send_request_image_button);
+        cancelRequestImageButton = (ImageButton) dialog.findViewById(R.id.cancel_request_image_button);
+
+        sendRequestImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String desc = joinRequestDescEditText.getText().toString();
@@ -173,6 +178,13 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                 }
             }
         });
+        cancelRequestImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        joinRequestIDTextView.setText(eventID);
 
 
         Window window = dialog.getWindow();

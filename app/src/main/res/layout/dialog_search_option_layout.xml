@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         android:padding="8dp">
 
         <EditText
@@ -36,9 +36,10 @@
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:tint="@android:color/white"
-            app:srcCompat="@drawable/search_icon" />
+            app:srcCompat="@drawable/search_image_icon" />
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
+        android:padding="16dp"
         android:id="@+id/dialog_search_results_recycler_view"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"

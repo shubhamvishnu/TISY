@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
     <TextView
@@ -17,6 +18,38 @@
         android:textStyle="bold"
         android:paddingBottom="24dp"/>
 
+    <LinearLayout
+        android:id="@+id/no_requests_linear_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <android.support.v7.widget.AppCompatImageButton
+
+
+            android:id="@+id/no_requests_image_button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/no_event_joined_icon" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="No Join Requests"
+            android:textColor="@android:color/white"
+            android:textSize="22dp" />
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/event_requests_recycler_view"
         android:layout_width="fill_parent"

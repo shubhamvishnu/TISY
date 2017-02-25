@@ -1,196 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:grid="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:grid="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    <!--<HorizontalScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:fillViewport="true">-->
+        <!--<HorizontalScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fillViewport="true">-->
 
-    <GridLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:columnCount="2"
-        android:padding="8dp"
-        android:rowCount="3"
-        grid:alignmentMode="alignBounds">
-        <LinearLayout
+        <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/default_mode"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/default_map_image_icon" />
-    <TextView
-android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Default"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/aubergine_mode"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/aubergine_map_image_icon" />
-    <TextView
+            android:layout_gravity="center"
+            android:columnCount="2"
+            android:padding="8dp"
+            android:rowCount="3"
+            grid:alignmentMode="alignBounds">
 
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Aubergine"
-        
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/dark_mode"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/dark_map_image_icon" />
-    <TextView
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Dark"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/night_mode"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/night_map_image_icon" />
-    <TextView
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/default_mode"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:elevation="20dp"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/default_map_image_icon" />
 
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Night"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-</LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/retro_mode"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/retro_map_image_icon" />
-    <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="Default"
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Retro"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/silver_mode"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        android:elevation="20dp"
-        android:padding="8dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/silver_map_image_icon" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/aubergine_mode"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:elevation="20dp"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/aubergine_map_image_icon" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="Aubergine"
+
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/dark_mode"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:elevation="20dp"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/dark_map_image_icon" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="Dark"
+
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/night_mode"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:elevation="20dp"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/night_map_image_icon" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="Night"
+
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/retro_mode"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:elevation="20dp"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/retro_map_image_icon" />
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="Retro"
+
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/silver_mode"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:elevation="20dp"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/silver_map_image_icon" />
 
 
-    <TextView
+                <TextView
 
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:text="Silver"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-        </LinearLayout>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:text="Silver"
 
-</GridLayout></ScrollView>
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </GridLayout>
+    </ScrollView>
 
 </LinearLayout>

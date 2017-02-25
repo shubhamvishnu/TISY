@@ -16,7 +16,7 @@
                 android:orientation="vertical"
                 android:id="@+id/no_request_layout"
                 android:gravity="center"
-                android:visibility="invisible"
+               android:visibility="invisible"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -24,7 +24,7 @@
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/no_request_image_icon"
                     android:layout_width="150dp"
-                    android:layout_marginTop="44dp"
+                    android:layout_marginTop="70dp"
                     android:layout_height="150dp"
                     android:adjustViewBounds="true"
                     android:layout_gravity="center"
@@ -36,13 +36,13 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22dp"
+                    android:textSize="16dp"
                     android:layout_marginTop="16dp"
-                    android:textStyle="bold"
+                    android:textStyle="normal"
                     android:textColor="@android:color/white"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="Join an Event!"/>
+                    android:text="Join an event!"/>
             </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
@@ -54,8 +54,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="JOIN EVENT"
-                android:textStyle="bold"
+                android:text="Join event"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:textSize="14dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginBottom="16dp"
                 android:textColor="@android:color/white"
                 android:background="@drawable/join_event_background"
@@ -63,17 +67,21 @@
 
             <TextView
                 android:id="@+id/sent_requests_text_view"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sent Requests:"
-                android:textColor="@color/colorAccent"
-                android:textSize="20dp"
-                android:textStyle="bold|italic" />
+                android:textColor="#2f4f4f"
+                android:textSize="14dp"
+                android:padding="8dp"
+                android:background="@drawable/active_event_item_description_background"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/dialog_sent_requests_recycler_view"
                 android:layout_width="fill_parent"
-                android:layout_height="250dp"
+                android:layout_height="fill_parent"
                 android:layout_margin="16dp"
                 android:padding="16dp"
                 android:scrollbarAlwaysDrawVerticalTrack="true"

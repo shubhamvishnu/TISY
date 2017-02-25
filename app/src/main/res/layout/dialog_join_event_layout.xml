@@ -3,21 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_marginTop="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:text="Join event:"
+        android:textColor="#2f4f4f"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/active_event_item_description_background"/>
     <TextView
         android:id="@+id/join_request_event_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:textSize="14dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:textStyle="bold"
-        android:padding="24dp"
-        android:paddingBottom="20dp" />
+        android:layout_marginBottom="8dp"
+        android:padding="16dp" />
 
     <EditText
         android:id="@+id/join_request_desc_edit_text"
@@ -25,25 +37,44 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:singleLine="true"
-        android:paddingRight="24dp"
-        android:paddingLeft="24dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingBottom="24dp"
-        android:hint="Write a message" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="36dp"
-        android:text="SEND REQUEST"
-        android:background="#1AFFFFFF"
-        android:elevation="20dp"
-        android:textAllCaps="true"
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="8dp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:id="@+id/join_request_send_button"/>
+        android:textSize="14dp"
+        android:textColorHint="#bcbcbc"
+        android:layout_marginBottom="16dp"
+        android:hint="Write a message"
+        android:textCursorDrawable="@drawable/edit_text_curson_color_style"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/cancel_request_image_button"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/cancel_icon" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/send_request_image_button"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="20dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/checked_icon" /></LinearLayout>
+
 
 </LinearLayout>
