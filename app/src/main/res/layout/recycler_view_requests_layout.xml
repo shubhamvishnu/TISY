@@ -8,15 +8,17 @@
 
     <TextView
         android:id="@+id/requests_title_text_view"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="Requests"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:textColor="#2f4f4f"
+        android:textSize="14dp"
+        android:background="@drawable/active_event_item_description_background"
+        android:padding="8dp"
         android:textStyle="bold"
-        android:paddingBottom="24dp"/>
+        />
 
     <LinearLayout
         android:id="@+id/no_requests_linear_layout"
@@ -30,7 +32,6 @@
         android:visibility="invisible">
 
         <android.support.v7.widget.AppCompatImageButton
-
 
             android:id="@+id/no_requests_image_button"
             android:layout_width="150dp"
@@ -47,8 +48,9 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="No Join Requests"
+            android:layout_marginTop="16dp"
             android:textColor="@android:color/white"
-            android:textSize="22dp" />
+            android:textSize="16dp" />
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/event_requests_recycler_view"

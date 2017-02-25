@@ -20,34 +20,42 @@
 
             <TextView
                 android:id="@+id/search_option_choice_name_text_view"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/active_members_recycler_view_item_background"
                 android:textColor="@android:color/white"
                 android:textSize="12dp"
                 android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/search_option_choice_event_id_text_view"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textColor="@android:color/white"
-                android:textSize="14dp"
+                android:textSize="12dp"
+                android:background="@drawable/created_time_background"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/search_option_add_member_image_view"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
-            android:padding="8dp"
+            android:padding="12dp"
             android:background="@drawable/received_request_button_selector"
             android:scaleType="fitCenter"
             android:tint="@android:color/white"
             app:srcCompat="@drawable/send_request_from_event_icon" />
+
     </LinearLayout>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/white"/>
 </LinearLayout>

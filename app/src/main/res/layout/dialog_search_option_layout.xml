@@ -21,7 +21,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:hint="Search using name or username"
-            android:paddingBottom="20dp"
             android:textColor="@android:color/white"
             android:textCursorDrawable="@drawable/edit_text_curson_color_style"
             android:textSize="16dp"
@@ -35,7 +34,7 @@
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:tint="@android:color/white"
+
             app:srcCompat="@drawable/search_image_icon" />
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
