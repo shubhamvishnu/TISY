@@ -11,6 +11,7 @@ public class RequestsDetails {
     public RequestsDetails(String username, String description) {
         this.username = username;
         this.description = description;
+
     }
 
     public String getUsername() {

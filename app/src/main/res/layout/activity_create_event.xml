@@ -5,7 +5,7 @@
     android:id="@+id/coordinatorLayoutCreateEvent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+
     tools:context=".CreateEvent">
 
 
@@ -14,6 +14,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
+
+        android:background="@drawable/chennai_anna_nagar_static_map"
         tools:context="com.projects.shubhamkhandelwal.tisy.CreateEvent">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,10 +33,10 @@
                 <RelativeLayout
                     android:id="@+id/relative_layout_top"
                     android:layout_width="fill_parent"
+                    android:background="@drawable/create_event_rounded_white_background"
                     android:layout_height="fill_parent">
 
                     <EditText
-
                         android:id="@+id/title_edit_text"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -43,6 +45,7 @@
                         android:padding="16dp"
                         android:textColor="@android:color/white"
                         android:textColorHint="#bcbcbc"
+
                         android:textCursorDrawable="@drawable/edit_text_curson_color_style"
                         android:textSize="25dp"
                         android:textStyle="bold|italic" />
@@ -158,15 +161,16 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dLocationTextView"
                         android:layout_gravity="center"
-                        android:layout_marginRight="24dp"
-                        android:layout_marginLeft="24dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginBottom="24dp"
                         android:background="@drawable/create_event_option_buttons_background"
                         android:elevation="20dp"
                         android:gravity="center"
-                        android:text="DESTINATION LOCATION"
+                        android:textAllCaps="false"
+                        android:text="click here to choose"
                         android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                        android:textStyle="normal" />
 
                     <!--<com.github.siyamed.shapeimageview.CircularImageView-->
                     <!--android:layout_width="match_parent"-->
@@ -210,7 +214,7 @@
                             android:adjustViewBounds="true"
                             android:background="@android:color/transparent"
                             android:elevation="20dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="2dp"
                             android:scaleType="fitCenter" />
 
                         <Button
@@ -220,7 +224,8 @@
                             android:layout_gravity="center"
                             android:background="@android:color/transparent"
                             android:gravity="center"
-                            android:text="EDIT"
+                            android:text="Edit"
+                            android:textAllCaps="false"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="8dp"
                             android:textSize="12dp"
@@ -235,13 +240,14 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dIconTextView"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="24dp"
-                        android:layout_marginRight="24dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
                         android:layout_marginBottom="24dp"
                         android:background="@drawable/create_event_option_buttons_background"
                         android:elevation="20dp"
                         android:gravity="center"
-                        android:text="DESTINATION ICON"
+                        android:textAllCaps="false"
+                        android:text="click here to choose"
                         android:textColor="@android:color/white"
                         android:textStyle="bold" />
 
@@ -276,16 +282,17 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:layout_below="@+id/relative_layout_top">
 
                     <Button
                         android:id="@+id/createEventButton"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
                         android:layout_gravity="center"
-                        android:background="#1AFFFFFF"
+                        android:background="@drawable/created_time_background"
                         android:elevation="20dp"
                         android:textCursorDrawable="@drawable/edit_text_curson_color_style"
                         android:gravity="center"

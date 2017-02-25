@@ -715,7 +715,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     SentEventJoinRequestRecyclerViewAdapter adapter = new SentEventJoinRequestRecyclerViewAdapter(MapsActivity.this);
                     eventJoinRequestSendRecyclerView.setAdapter(adapter);
 
-                }else{
+                } else {
                     noInvitesSentLinearLayout.setVisibility(View.VISIBLE);
                     eventJoinRequestRecyclerViewLinearLayout.setVisibility(View.GONE);
                 }
@@ -1428,11 +1428,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         eventRequestRecyclerView = (RecyclerView) requestsDialog.findViewById(R.id.event_requests_recycler_view);
         eventRequestRecyclerView.setHasFixedSize(true);
 
-        if(joinRequests.size() == 0){
+        if (joinRequests.size() == 0) {
             eventRequestRecyclerView.setVisibility(View.GONE);
             noRequestsLinearLayout.setVisibility(View.VISIBLE);
 
-        }else{
+        } else {
             noRequestsLinearLayout.setVisibility(View.INVISIBLE);
             eventRequestRecyclerView.setVisibility(View.VISIBLE);
 

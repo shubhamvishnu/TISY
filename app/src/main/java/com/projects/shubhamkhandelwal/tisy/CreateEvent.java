@@ -154,34 +154,8 @@ public class CreateEvent extends Activity {
             }
         });
 
-        dLocation.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        dLocation.setBackgroundColor(Color.parseColor("#26FFFFFF"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        dLocation.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-                        break;
-                }
-                return false;
-            }
-        });
-        dIconButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        dIconButton.setBackgroundColor(Color.parseColor("#26FFFFFF"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        dIconButton.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-                        break;
-                }
-                return false;
-            }
-        });
+
+
         dIconButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
