@@ -387,7 +387,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         @Override
         public void onClick(View view) {
-            ActiveEventInfo activeEventInfo = activeEventIds.get(getPosition());
+            ActiveEventInfo activeEventInfo = activeEventIds.get(getPosition()-receviedRequestsList.size());
             Constants.currentEventId = activeEventInfo.getEventId();
             if (activeEventInfo.getAdmin().equals(username)) {
                 Constants.eventAdmin = true;

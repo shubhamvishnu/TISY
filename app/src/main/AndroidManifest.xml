@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".Classes.LocationListenerService" />
+        <service android:name=".Classes.notificationService" />
 
         <activity
             android:name=".MainActivity"

@@ -71,11 +71,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
+import com.projects.shubhamkhandelwal.tisy.Classes.ActiveMembersRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
+import com.projects.shubhamkhandelwal.tisy.Classes.EventMemberViewRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventMembersRecyclerViewAdapater;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
@@ -236,6 +238,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // initialize the checkpoints in the map
         checkPointsInit();
+
+        // show event members
+        initializeMembers();
     }
 
     // initialize all the checkpoints for the event
@@ -1192,6 +1197,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setPadding(0, 250, 0, 0);
         initializeMapStyle();
         initializeMapType();
         GPSEnabledCheck();
@@ -1219,7 +1225,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             if (mMap != null) {
-                mMap.setPadding(0, 0, 0, 200);
+                mMap.setPadding(0, 250, 0, 200);
             }
             if (showGPSOption) {
                 showGPSDialog();
@@ -1269,8 +1275,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.getUiSettings().setAllGesturesEnabled(true);
 
-    }
 
+    }
+    void initializeMembers(){
+        RecyclerView activeEventMemberRecyclerView;
+        EventMemberViewRecyclerViewAdapter activeMembersRecyclerViewAdapter;
+        activeEventMemberRecyclerView = (RecyclerView) findViewById(R.id.active_event_member_recycler_view_maps);
+        activeEventMemberRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        activeEventMemberRecyclerView.setLayoutManager(layoutManager);
+
+        activeMembersRecyclerViewAdapter = new EventMemberViewRecyclerViewAdapter(this, mMap);
+        activeEventMemberRecyclerView.setAdapter(activeMembersRecyclerViewAdapter);
+
+    }
     void showSnackBar() {
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "Turn on GPS", Snackbar.LENGTH_INDEFINITE)
@@ -1285,7 +1304,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 if (mMap != null) {
-                    mMap.setPadding(0, 0, 0, 0);
+                    mMap.setPadding(0, 250, 0, 0);
                 }
             }
 
@@ -1301,7 +1320,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void openGPSSettings() {
         if (mMap != null) {
-            mMap.setPadding(0, 0, 0, 0);
+            mMap.setPadding(0, 250, 0, 0);
         }
         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
     }
@@ -1324,7 +1343,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onClick(View view) {
                         if (mMap != null) {
-                            mMap.setPadding(0, 0, 0, 0);
+                            mMap.setPadding(0, 250, 0, 0);
                         }
                         openSettings();
                     }
@@ -1587,7 +1606,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // enable user location
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (mMap != null) {
-                mMap.setPadding(0, 0, 0, 200);
+                mMap.setPadding(0, 250, 0, 200);
             }
             showPermissionSnackBar();
         } else {
@@ -1804,7 +1823,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (Map.Entry<String, Note> checkpointMapEntry : checkPointCoordinateMap.entrySet()) {
 
                 Note note = checkpointMapEntry.getValue();
-                Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(note.getLatlng()).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.check_points_icon, 300, 300))));
+                Marker checkPointMarker = mMap.addMarker(new MarkerOptions().position(note.getLatlng()).title(note.getTitle()).snippet(note.getDesc()).icon(BitmapDescriptorFactory.fromBitmap(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.check_points_icon, 250, 250))));
                 checkPointMarker.setTag(note.getKey());
                 zoomFitCheckPointCoordinates.add(checkPointMarker);
             }
@@ -2034,7 +2053,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void showStreetViewNotAvailableSnackBar() {
         if (mMap != null) {
-            mMap.setPadding(0, 0, 0, 200);
+            mMap.setPadding(0, 250, 0, 200);
         }
         final Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "Oops! Street view isn't available here...", Snackbar.LENGTH_SHORT);
@@ -2043,7 +2062,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 if (mMap != null) {
-                    mMap.setPadding(0, 0, 0, 0);
+                    mMap.setPadding(0, 250, 0, 0);
                 }
             }
 
@@ -2058,7 +2077,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     void showStreetViewSnackBar(final Marker marker) {
         if (mMap != null) {
-            mMap.setPadding(0, 0, 0, 200);
+            mMap.setPadding(0, 250, 0, 200);
         }
         final Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "See how it looks?", Snackbar.LENGTH_LONG)
@@ -2075,7 +2094,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 if (mMap != null) {
-                    mMap.setPadding(0, 0, 0, 0);
+                    mMap.setPadding(0, 250, 0, 0);
                 }
             }
 

@@ -60,9 +60,9 @@ public class CreateEvent extends Activity {
     String eventId;
     EventInfo eventInfo;
     //Button sLocation;
-    Button dLocation;
+    ImageButton dLocation;
     Button createEventButton;
-    Button dIconButton;
+    ImageButton dIconButton;
     Button editDestinationIconButton;
     //EditText sLocationDescEditText;
     EditText dLocationDescEditText;
@@ -112,9 +112,9 @@ public class CreateEvent extends Activity {
 
         // intializing the view elements
 
-        dLocation = (Button) findViewById(R.id.dlocation);
+        dLocation = (ImageButton) findViewById(R.id.dlocation);
         createEventButton = (Button) findViewById(R.id.createEventButton);
-        dIconButton = (Button) findViewById(R.id.dIconButton);
+        dIconButton = (ImageButton) findViewById(R.id.dIconButton);
         editDestinationIconButton = (Button) findViewById(R.id.edit_destination_icon_button);
 
 
@@ -159,6 +159,7 @@ public class CreateEvent extends Activity {
         dIconButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.show();
                 showDestinationIconDialog();
 
 
@@ -175,6 +176,7 @@ public class CreateEvent extends Activity {
         dLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.show();
                 locationPreference = 2;
                 placePickerDialog();
             }
@@ -736,6 +738,10 @@ public class CreateEvent extends Activity {
         window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         dialog.setCanceledOnTouchOutside(true);
+
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
         dialog.show();
 
 
@@ -1004,6 +1010,9 @@ public class CreateEvent extends Activity {
     // to call the placepicker dialog
     void placePickerDialog() {
         builder = new PlacePicker.IntentBuilder();
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException e) {

@@ -97,12 +97,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/create_event_item_desc_background"
+
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="8dp"
                         android:gravity="center"
-                        android:text="Destination Location:"
-                        android:textColor="#2f4f4f"
+                        android:text="Select a destination location:"
+                        android:textColor="#d3d3d3"
                         android:textSize="12dp"
                         android:padding="6dp"
                         android:textStyle="bold" />
@@ -154,23 +154,37 @@
                     <!--android:layout_below="@+id/layout_one"-->
                     <!--android:orientation="vertical">-->
 
-
-                    <Button
+                    <android.support.v7.widget.AppCompatImageButton
                         android:id="@+id/dlocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/dLocationTextView"
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
                         android:layout_gravity="center"
-                        android:layout_marginRight="30dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginBottom="24dp"
-                        android:background="@drawable/create_event_option_buttons_background"
+                        android:layout_centerHorizontal="true"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
                         android:elevation="20dp"
-                        android:gravity="center"
-                        android:textAllCaps="false"
-                        android:text="click here to choose"
-                        android:textColor="@android:color/white"
-                        android:textStyle="normal" />
+                        android:layout_below="@+id/dLocationTextView"
+                        android:padding="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/destination_location_picker_icon" />
+
+                    <!--<Button-->
+                        <!--android:id="@+id/dlocation"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@+id/dLocationTextView"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_marginRight="30dp"-->
+                        <!--android:layout_marginLeft="30dp"-->
+                        <!--android:layout_marginBottom="24dp"-->
+                        <!--android:background="@drawable/create_event_option_buttons_background"-->
+                        <!--android:elevation="20dp"-->
+                        <!--android:gravity="center"-->
+                        <!--android:textAllCaps="false"-->
+                        <!--android:text="click here to choose"-->
+                        <!--android:textColor="@android:color/white"-->
+                        <!--android:textStyle="bold" />-->
 
                     <!--<com.github.siyamed.shapeimageview.CircularImageView-->
                     <!--android:layout_width="match_parent"-->
@@ -185,11 +199,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:background="@drawable/create_event_item_desc_background"
+
                         android:layout_centerHorizontal="true"
                         android:layout_below="@id/dLocationLinearLayout"
-                        android:text="Destination Icon:"
-                        android:textColor="#2f4f4f"
+                        android:text="select a destination marker:"
+                        android:textColor="#d3d3d3"
                         android:textSize="12dp"
                         android:padding="6dp"
                         android:layout_marginBottom="8dp"
@@ -232,24 +246,22 @@
                             android:textStyle="normal" />
 
                     </LinearLayout>
-
-                    <Button
-
+                    <android.support.v7.widget.AppCompatImageButton
                         android:id="@+id/dIconButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/dIconTextView"
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_marginBottom="24dp"
-                        android:background="@drawable/create_event_option_buttons_background"
+                        android:layout_centerHorizontal="true"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
                         android:elevation="20dp"
-                        android:gravity="center"
-                        android:textAllCaps="false"
-                        android:text="click here to choose"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                        android:layout_below="@+id/dIconTextView"
+                        android:padding="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/destination_icon_selection_icon" />
+
+
 
                     <TextView
                         android:id="@+id/descriptionTextView"
@@ -257,10 +269,10 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dLocationIconLinearLayout"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/create_event_item_desc_background"
+
                         android:layout_centerHorizontal="true"
                         android:text="Description:"
-                        android:textColor="#2f4f4f"
+                        android:textColor="#d3d3d3"
                         android:textSize="12dp"
                         android:padding="6dp"
                         android:textStyle="bold" />
