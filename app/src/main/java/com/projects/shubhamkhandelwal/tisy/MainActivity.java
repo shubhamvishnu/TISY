@@ -123,7 +123,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
 
         coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity); // initialize the view object.
-        userAccountDialog = null; // initialize the user account information dialog.
+        userAccountDialog = null;
 
         /**
          * create two FAB - center main FAB; user account information FAB
