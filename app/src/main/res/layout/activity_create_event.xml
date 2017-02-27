@@ -306,7 +306,7 @@
                         android:layout_gravity="center"
                         android:background="@drawable/created_time_background"
                         android:elevation="20dp"
-                        android:textCursorDrawable="@drawable/edit_text_curson_color_style"
+
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="CREATE EVENT"

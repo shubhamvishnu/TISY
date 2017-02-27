@@ -19,11 +19,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/active_event_item_description_background"
+
                 android:gravity="center"
                 android:padding="12dp"
                 android:text="Profile information"
-                android:textColor="#2f4f4f"
+                android:textColor="#d3d3d3"
                 android:textSize="16dp"
                 android:textStyle="normal" />
 
@@ -58,11 +58,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/active_event_item_description_background"
                     android:gravity="center"
                     android:padding="8dp"
                     android:text="Username:"
-                    android:textColor="#2f4f4f"
+                    android:textColor="#d3d3d3"
                     android:textSize="14dp"
                     android:textStyle="normal" />
 
@@ -95,7 +94,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="8dp"
-                    android:background="@drawable/active_members_recycler_view_item_background"
                     android:weightSum="3">
 
                     <LinearLayout
@@ -109,11 +107,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:background="@drawable/active_event_item_description_background"
+
                             android:gravity="center"
                             android:padding="6dp"
                             android:text="active events: "
-                            android:textColor="#2f4f4f"
+                            android:textColor="#d3d3d3"
                             android:textSize="12dp"
                             android:textStyle="normal" />
 
@@ -123,7 +121,7 @@
                             android:layout_width="54dp"
                             android:layout_height="54dp"
                             android:layout_gravity="center"
-                            android:background="@drawable/floating_action_button_selector"
+                            android:background="@drawable/floating_sub_action_button_selector"
                             android:gravity="center"
                             android:textSize="16dp"
                             android:textStyle="bold"
@@ -141,12 +139,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:background="@drawable/active_event_item_description_background"
                             android:gravity="center"
                             android:padding="6dp"
                             android:text="events created:"
 
-                            android:textColor="#2f4f4f"
+                            android:textColor="#d3d3d3"
                             android:textSize="12dp"
 
                             android:textStyle="normal" />
@@ -157,7 +154,7 @@
                             android:layout_width="54dp"
                             android:layout_height="54dp"
                             android:layout_gravity="center" android:textSize="16dp"
-                            android:background="@drawable/floating_action_button_selector"
+                            android:background="@drawable/floating_sub_action_button_selector"
                             android:gravity="center" android:textStyle="bold"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
@@ -173,12 +170,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:background="@drawable/active_event_item_description_background"
+
                             android:gravity="center"
                             android:padding="6dp"
                             android:text="events joined: "
 
-                            android:textColor="#2f4f4f"
+                            android:textColor="#d3d3d3"
                             android:textSize="12dp"
 
                             android:textStyle="normal" />
@@ -188,7 +185,7 @@
                             android:layout_width="54dp"
                             android:layout_height="54dp"
                             android:layout_gravity="center" android:textSize="16dp"
-                            android:background="@drawable/floating_action_button_selector"
+                            android:background="@drawable/floating_sub_action_button_selector"
                             android:gravity="center" android:textStyle="bold"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
@@ -221,7 +218,7 @@
 
                 <Button
                     android:id="@+id/logout_button"
-                    android:layout_width="150dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/created_time_background"

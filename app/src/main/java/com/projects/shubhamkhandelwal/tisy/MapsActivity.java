@@ -27,6 +27,7 @@ import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -71,13 +73,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
-import com.projects.shubhamkhandelwal.tisy.Classes.ActiveMembersRecyclerViewAdapter;
+
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
-import com.projects.shubhamkhandelwal.tisy.Classes.EventMemberViewRecyclerViewAdapter;
+
 import com.projects.shubhamkhandelwal.tisy.Classes.EventMembersRecyclerViewAdapater;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
@@ -97,7 +99,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
 
     public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
@@ -1316,6 +1318,102 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         snackbar.setActionTextColor(Color.parseColor("#009688"));
         snackbar.show();
+    }
+    public class EventMemberViewRecyclerViewAdapter extends RecyclerView.Adapter<EventMemberViewRecyclerViewAdapter.EventMembersViewRecyclerViewHolder> {
+        List<String> memberList;
+        List<LatLng> memberCoordinates;
+        Context context;
+        private LayoutInflater inflator;
+        GoogleMap googleMap;
+        public EventMemberViewRecyclerViewAdapter(Context context, GoogleMap googleMap) {
+            inflator = LayoutInflater.from(context);
+            this.context = context;
+            memberList = new ArrayList<>();
+            memberCoordinates = new ArrayList<>();
+            this.googleMap = googleMap;
+            init();
+
+        }
+
+        void init() {
+            Firebase initMembersFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+            initMembersFirebase.keepSynced(true);
+            initMembersFirebase.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    int position = memberList.size();
+
+                    memberList.add(dataSnapshot.getKey());
+                    String[] coordinate = dataSnapshot.getValue().toString().split(",");
+                    LatLng latLng = new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]));
+                    memberCoordinates.add(latLng);
+                    notifyItemInserted(position);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    int index = memberList.indexOf(dataSnapshot.getKey());
+                    memberList.remove(index);
+                    memberCoordinates.remove(index);
+                    notifyItemRemoved(index);
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
+
+        @Override
+        public EventMembersViewRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflator.inflate(R.layout.recycler_view_active_event_members_row_layout, parent, false);
+            EventMembersViewRecyclerViewHolder viewHolder = new EventMembersViewRecyclerViewHolder(view);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(EventMembersViewRecyclerViewHolder holder, int position) {
+            holder.memberTextView.setText(memberList.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return memberList.size();
+        }
+
+        class EventMembersViewRecyclerViewHolder extends RecyclerView.ViewHolder {
+            TextView memberTextView;
+
+            public EventMembersViewRecyclerViewHolder(View itemView) {
+                super(itemView);
+                memberTextView = (TextView) itemView.findViewById(R.id.active_event_members_text_view);
+                memberTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(mMap != null) {
+                            CameraUpdate center =
+                                    CameraUpdateFactory.newLatLng(memberCoordinates.get(getPosition()));
+                            CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+
+                            mMap.moveCamera(center);
+                            mMap.animateCamera(zoom);
+                        }
+                    }
+                });
+            }
+        }
+
     }
 
     void openGPSSettings() {

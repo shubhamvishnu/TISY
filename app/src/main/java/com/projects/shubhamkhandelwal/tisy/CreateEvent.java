@@ -190,20 +190,7 @@ public class CreateEvent extends Activity {
         members.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), "0.0,0.0");
 
 
-        createEventButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        createEventButton.setBackgroundColor(Color.parseColor("#26FFFFFF"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        createEventButton.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-                        break;
-                }
-                return false;
-            }
-        });
+
         // creating event in firebase
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override

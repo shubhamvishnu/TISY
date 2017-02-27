@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".Classes.LocationListenerService" />
-        <service android:name=".Classes.notificationService" />
+        <service android:name=".Classes.NotificationService" />
 
         <activity
             android:name=".MainActivity"
@@ -48,21 +48,25 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
             android:screenOrientation="portrait"
             android:theme="@style/MapTheme" />
+
         <activity
             android:name=".CreateEvent"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".Login"
             android:screenOrientation="portrait" />
+
         <activity android:name=".StreetViewActivity" />
+
         <activity
             android:name=".TrackActivity"
             android:theme="@style/MapTheme" />
         <activity android:name=".StreetViewForLocationActivity" />
+
     </application>
 
 </manifest>

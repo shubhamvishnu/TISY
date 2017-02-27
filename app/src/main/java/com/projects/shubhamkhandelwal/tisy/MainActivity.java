@@ -1,6 +1,7 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Dialog;
+import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -49,6 +50,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.MovementTracker;
+import com.projects.shubhamkhandelwal.tisy.Classes.NotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
 import com.tiancaicc.springfloatingactionmenu.MenuItemView;
@@ -107,6 +109,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
             startService(new Intent(getBaseContext(), LocationListenerService.class));
+           // startService(new Intent(getBaseContext(), NotificationService.class));
             showAllEventsDialog();
             initProgressDialog();
         } else {
