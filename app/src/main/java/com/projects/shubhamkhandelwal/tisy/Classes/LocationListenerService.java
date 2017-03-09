@@ -147,20 +147,21 @@ public class LocationListenerService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            updateEventPosition(location);
-            String dateMonthYear = TimeStamp.getRawTime();
-            String hourAndMinute = TimeStamp.getHourAndMinute();
+            if (location.getAccuracy() >= 10 && location.getAccuracy() != 0.0) {
+                updateEventPosition(location);
+                String dateMonthYear = TimeStamp.getRawTime();
+                String hourAndMinute = TimeStamp.getHourAndMinute();
 
-            LocationLog locationLog = new LocationLog();
-            locationLog.setLatitude(String.valueOf(location.getLatitude()));
-            locationLog.setLongitude(String.valueOf(location.getLongitude()));
+                LocationLog locationLog = new LocationLog();
+                locationLog.setLatitude(String.valueOf(location.getLatitude()));
+                locationLog.setLongitude(String.valueOf(location.getLongitude()));
 
-            locationLog.setCustomColor(customColor);
-            locationLog.setHourAndMinute(hourAndMinute);
+                locationLog.setCustomColor(customColor);
+                locationLog.setHourAndMinute(hourAndMinute);
 
-            //updateLocationLog(locationLog, dateMonthYear);
+                //updateLocationLog(locationLog, dateMonthYear);
 
-
+            }
         }
 
         @Override

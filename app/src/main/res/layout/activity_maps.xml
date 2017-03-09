@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
@@ -42,6 +42,27 @@
                 android:elevation="6dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/menu_icon" />
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/maps_chat_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="10dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="6dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/multimedia_chat_icon" />
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/maps_zoom_fit_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="10dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="6dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/multimedia_zoom_fit_icon" />
+
 
         </LinearLayout>
     </RelativeLayout>

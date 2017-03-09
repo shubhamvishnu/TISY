@@ -30,7 +30,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,13 +72,11 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
-
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
-
 import com.projects.shubhamkhandelwal.tisy.Classes.EventMembersRecyclerViewAdapater;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
@@ -89,7 +86,9 @@ import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+
 import com.squareup.picasso.Picasso;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +127,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     RecyclerView eventRequestRecyclerView; // received requests recyclerview
     RequestsRecyclerAdapter requestsRecyclerAdapter; // received requests recyclerview adapter
 
-    boolean showGPSOption = true;
 
     int emoticon = 0;
 
@@ -199,6 +197,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 checkGPS();
             }
         });
+
+        ImageButton chatImageIcon = (ImageButton) findViewById(R.id.maps_chat_icon);
+        chatImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChatsDialog();
+            }
+        });
+
+        ImageButton zoomFitImageIcon = (ImageButton) findViewById(R.id.maps_zoom_fit_icon);
+        zoomFitImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    showGPSAlert();
+                }else{
+                    zoomFitMembers();
+                }
+            }
+        });
+
+
         // initializing variable
         //initializing String variables
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
@@ -229,6 +250,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         init();
     }
+
+
 
     void init() {
 
@@ -656,7 +679,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (checkInternetConnection()) {
             placePickerDialog();
         } else {
-            Toast.makeText(MapsActivity.this, "No internet connection, please try again later.", Toast.LENGTH_SHORT).show();
+            Alerter.create(this)
+                    .setText("Oops! no internet connection...")
+                    .setBackgroundColor(R.color.colorPrimary)
+                    .show();
 
         }
     }
@@ -682,7 +708,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
 
 
-                    Toast.makeText(MapsActivity.this, "No internet connection, please try again later.", Toast.LENGTH_SHORT).show();
+                    Alerter.create(this)
+                            .setText("Oops! no internet connection...")
+                            .setBackgroundColor(R.color.colorPrimary)
+                            .show();
                 }
                 // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             }
@@ -1082,7 +1111,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 if (emoticon == 0) {
-                    Toast.makeText(MapsActivity.this, "Kindly give us your feedback!", Toast.LENGTH_SHORT).show();
+                    Alerter.create(MapsActivity.this)
+                            .setText("We would love to hear your feedback...")
+                            .setBackgroundColor(R.color.colorPrimary)
+                            .show();
                 } else {
                     suggestionDialog.dismiss();
                     String suggestion = emoticon + " - " + suggestionEditText.getText().toString().trim();
@@ -1107,7 +1139,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         suggestionFirebase.push().setValue(suggestionMap, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                Toast.makeText(MapsActivity.this, "Thank you!", Toast.LENGTH_SHORT).show();
+                Alerter.create(MapsActivity.this)
+                        .setText("Thank you for your thoughts!")
+                        .setBackgroundColor(R.color.colorPrimary)
+                        .show();
             }
         });
     }
@@ -1226,47 +1261,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // check for GPS is enabled, if not show snackbar, else just call the location Action
         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            if (mMap != null) {
-                mMap.setPadding(0, 250, 0, 200);
-            }
-            if (showGPSOption) {
-                showGPSDialog();
-                showGPSOption = false;
-            } else {
-                showSnackBar();
-            }
+                showGPSAlert();
         } else {
+            updateStatus();
             initializeMap();
         }
     }
-
-    void showGPSDialog() {
-        final Dialog gpsDialog = new Dialog(this, R.style.event_info_dialog_style);
-        gpsDialog.setContentView(R.layout.dialog_turn_on_gps_layout);
-        ImageButton turnonGPSImageButton = (ImageButton) gpsDialog.findViewById(R.id.turn_on_gps_image_button);
-        Button turnOnGPSButton = (Button) gpsDialog.findViewById(R.id.turn_on_gps_button);
-        turnonGPSImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gpsDialog.dismiss();
-                openGPSSettings();
-            }
-        });
-        turnOnGPSButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gpsDialog.dismiss();
-                openGPSSettings();
-            }
-        });
-        Window window = gpsDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        gpsDialog.setCanceledOnTouchOutside(true);
-        gpsDialog.show();
-
-
+    void updateStatus(){
+        Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
+        updateLastKnowStatus.keepSynced(true);
+        Map<String, Object> lastSeenMap = new HashMap<>();
+        lastSeenMap.put("lastSeen", "Online");
+        updateLastKnowStatus.updateChildren(lastSeenMap);
     }
+    void showGPSAlert(){
+        Alerter.create(this)
+                .setTitle("Turn on GPS")
+                .setText("TISY uses GPS to locate and track users.")
+                .setBackgroundColor(R.color.colorAccent)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openGPSSettings();
+                    }
+                })
+                .show();
+    }
+
 
     void initializeMap() {
         userlocationAction();
@@ -1279,7 +1300,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-    void initializeMembers(){
+
+    void initializeMembers() {
         RecyclerView activeEventMemberRecyclerView;
         EventMemberViewRecyclerViewAdapter activeMembersRecyclerViewAdapter;
         activeEventMemberRecyclerView = (RecyclerView) findViewById(R.id.active_event_member_recycler_view_maps);
@@ -1292,6 +1314,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         activeEventMemberRecyclerView.setAdapter(activeMembersRecyclerViewAdapter);
 
     }
+
     void showSnackBar() {
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "Turn on GPS", Snackbar.LENGTH_INDEFINITE)
@@ -1318,102 +1341,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         snackbar.setActionTextColor(Color.parseColor("#009688"));
         snackbar.show();
-    }
-    public class EventMemberViewRecyclerViewAdapter extends RecyclerView.Adapter<EventMemberViewRecyclerViewAdapter.EventMembersViewRecyclerViewHolder> {
-        List<String> memberList;
-        List<LatLng> memberCoordinates;
-        Context context;
-        private LayoutInflater inflator;
-        GoogleMap googleMap;
-        public EventMemberViewRecyclerViewAdapter(Context context, GoogleMap googleMap) {
-            inflator = LayoutInflater.from(context);
-            this.context = context;
-            memberList = new ArrayList<>();
-            memberCoordinates = new ArrayList<>();
-            this.googleMap = googleMap;
-            init();
-
-        }
-
-        void init() {
-            Firebase initMembersFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
-            initMembersFirebase.keepSynced(true);
-            initMembersFirebase.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    int position = memberList.size();
-
-                    memberList.add(dataSnapshot.getKey());
-                    String[] coordinate = dataSnapshot.getValue().toString().split(",");
-                    LatLng latLng = new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]));
-                    memberCoordinates.add(latLng);
-                    notifyItemInserted(position);
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    int index = memberList.indexOf(dataSnapshot.getKey());
-                    memberList.remove(index);
-                    memberCoordinates.remove(index);
-                    notifyItemRemoved(index);
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-        }
-
-        @Override
-        public EventMembersViewRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflator.inflate(R.layout.recycler_view_active_event_members_row_layout, parent, false);
-            EventMembersViewRecyclerViewHolder viewHolder = new EventMembersViewRecyclerViewHolder(view);
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(EventMembersViewRecyclerViewHolder holder, int position) {
-            holder.memberTextView.setText(memberList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return memberList.size();
-        }
-
-        class EventMembersViewRecyclerViewHolder extends RecyclerView.ViewHolder {
-            TextView memberTextView;
-
-            public EventMembersViewRecyclerViewHolder(View itemView) {
-                super(itemView);
-                memberTextView = (TextView) itemView.findViewById(R.id.active_event_members_text_view);
-                memberTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(mMap != null) {
-                            CameraUpdate center =
-                                    CameraUpdateFactory.newLatLng(memberCoordinates.get(getPosition()));
-                            CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
-                            mMap.moveCamera(center);
-                            mMap.animateCamera(zoom);
-                        }
-                    }
-                });
-            }
-        }
-
     }
 
     void openGPSSettings() {
@@ -1703,25 +1630,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // enable user location
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (mMap != null) {
-                mMap.setPadding(0, 250, 0, 200);
-            }
-            showPermissionSnackBar();
+
+            showPermissionAlert();
+
         } else {
             mMap.setMyLocationEnabled(true);
             // listener for change in location of the user
             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                 @Override
                 public void onMyLocationChange(Location location) {
+                    if (location.getAccuracy() <= 10 && location.getAccuracy() != 0.0) {
 
-                    checkNearCheckPoint(location);
-                    updateUserCurrentLocation(location);
+                        checkNearCheckPoint(location);
+                        updateUserCurrentLocation(location);
+                    }
                 }
             });
             changeInLocation();
         }
 
 
+    }
+    void showPermissionAlert(){
+        Alerter.create(this)
+                .setTitle("Enable location permission")
+                .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
+                .setBackgroundColor(R.color.colorPrimaryDark)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openSettings();
+                    }
+                })
+                .show();
     }
 
     void checkNearCheckPoint(Location location) {
@@ -1747,7 +1688,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     void vibrateDevice() {
-        Toast.makeText(MapsActivity.this, "checkpoint reached" + checkPointsReached, Toast.LENGTH_SHORT).show();
+        Alerter.create(this)
+                .setText("Checkpoint reached!")
+                .setDuration(5000)
+                .setBackgroundColor(R.color.colorAccent)
+                .show();
         Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 
         // Vibrate for 500 milliseconds
@@ -1885,6 +1830,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    void zoomFitMembers() {
+        if (mMap != null) {
+            zoomFit = true;
+            updateMapMembers();
+        }
+    }
+
 //    void updateUserProfileImage(String username) {
 //        Firebase imageURLFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/userPhotoUri");
 //        imageURLFirebase.keepSynced(true);
@@ -1903,13 +1855,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            }
 //        });
 //    }
-
-    void zoomFitMembers() {
-        if (mMap != null) {
-            zoomFit = true;
-            updateMapMembers();
-        }
-    }
 
     void updateMapMembers() {
 
@@ -2022,7 +1967,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
     void deleteCheckPoint(String key, String mapKey) {
         Firebase deleteCheckPointFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/checkPoints/" + key);
         deleteCheckPointFirebase.removeValue();
@@ -2129,7 +2073,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String markerTag = (String) marker.getTag();
         if (markerTag != null) {
             if (markerTag.equals(Constants.START_LOCATION_TAG) || markerTag.equals(Constants.DESTINATION_LOCATION_TAG)) {
-                showStreetViewSnackBar(marker);
+                //showStreetViewSnackBar(marker);
             } else {
                 showCheckPointDialog(markerTag);
             }
@@ -2147,7 +2091,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    showStreetViewNotAvailableSnackBar();
 //                }
     }
-
 
     void showStreetViewNotAvailableSnackBar() {
         if (mMap != null) {
@@ -2204,6 +2147,104 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         snackbar.setActionTextColor(Color.parseColor("#009688"));
         snackbar.show();
+
+    }
+
+    public class EventMemberViewRecyclerViewAdapter extends RecyclerView.Adapter<EventMemberViewRecyclerViewAdapter.EventMembersViewRecyclerViewHolder> {
+        List<String> memberList;
+        List<LatLng> memberCoordinates;
+        Context context;
+        GoogleMap googleMap;
+        private LayoutInflater inflator;
+
+        public EventMemberViewRecyclerViewAdapter(Context context, GoogleMap googleMap) {
+            inflator = LayoutInflater.from(context);
+            this.context = context;
+            memberList = new ArrayList<>();
+            memberCoordinates = new ArrayList<>();
+            this.googleMap = googleMap;
+            init();
+
+        }
+
+        void init() {
+            Firebase initMembersFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
+            initMembersFirebase.keepSynced(true);
+            initMembersFirebase.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    int position = memberList.size();
+
+                    memberList.add(dataSnapshot.getKey());
+                    String[] coordinate = dataSnapshot.getValue().toString().split(",");
+                    LatLng latLng = new LatLng(Double.parseDouble(coordinate[0]), Double.parseDouble(coordinate[1]));
+                    memberCoordinates.add(latLng);
+                    notifyItemInserted(position);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    int index = memberList.indexOf(dataSnapshot.getKey());
+                    memberList.remove(index);
+                    memberCoordinates.remove(index);
+                    notifyItemRemoved(index);
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
+
+        @Override
+        public EventMembersViewRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflator.inflate(R.layout.recycler_view_active_event_members_row_layout, parent, false);
+            EventMembersViewRecyclerViewHolder viewHolder = new EventMembersViewRecyclerViewHolder(view);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(EventMembersViewRecyclerViewHolder holder, int position) {
+            holder.memberTextView.setText(memberList.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return memberList.size();
+        }
+
+        class EventMembersViewRecyclerViewHolder extends RecyclerView.ViewHolder {
+            TextView memberTextView;
+
+            public EventMembersViewRecyclerViewHolder(View itemView) {
+                super(itemView);
+                memberTextView = (TextView) itemView.findViewById(R.id.active_event_members_text_view);
+                memberTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mMap != null) {
+                            CameraUpdate center =
+                                    CameraUpdateFactory.newLatLng(memberCoordinates.get(getPosition()));
+                            CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+
+                            mMap.moveCamera(center);
+                            mMap.animateCamera(zoom);
+                        }
+                    }
+                });
+            }
+        }
 
     }
 

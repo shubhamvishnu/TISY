@@ -35,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -172,7 +171,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addMenuItem(R.color.main_activity_option_user_info, R.drawable.info_icon, MY_ACCOUNT_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_option_synergize, R.drawable.synergize_icon, SENT_REQUESTS_TAG, android.R.color.white,this)
                 .addMenuItem(R.color.main_activity_my_places_tag,  R.drawable.my_places_location_marker_icon, PLACES_TAG, android.R.color.white,this)
-                .addMenuItem(R.color.main_activity_option_invite, R.drawable.invite_icon, RECEIVED_REQUESTS_TAG, android.R.color.white,this)
+              //  .addMenuItem(R.color.main_activity_option_invite, R.drawable.invite_icon, RECEIVED_REQUESTS_TAG, android.R.color.white,this)
                 //you can choose menu layout animation
                 //设置动画类型
                 .animationType(SpringFloatingActionMenu.ANIMATION_TYPE_TUMBLR)
@@ -386,7 +385,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 void logout(){
-   getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE).edit().clear().apply();
+    getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE).edit().clear().apply();
     getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE).edit().clear().apply();
     getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).edit().clear().apply();
     getSharedPreferences(SharedPreferencesName.CHATS_READ_COUNT, MODE_PRIVATE).edit().clear().apply();

@@ -120,7 +120,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     }
 
     void removeRequest(final int position) {
-        progressDialog.show();
+
         firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + eventIdList.get(position) + "/" + username);
         firebase.keepSynced(true);
         firebase.removeValue(new Firebase.CompletionListener() {
@@ -139,7 +139,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
     }
 
     void addUser(final int position) {
-        progressDialog.show();
+
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + eventIdList.get(position) + "/members");
         firebase.keepSynced(true);
         final Map<String, Object> updateMember = new HashMap<String, Object>();
@@ -184,6 +184,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
                 case R.id.accept_request_image_button: {
                     int position = getPosition();
                     if (position >= 0 && eventIdList.size() > 0 && position < eventIdList.size()) {
+                        progressDialog.show();
                         addUser(position);
                     }
                     break;
@@ -191,6 +192,7 @@ public class ReceivedRequestsRecyclerViewAdapter extends RecyclerView.Adapter<Re
                 case R.id.decline_request_image_button: {
                     int position = getPosition();
                     if (position >= 0 && eventIdList.size() > 0 && position < eventIdList.size()) {
+                        progressDialog.show();
                         removeRequest(position);
                     }
                     break;

@@ -44,6 +44,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -206,13 +207,19 @@ public class CreateEvent extends Activity {
                 } else {
                     if (!eventId.isEmpty()) {
                         if (dLocationDescEditText.getText().toString().isEmpty() || destLocation == null || destLocationDesc == null || destLocation.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
-                            Toast.makeText(CreateEvent.this, "please mention all the event details", Toast.LENGTH_SHORT).show();
+                            Alerter.create(CreateEvent.this)
+                                    .setText("Please enter all the details...")
+                                    .setBackgroundColor(R.color.colorPrimary)
+                                    .show();
                         } else {
                             if (checkInternetConnection()) {
                                 progressDialog.show();
 
                                 if (!checkInternetConnection()) {
-                                    Toast.makeText(CreateEvent.this, "no internet connection", Toast.LENGTH_SHORT).show();
+                                    Alerter.create(CreateEvent.this)
+                                            .setText("Oops! no internet connection...")
+                                            .setBackgroundColor(R.color.colorPrimary)
+                                            .show();
                                 } else {
 
                                     // creating reference with the new eventID
@@ -237,7 +244,10 @@ public class CreateEvent extends Activity {
                         }
 
                     } else {
-                        Toast.makeText(CreateEvent.this, "some problem has occured. please try again later", Toast.LENGTH_SHORT).show();
+                        Alerter.create(CreateEvent.this)
+                                .setText("Oops! no internet connection...")
+                                .setBackgroundColor(R.color.colorPrimary)
+                                .show();
                     }
                 }
             }
@@ -1025,8 +1035,11 @@ public class CreateEvent extends Activity {
             if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    // TODO: toast the reason why we need the permission
-                    Toast.makeText(CreateEvent.this, "location access permission is needed to give you the best experience", Toast.LENGTH_SHORT).show();
+                    // toast the reason why we need the permission
+                    Alerter.create(CreateEvent.this)
+                            .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
+                            .setBackgroundColor(R.color.colorPrimary)
+                            .show();
                 }
                 requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);
             }
@@ -1039,16 +1052,28 @@ public class CreateEvent extends Activity {
 
         if (requestCode == REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                // TODO: show snackbar android
-                //TODO: start from here tom
-                showSnackBar();
+
+                showPermissionAlert();
+
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         }
     }
-
+    void showPermissionAlert(){
+        Alerter.create(this)
+                .setTitle("Enable location permission")
+                .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
+                .setBackgroundColor(R.color.colorPrimaryDark)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openSettings();
+                    }
+                })
+                .show();
+    }
     void showSnackBar() {
 
         Snackbar snackbar = Snackbar

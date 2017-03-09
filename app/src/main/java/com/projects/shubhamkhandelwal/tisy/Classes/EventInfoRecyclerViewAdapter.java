@@ -90,7 +90,7 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
             profileImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showTracks(getPosition());
+
                 }
             });
         }
