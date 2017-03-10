@@ -8,4 +8,5 @@ public class SharedPreferencesName {
     public static String LOGIN_STATUS = "login_status";
     public static String CHATS_READ_COUNT = "chats_read";
     public static String MAP_CONFIG = "map";
+    public static String AD_INFO = "add_info";
 }

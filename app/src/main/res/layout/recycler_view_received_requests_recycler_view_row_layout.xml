@@ -36,20 +36,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:padding="6dp"
+                    android:padding="4dp"
                     android:text="request from:"
-                    android:textColor="#d3d3d3"
+                    android:textColor="@android:color/white"
                     android:textSize="12dp"
-                    android:textStyle="normal" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/received_request_username_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/created_time_background"
                     android:gravity="center"
-                    android:padding="6dp"
-                    android:textColor="@android:color/white"
+                    android:padding="4dp"
+                    android:textColor="#d3d3d3"
                     android:textSize="12dp"
                     android:textStyle="normal" />
 
@@ -63,18 +62,18 @@
                 android:gravity="left"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
 
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:padding="6dp"
+                    <!--android:layout_marginLeft="8dp"-->
+                    <!--android:layout_marginRight="8dp"-->
+                    <!--android:padding="6dp"-->
 
-                    android:text="wants to say - "
-                    android:textColor="#d3d3d3"
-                    android:textSize="12dp"
-                    android:textStyle="normal" />
+                    <!--android:text="wants to say - "-->
+                    <!--android:textColor="#d3d3d3"-->
+                    <!--android:textSize="12dp"-->
+                    <!--android:textStyle="normal" />-->
 
                 <TextView
                     android:id="@+id/received_request_desc_text_view"
@@ -82,83 +81,86 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:padding="8dp"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="12dp"
-                    android:textStyle="normal" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="4dp"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:padding="6dp"
-
-                    android:text="for event:"
+                    android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="4dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
                     android:textColor="#d3d3d3"
-                    android:textSize="12dp"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/received_request_for_user_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/created_time_background"
-                    android:gravity="center"
-                    android:padding="6dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="12dp"
-                    android:textStyle="normal" />
-            </LinearLayout>
-
+                android:textSize="12dp"
+                android:textStyle="normal" />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-        <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/add_user_image_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/received_request_button_selector"
-            android:elevation="20dp"
-            android:padding="12dp"
-            android:scaleType="fitCenter"
-            android:tint="@android:color/white"
-            app:srcCompat="@drawable/request_accept_icon" />
 
-        <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/delete_user_image_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/floating_action_button_selector"
-            android:elevation="20dp"
-            android:padding="12dp"
-            android:scaleType="fitCenter"
-            android:tint="@android:color/white"
-            app:srcCompat="@drawable/request_decline_icon" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="4dp"
+            android:gravity="left"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:padding="4dp"
+
+                android:text="for event:"
+                android:textColor="@android:color/white"
+
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/received_request_for_user_id"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#d3d3d3"
+                android:gravity="center"
+                android:padding="4dp"
+
+                android:textSize="12dp"
+                android:textStyle="normal" />
         </LinearLayout>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/add_user_image_button"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/received_request_button_selector"
+        android:elevation="20dp"
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        android:tint="@android:color/white"
+        app:srcCompat="@drawable/request_accept_icon" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/delete_user_image_button"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/floating_action_button_selector"
+        android:elevation="20dp"
+        android:padding="12dp"
+        android:scaleType="fitCenter"
+        android:tint="@android:color/white"
+        app:srcCompat="@drawable/request_decline_icon" />
+    </LinearLayout>
+
+</LinearLayout>
 
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/white" />
+<TextView
+    android:layout_width="fill_parent"
+    android:layout_height="1dp"
+    android:background="@android:color/white" />
 </LinearLayout>

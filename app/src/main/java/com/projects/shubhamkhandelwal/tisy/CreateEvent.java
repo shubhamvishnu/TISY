@@ -33,6 +33,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -94,6 +97,7 @@ public class CreateEvent extends Activity {
    // LinearLayout sLocationLinearLayout;
     LinearLayout dLocationLinearLayout;
     LinearLayout dLocationIconLinearLayout;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +149,7 @@ public class CreateEvent extends Activity {
         // generate the eventId; calls the generate() function
         generateEventId();
         initProgressDialog();
+        initAdd();
 
 
         dLocationEditImageButton.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +258,32 @@ public class CreateEvent extends Activity {
             }
         });
     }
+void initAdd(){
+    mInterstitialAd = new InterstitialAd(this);
+    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
 
+    mInterstitialAd.setAdListener(new AdListener() {
+        @Override
+        public void onAdClosed() {
+            requestNewInterstitial();
+            checkForCount();
+        }
+    });
+    requestNewInterstitial();
+}
+    void checkForCount(){
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            next();
+        }
+    }
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
     void initProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -1138,17 +1168,17 @@ public class CreateEvent extends Activity {
             mapStyleEditor.putInt("type", Constants.TYPE_MAP_SATELLITE);
         }
         mapStyleEditor.apply();
-
-        next();
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+       checkForCount();
     }
 
     void next() {
 
         intent = new Intent(CreateEvent.this, MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
+
         startActivity(intent);
         finish();
     }

@@ -55,6 +55,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -152,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter; // search option recyclerview adapter
 
     List<String> eventMemberList;
-
+    InterstitialAd mInterstitialAd;
     /**
      * converts the vector drawables to bitmap
      *
@@ -249,10 +252,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         init();
+        initAdd();
     }
+void initAdd(){
+    mInterstitialAd = new InterstitialAd(this);
+    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
 
+    mInterstitialAd.setAdListener(new AdListener() {
+        @Override
+        public void onAdClosed() {
+            requestNewInterstitial();
+            checkCount();
+        }
+    });
 
+    requestNewInterstitial();
+}
+void checkCount(){
+    if (mInterstitialAd.isLoaded()) {
+        mInterstitialAd.show();
+    } else {
+        exitMapEvent();
+    }
+}
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .build();
 
+        mInterstitialAd.loadAd(adRequest);
+    }
     void init() {
 
         // requests received notification
@@ -1111,10 +1140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 if (emoticon == 0) {
-                    Alerter.create(MapsActivity.this)
-                            .setText("We would love to hear your feedback...")
-                            .setBackgroundColor(R.color.colorPrimary)
-                            .show();
+                    Toast.makeText(MapsActivity.this, "We would love to hear your thoughts!", Toast.LENGTH_SHORT).show();
                 } else {
                     suggestionDialog.dismiss();
                     String suggestion = emoticon + " - " + suggestionEditText.getText().toString().trim();
@@ -1567,7 +1593,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         deleteEvent.removeValue(new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                exitMapEvent();
+                checkCount();
             }
         });
     }
@@ -2237,7 +2263,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             CameraUpdate center =
                                     CameraUpdateFactory.newLatLng(memberCoordinates.get(getPosition()));
                             CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
                             mMap.moveCamera(center);
                             mMap.animateCamera(zoom);
                         }

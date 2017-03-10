@@ -31,8 +31,8 @@
     </LinearLayout>
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/remove_request_image_button"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:padding="12dp"

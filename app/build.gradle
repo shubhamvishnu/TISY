@@ -57,6 +57,7 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     compile 'com.tapadoo.android:alerter:1.0.6'
+    compile 'com.google.firebase:firebase-ads:9.4.0'
     
 }
 apply plugin: 'com.google.gms.google-services'

@@ -12,11 +12,13 @@
         <!--android:background="@android:color/white" />-->
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/member_remove_image_button"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:background="@android:color/transparent"
+        android:tint="@android:color/white"
+        android:padding="12dp"
+        android:background="@drawable/floating_action_button_selector"
         app:srcCompat="@drawable/remove_member_icon" />
 
     <LinearLayout
