@@ -2,7 +2,9 @@ package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +44,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
+import com.projects.shubhamkhandelwal.tisy.Classes.NotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
 import com.tiancaicc.springfloatingactionmenu.MenuItemView;
@@ -103,9 +106,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
             startService(new Intent(getBaseContext(), LocationListenerService.class));
+            //stopService(new Intent(getBaseContext(), NotificationService.class));
+            startService(new Intent(getBaseContext(), NotificationService.class));
             // startService(new Intent(getBaseContext(), NotificationService.class));
             showAllEventsDialog();
             initProgressDialog();
+            removeNotification();
            // initPlacesAdd();
             //initCreateEventAdd();
         } else {
@@ -217,7 +223,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
     }
-
+void removeNotification(){
+    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    mNotificationManager.cancel(Constants.UNREAD_CHATS_NOTIFICATION_ID);
+}
     @Override
     public void onClick(View view) {
 
@@ -308,6 +317,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
 
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        startService(new Intent(getBaseContext(), NotificationService.class));
     }
 
     /**

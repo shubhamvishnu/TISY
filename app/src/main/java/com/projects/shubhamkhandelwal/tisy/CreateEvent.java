@@ -45,6 +45,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
+import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 import com.tapadoo.alerter.Alerter;
@@ -214,7 +215,7 @@ public class CreateEvent extends Activity {
                         if (dLocationDescEditText.getText().toString().isEmpty() || destLocation == null || destLocationDesc == null || destLocation.isEmpty() || destLocationDesc.isEmpty() || iconResourceId == -1 || eventDescription == null || eventDescription.isEmpty() || eventTitle.isEmpty() || eventTitle == null) {
                             Alerter.create(CreateEvent.this)
                                     .setText("Please enter all the details...")
-                                    .setBackgroundColor(R.color.colorPrimary)
+                                    .setBackgroundColor(R.color.colorPrimaryDark)
                                     .show();
                         } else {
                             if (checkInternetConnection()) {
@@ -223,7 +224,7 @@ public class CreateEvent extends Activity {
                                 if (!checkInternetConnection()) {
                                     Alerter.create(CreateEvent.this)
                                             .setText("Oops! no internet connection...")
-                                            .setBackgroundColor(R.color.colorPrimary)
+                                            .setBackgroundColor(R.color.colorAccent)
                                             .show();
                                 } else {
 
@@ -251,7 +252,7 @@ public class CreateEvent extends Activity {
                     } else {
                         Alerter.create(CreateEvent.this)
                                 .setText("Oops! no internet connection...")
-                                .setBackgroundColor(R.color.colorPrimary)
+                                .setBackgroundColor(R.color.colorAccent)
                                 .show();
                     }
                 }
@@ -1068,7 +1069,7 @@ void initAdd(){
                     // toast the reason why we need the permission
                     Alerter.create(CreateEvent.this)
                             .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
-                            .setBackgroundColor(R.color.colorPrimary)
+                            .setBackgroundColor(R.color.colorAccent)
                             .show();
                 }
                 requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);
@@ -1168,10 +1169,21 @@ void initAdd(){
             mapStyleEditor.putInt("type", Constants.TYPE_MAP_SATELLITE);
         }
         mapStyleEditor.apply();
+
+        storeEventInDatabase();
+
+    }
+    void storeEventInDatabase(){
+        SQLiteDatabaseConnection sqLiteDatabaseConnection = new SQLiteDatabaseConnection(this);
+        long count = sqLiteDatabaseConnection.insertRow(eventId, 0);
+        if(count < 0){
+
+        }else{
+        }
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-       checkForCount();
+        checkForCount();
     }
 
     void next() {

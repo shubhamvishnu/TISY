@@ -86,6 +86,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
+import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
@@ -710,7 +711,7 @@ void checkCount(){
         } else {
             Alerter.create(this)
                     .setText("Oops! no internet connection...")
-                    .setBackgroundColor(R.color.colorPrimary)
+                    .setBackgroundColor(R.color.colorAccent)
                     .show();
 
         }
@@ -739,7 +740,7 @@ void checkCount(){
 
                     Alerter.create(this)
                             .setText("Oops! no internet connection...")
-                            .setBackgroundColor(R.color.colorPrimary)
+                            .setBackgroundColor(R.color.colorAccent)
                             .show();
                 }
                 // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
@@ -1167,7 +1168,7 @@ void checkCount(){
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 Alerter.create(MapsActivity.this)
                         .setText("Thank you for your thoughts!")
-                        .setBackgroundColor(R.color.colorPrimary)
+                        .setBackgroundColor(R.color.colorPrimaryDark)
                         .show();
             }
         });
@@ -1224,6 +1225,13 @@ void checkCount(){
             }
         });
 
+        chatsDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                updateChatsReadCount();
+            }
+        });
+
         backArrowImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1238,6 +1246,27 @@ void checkCount(){
         Log.d("listenerForChats", "listener removed");
         chatsDialog.show();
 
+    }
+    void updateChatsReadCount(){
+
+        Firebase chatsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/chats");
+        chatsFirebase.keepSynced(true);
+        chatsFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long childCount = dataSnapshot.getChildrenCount();
+                SQLiteDatabaseConnection sqLiteDatabaseConnection = new SQLiteDatabaseConnection(MapsActivity.this);
+                int count = sqLiteDatabaseConnection.getCount(Constants.currentEventId);
+                if(count < childCount){
+                    sqLiteDatabaseConnection.updateCount(Constants.currentEventId, (int)childCount);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     void sendMessage(final String message) {
@@ -1681,7 +1710,7 @@ void checkCount(){
         Alerter.create(this)
                 .setTitle("Enable location permission")
                 .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
-                .setBackgroundColor(R.color.colorPrimaryDark)
+                .setBackgroundColor(R.color.colorAccent)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1715,7 +1744,7 @@ void checkCount(){
 
     void vibrateDevice() {
         Alerter.create(this)
-                .setText("Checkpoint reached!")
+                .setTitle("Checkpoint reached!")
                 .setDuration(5000)
                 .setBackgroundColor(R.color.colorAccent)
                 .show();

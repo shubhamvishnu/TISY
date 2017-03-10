@@ -42,5 +42,7 @@ public class Constants {
     public static int TYPE_MAP_TERRAIN = 9003;
 
 
+    public static int UNREAD_CHATS_NOTIFICATION_ID = 1100;
+
 
 }
