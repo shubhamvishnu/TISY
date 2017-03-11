@@ -41,10 +41,13 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
+import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
+import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
@@ -152,6 +155,8 @@ public class CreateEvent extends Activity {
         initProgressDialog();
         initAdd();
 
+        initServices();
+
 
         dLocationEditImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,6 +263,18 @@ public class CreateEvent extends Activity {
                 }
             }
         });
+    }
+
+    void initServices(){
+        if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
+            startService(new Intent(getBaseContext(), LocationListenerService.class));
+        }
+        if(!Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
+            startService(new Intent(getBaseContext(), ChatNotificationService.class));
+        }
+        if(!Constants.REQUEST_NOTIFICATION_SERVICE_STATUS){
+            startService(new Intent(getBaseContext(), RequestNotificationService.class));
+        }
     }
 void initAdd(){
     mInterstitialAd = new InterstitialAd(this);

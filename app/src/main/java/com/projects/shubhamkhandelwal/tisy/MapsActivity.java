@@ -75,6 +75,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
+import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
@@ -83,14 +84,15 @@ import com.projects.shubhamkhandelwal.tisy.Classes.EventInfoRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventMembersRecyclerViewAdapater;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
+import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
+import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
-
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
@@ -157,6 +159,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     List<String> eventMemberList;
     InterstitialAd mInterstitialAd;
+    boolean editDestinationLocation;
+
     /**
      * converts the vector drawables to bitmap
      *
@@ -184,8 +188,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        // set the title for the ActionBar
-        setTitle("TISY");
+        initServices();
 
         // initialize the GoogleMaps with the activity's context. To create custom icons for the markers.
         MapsInitializer.initialize(getApplicationContext());
@@ -217,7 +220,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     showGPSAlert();
-                }else{
+                } else {
                     zoomFitMembers();
                 }
             }
@@ -229,6 +232,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         nameSearch = new String();
 
+        editDestinationLocation = false;
 
         zoomFit = false;
 
@@ -255,27 +259,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         init();
         initAdd();
     }
-void initAdd(){
-    mInterstitialAd = new InterstitialAd(this);
-    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
 
-    mInterstitialAd.setAdListener(new AdListener() {
-        @Override
-        public void onAdClosed() {
-            requestNewInterstitial();
-            checkCount();
-        }
-    });
+    void initAdd() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
 
-    requestNewInterstitial();
-}
-void checkCount(){
-    if (mInterstitialAd.isLoaded()) {
-        mInterstitialAd.show();
-    } else {
-        exitMapEvent();
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                checkCount();
+            }
+        });
+
+        requestNewInterstitial();
     }
-}
+
+    void initServices(){
+        if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
+            startService(new Intent(getBaseContext(), LocationListenerService.class));
+        }
+        if(!Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
+            startService(new Intent(getBaseContext(), ChatNotificationService.class));
+        }
+        if(!Constants.REQUEST_NOTIFICATION_SERVICE_STATUS){
+            startService(new Intent(getBaseContext(), RequestNotificationService.class));
+        }
+    }
+    void checkCount() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            exitMapEvent();
+        }
+    }
+
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
@@ -283,6 +301,7 @@ void checkCount(){
 
         mInterstitialAd.loadAd(adRequest);
     }
+
     void init() {
 
         // requests received notification
@@ -732,20 +751,78 @@ void checkCount(){
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
-                if (checkInternetConnection()) {
-                    showCheckPointAddOptionDialog(place.getLatLng(), place.getName().toString());
+                if (editDestinationLocation) {
+                    editDestinationLocation = false;
+
+                    if (checkInternetConnection()) {
+                        Place place = PlacePicker.getPlace(data, this);
+                        showDestinationLocationChangeDialog(place.getLatLng());
+                    } else {
+                        Alerter.create(this)
+                                .setText("Oops! no internet connection...")
+                                .setBackgroundColor(R.color.colorAccent)
+                                .show();
+                    }
+
                 } else {
+                    Place place = PlacePicker.getPlace(data, this);
+                    if (checkInternetConnection()) {
+                        showCheckPointAddOptionDialog(place.getLatLng(), place.getName().toString());
+                    } else {
+                        Alerter.create(this)
+                                .setText("Oops! no internet connection...")
+                                .setBackgroundColor(R.color.colorAccent)
+                                .show();
+                    }
+                    // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
 
-
-                    Alerter.create(this)
-                            .setText("Oops! no internet connection...")
-                            .setBackgroundColor(R.color.colorAccent)
-                            .show();
                 }
-                // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
             }
         }
+    }
+
+    void showDestinationLocationChangeDialog(final LatLng latLng) {
+        final Dialog destinationLocationChangeDialog = new Dialog(this, R.style.event_info_dialog_style);
+        destinationLocationChangeDialog.setContentView(R.layout.dialog_edit_destination_location_layout);
+        final TextView editDestinationEditText = (TextView) destinationLocationChangeDialog.findViewById(R.id.edit_destination_edit_text);
+        ImageButton cancelEditDestinationImageButton = (ImageButton) destinationLocationChangeDialog.findViewById(R.id.cancel_edit_destination_image_button);
+        ImageButton confirmEditDestinationImageButton = (ImageButton) destinationLocationChangeDialog.findViewById(R.id.confirm_edit_destination_button);
+
+        cancelEditDestinationImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eventInfoDialog();
+            }
+        });
+        confirmEditDestinationImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkInternetConnection()) {
+                    final String destinationDesc = editDestinationEditText.getText().toString();
+                    if (!(destinationDesc == null || destinationDesc.isEmpty())) {
+                        Firebase editDestinationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/info");
+                        editDestinationFirebase.keepSynced(true);
+                        Map<String, Object> editLocationMap = new HashMap<String, Object>();
+                        editLocationMap.put("dLocation", String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
+                        editLocationMap.put("dLocationDesc", destinationDesc);
+                        editDestinationFirebase.updateChildren(editLocationMap, new Firebase.CompletionListener() {
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                eventInfo.setdLocation(String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
+                                eventInfo.setdLocationDesc(destinationDesc);
+                                zoomFitMembers();
+                                eventInfoDialog();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(MapsActivity.this, "enter a destination title", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+
+                }
+            }
+        });
+
     }
 
     void sendMemberRequest() {
@@ -944,8 +1021,9 @@ void checkCount(){
         TextView titleTextView;
         RecyclerView eventInfoMembersRecyclerView;
         ImageButton editMembersImageButton;
+        Button editDestinationLocationButton;
 
-        Dialog eventInfoDialog = new Dialog(this, R.style.event_info_dialog_style);
+        final Dialog eventInfoDialog = new Dialog(this, R.style.event_info_dialog_style);
         eventInfoDialog.setContentView(R.layout.dialog_event_info_layout);
 
         eventIdDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.event_id_info_text_view);
@@ -955,9 +1033,13 @@ void checkCount(){
         timeStampTextView = (TextView) eventInfoDialog.findViewById(R.id.time_stamp_text_view);
         titleTextView = (TextView) eventInfoDialog.findViewById(R.id.event_title_text_view);
 
+        editDestinationLocationButton = (Button) eventInfoDialog.findViewById(R.id.edit_destination_location_button);
+
+
         editMembersImageButton = (ImageButton) eventInfoDialog.findViewById(R.id.editMembersImageButton);
         if (!Constants.eventAdmin) {
-            editMembersImageButton.setVisibility(View.INVISIBLE);
+            editMembersImageButton.setVisibility(View.GONE);
+            editDestinationLocationButton.setVisibility(View.GONE);
         }
         eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
         eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -974,6 +1056,14 @@ void checkCount(){
         EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName, lastSeenInfo);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
+        editDestinationLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eventInfoDialog.dismiss();
+                editDestinationLocation = true;
+                placePickerDialog();
+            }
+        });
 
         editMembersImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1247,7 +1337,8 @@ void checkCount(){
         chatsDialog.show();
 
     }
-    void updateChatsReadCount(){
+
+    void updateChatsReadCount() {
 
         Firebase chatsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/chats");
         chatsFirebase.keepSynced(true);
@@ -1257,8 +1348,8 @@ void checkCount(){
                 long childCount = dataSnapshot.getChildrenCount();
                 SQLiteDatabaseConnection sqLiteDatabaseConnection = new SQLiteDatabaseConnection(MapsActivity.this);
                 int count = sqLiteDatabaseConnection.getCount(Constants.currentEventId);
-                if(count < childCount){
-                    sqLiteDatabaseConnection.updateCount(Constants.currentEventId, (int)childCount);
+                if (count < childCount) {
+                    sqLiteDatabaseConnection.updateCount(Constants.currentEventId, (int) childCount);
                 }
             }
 
@@ -1270,6 +1361,9 @@ void checkCount(){
     }
 
     void sendMessage(final String message) {
+        SQLiteDatabaseConnection sqlLiteDatabaseConnection = new SQLiteDatabaseConnection(this);
+        int count = sqlLiteDatabaseConnection.getCount(Constants.currentEventId);
+        sqlLiteDatabaseConnection.updateCount(Constants.currentEventId, ++count);
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/chats");
         EventChat chat = new EventChat(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), message);
         Map<String, Object> chatMessage = new HashMap<>();
@@ -1316,20 +1410,22 @@ void checkCount(){
         // check for GPS is enabled, if not show snackbar, else just call the location Action
         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                showGPSAlert();
+            showGPSAlert();
         } else {
             updateStatus();
             initializeMap();
         }
     }
-    void updateStatus(){
+
+    void updateStatus() {
         Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
         updateLastKnowStatus.keepSynced(true);
         Map<String, Object> lastSeenMap = new HashMap<>();
         lastSeenMap.put("lastSeen", "Online");
         updateLastKnowStatus.updateChildren(lastSeenMap);
     }
-    void showGPSAlert(){
+
+    void showGPSAlert() {
         Alerter.create(this)
                 .setTitle("Turn on GPS")
                 .setText("TISY uses GPS to locate and track users.")
@@ -1706,7 +1802,8 @@ void checkCount(){
 
 
     }
-    void showPermissionAlert(){
+
+    void showPermissionAlert() {
         Alerter.create(this)
                 .setTitle("Enable location permission")
                 .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")

@@ -34,8 +34,6 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,7 +42,8 @@ import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
-import com.projects.shubhamkhandelwal.tisy.Classes.NotificationService;
+import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
+import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
 import com.tiancaicc.springfloatingactionmenu.MenuItemView;
@@ -105,14 +104,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          */
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
-            startService(new Intent(getBaseContext(), LocationListenerService.class));
-            //stopService(new Intent(getBaseContext(), NotificationService.class));
-            //startService(new Intent(getBaseContext(), NotificationService.class));
-            // startService(new Intent(getBaseContext(), NotificationService.class));
-            showAllEventsDialog();
-            initProgressDialog();
-            removeNotification();
-           // initPlacesAdd();
+           initMain();
+            //removeNotification();
+            // initPlacesAdd();
             //initCreateEventAdd();
         } else {
             intent = new Intent(MainActivity.this, Login.class);
@@ -203,7 +197,19 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .build();
 
     }
-
+void initMain(){
+    if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
+        startService(new Intent(getBaseContext(), LocationListenerService.class));
+    }
+    if(!Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
+        startService(new Intent(getBaseContext(), ChatNotificationService.class));
+    }
+    if(!Constants.REQUEST_NOTIFICATION_SERVICE_STATUS){
+        startService(new Intent(getBaseContext(), RequestNotificationService.class));
+    }
+    showAllEventsDialog();
+    initProgressDialog();
+}
     void initProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -223,10 +229,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
     }
-void removeNotification(){
-    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    mNotificationManager.cancel(Constants.UNREAD_CHATS_NOTIFICATION_ID);
-}
+
+    void removeNotification() {
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(Constants.UNREAD_CHATS_NOTIFICATION_ID);
+    }
+
     @Override
     public void onClick(View view) {
 
@@ -234,7 +242,7 @@ void removeNotification(){
         String label = menuItemView.getLabelTextView().getText().toString();
 
         if (label.equals(CREATE_EVENT_TAG)) {
-           toCreateEvent();
+            toCreateEvent();
 
         }
         if (label.equals(PLACES_TAG)) {
@@ -257,12 +265,10 @@ void removeNotification(){
     }
 
 
-
     void toCreateEvent() {
         intent = new Intent(MainActivity.this, CreateEvent.class);
         startActivity(intent);
     }
-
 
 
     void toStreetViewActivity() {
@@ -319,11 +325,6 @@ void removeNotification(){
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        startService(new Intent(getBaseContext(), NotificationService.class));
-    }
 
     /**
      * fetches information about the user.

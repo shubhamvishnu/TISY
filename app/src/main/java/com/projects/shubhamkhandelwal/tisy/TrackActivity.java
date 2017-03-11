@@ -45,11 +45,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
+import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationNote;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
+import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 
 import java.util.HashMap;
@@ -88,9 +91,13 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
         }
 
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.track_map);
         mapFragment.getMapAsync(this);
+
+
+        initServices();
 
         addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
         addNoteImageButton.setVisibility(View.INVISIBLE);
@@ -114,7 +121,17 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
 
     }
-
+    void initServices(){
+        if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
+            startService(new Intent(getBaseContext(), LocationListenerService.class));
+        }
+        if(!Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
+            startService(new Intent(getBaseContext(), ChatNotificationService.class));
+        }
+        if(!Constants.REQUEST_NOTIFICATION_SERVICE_STATUS){
+            startService(new Intent(getBaseContext(), RequestNotificationService.class));
+        }
+    }
 
     // to call the placepicker dialog
     void placePickerDialog() {

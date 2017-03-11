@@ -44,5 +44,11 @@ public class Constants {
 
     public static int UNREAD_CHATS_NOTIFICATION_ID = 1100;
 
+    public static boolean CHAT_NOTIFICATION_SERVICE_STATUS = false;
+    public static boolean REQUEST_NOTIFICATION_SERVICE_STATUS = false;
+    public static boolean LOCATION_NOTIFICATION_SERVICE_STATUS = false;
+
+
+
 
 }

@@ -39,12 +39,12 @@ public class LocationListenerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Constants.LOCATION_NOTIFICATION_SERVICE_STATUS =  true;
         username = getBaseContext().getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
 
         init();
         return START_STICKY;
     }
-
 
     void init() {
         customColor = 0;
@@ -72,6 +72,7 @@ public class LocationListenerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Constants.LOCATION_NOTIFICATION_SERVICE_STATUS =  false;
     }
 
     void updateLocationLog(LocationLog locationLog, String dateMonthYear) {
