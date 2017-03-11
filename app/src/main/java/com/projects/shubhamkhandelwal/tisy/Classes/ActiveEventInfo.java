@@ -13,19 +13,19 @@ public class ActiveEventInfo {
     private int dIconResourceId;
     private String association;
     private String timeCreated;
-    private String requests;
+    //private String requests;
     private List<String> memberList;
 
-    public ActiveEventInfo(String title, String association, String eventId, EventInfo eventInfo, String requests, String timeCreated, List<String> memberList) {
+    public ActiveEventInfo(String title, String association, String eventId, EventInfo eventInfo, String timeCreated, List<String> memberList) {
         this.association = association;
         this.title = title;
         this.eventId = eventId;
         this.eventInfo = eventInfo;
-        if (Integer.parseInt(requests) == 0) {
-            this.requests = "No pending requests";
-        } else {
-            this.requests = requests + " pending requests";
-        }
+//        if (Integer.parseInt(requests) == 0) {
+//            this.requests = "No pending requests";
+//        } else {
+//            this.requests = requests + " pending requests";
+//        }
         this.timeCreated = timeCreated;
         this.memberList = memberList;
     }
@@ -52,15 +52,6 @@ public class ActiveEventInfo {
 
     public void setTimeCreated(String timeCreated) {
         this.timeCreated = timeCreated;
-    }
-
-
-    public String getRequests() {
-        return requests;
-    }
-
-    public void setRequests(String requests) {
-        this.requests = requests;
     }
 
 

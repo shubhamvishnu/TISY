@@ -103,7 +103,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                                 }
                             }
 
-                            final String request = String.valueOf(numberOfRequests);
+                            //final String request = String.valueOf(numberOfRequests);
                             final String timeCreated = dataSnapshot.child("time").getValue().toString();
                             // final String memberCount = String.valueOf(dataSnapshot.child("members").getChildrenCount());
                             final List<String> memberList = new ArrayList<String>();
@@ -113,7 +113,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                             EventInfo eventInfo = new EventInfo();
                             eventInfo.setdLocation(dataSnapshot.child("info").child("dLocation").getValue().toString());
                             eventInfo.setdLocationDesc(dataSnapshot.child("info").child("dLocationDesc").getValue().toString());
-                            ActiveEventInfo activeEventInfo = new ActiveEventInfo(title, association, activeEventId, eventInfo, request, timeCreated, memberList);
+                            ActiveEventInfo activeEventInfo = new ActiveEventInfo(title, association, activeEventId, eventInfo, timeCreated, memberList);
 
                             activeEventInfo.setAdmin(dataSnapshot.child("admin").getValue().toString());
                             activeEventInfo.setdIconResourceId(Integer.parseInt(dataSnapshot.child("dIcon").getValue().toString()));
@@ -188,7 +188,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 
             ((ActiveEventsRecyclerViewHolder) holder).activeEventdLocationDesc.setText(info.getdLocationDesc());
-            ((ActiveEventsRecyclerViewHolder) holder).activeEventRequests.setText(activeEventIds.get(finalPosition).getRequests());
+            //((ActiveEventsRecyclerViewHolder) holder).activeEventRequests.setText(activeEventIds.get(finalPosition).getRequests());
             ((ActiveEventsRecyclerViewHolder) holder).activeEventTimeCreated.setText(activeEventIds.get(finalPosition).getTimeCreated());
 
             ((ActiveEventsRecyclerViewHolder) holder).activeMembersRecyclerViewAdapter = new ActiveMembersRecyclerViewAdapter(context, activeEventIds.get(finalPosition).getMemberList());
@@ -346,13 +346,14 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
         TextView activeEventdLocationDesc;
         TextView activeEventTitleTextView;
-        TextView activeEventRequests;
+        //TextView activeEventRequests;
         TextView activeEventTimeCreated;
         TextView activeEventAssociation;
 
         RecyclerView activeEventMemberRecyclerView;
         ActiveMembersRecyclerViewAdapter activeMembersRecyclerViewAdapter;
         ImageView activeEventCardImageView;
+
 
         View view;
 
@@ -363,7 +364,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
             activeEventdLocationDesc = (TextView) itemView.findViewById(R.id.active_event_dLocationDesc);
             activeEventTitleTextView = (TextView) itemView.findViewById(R.id.active_event_title_text_view);
-            activeEventRequests = (TextView) itemView.findViewById(R.id.active_event_requests);
+           //activeEventRequests = (TextView) itemView.findViewById(R.id.active_event_requests);
             activeEventTimeCreated = (TextView) itemView.findViewById(R.id.active_event_time_created);
             activeEventAssociation = (TextView) itemView.findViewById(R.id.active_event_association_text_view);
 
@@ -378,7 +379,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             activeEventIdTextView.setOnClickListener(this);
             activeEventdLocationDesc.setOnClickListener(this);
             activeEventTitleTextView.setOnClickListener(this);
-            activeEventRequests.setOnClickListener(this);
+            //activeEventRequests.setOnClickListener(this);
             activeEventTimeCreated.setOnClickListener(this);
             activeEventAssociation.setOnClickListener(this);
 

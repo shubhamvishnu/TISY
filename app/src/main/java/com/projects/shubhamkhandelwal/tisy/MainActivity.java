@@ -107,7 +107,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (loginCheck.contains("login")) {
             startService(new Intent(getBaseContext(), LocationListenerService.class));
             //stopService(new Intent(getBaseContext(), NotificationService.class));
-            startService(new Intent(getBaseContext(), NotificationService.class));
+            //startService(new Intent(getBaseContext(), NotificationService.class));
             // startService(new Intent(getBaseContext(), NotificationService.class));
             showAllEventsDialog();
             initProgressDialog();
