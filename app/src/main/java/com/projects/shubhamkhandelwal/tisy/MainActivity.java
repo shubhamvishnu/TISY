@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -46,6 +47,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
+import com.tapadoo.alerter.Alerter;
 import com.tiancaicc.springfloatingactionmenu.MenuItemView;
 import com.tiancaicc.springfloatingactionmenu.OnMenuActionListener;
 import com.tiancaicc.springfloatingactionmenu.SpringFloatingActionMenu;
@@ -57,12 +59,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // variables
     // FAB sub-action button tags; to identify which sub-action button was clicked.
 
-    public final static String CREATE_EVENT_TAG = "Create Event";
-    public final static String ALL_EVENTS_TAG = "All Events";
-    public final static String SENT_REQUESTS_TAG = "Synergize";
+    public final static String CREATE_EVENT_TAG = "Create event";
+    public final static String ALL_EVENTS_TAG = "All events";
+    public final static String SENT_REQUESTS_TAG = "Join an event";
     public final static String RECEIVED_REQUESTS_TAG = "Invites";
-    public final static String MY_ACCOUNT_TAG = "My Account";
-    public final static String PLACES_TAG = "My Places";
+    public final static String MY_ACCOUNT_TAG = "My account";
+    public final static String PLACES_TAG = "My places";
+    public final static String SHARE_APP_TAG = "Share";
+
 
     ProgressDialog progressDialog;
 
@@ -167,6 +171,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addMenuItem(R.color.main_activity_create_event, R.drawable.create_event_icon, CREATE_EVENT_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_option_user_info, R.drawable.info_icon, MY_ACCOUNT_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_option_synergize, R.drawable.synergize_icon, SENT_REQUESTS_TAG, android.R.color.white, this)
+                .addMenuItem(R.color.main_activity_share_app_option, R.drawable.share_app_image_icon, SHARE_APP_TAG, android.R.color.white, this)
+
                 .addMenuItem(R.color.main_activity_my_places_tag, R.drawable.my_places_location_marker_icon, PLACES_TAG, android.R.color.white, this)
                 //  .addMenuItem(R.color.main_activity_option_invite, R.drawable.invite_icon, RECEIVED_REQUESTS_TAG, android.R.color.white,this)
                 //you can choose menu layout animation
@@ -262,9 +268,56 @@ void initMain(){
         if (label.equals(MY_ACCOUNT_TAG)) {
             initializeUserInformation();
         }
+        if(label.equals(SHARE_APP_TAG)){
+            shareAppDialogOption();
+        }
     }
 
+    void shareAppDialogOption(){
+        final Dialog shareAppDialogOptions = new Dialog(this, R.style.event_info_dialog_style); // initialize the dialog object.
+        shareAppDialogOptions.setContentView(R.layout.dialog_share_app_layout); // initialize the dialog layout; xml layout;
 
+        final EditText shareEventMessageEditText, shareEventIDEditText;
+        ImageButton shareImageButton;
+
+        shareEventMessageEditText = (EditText) shareAppDialogOptions.findViewById(R.id.share_event_message);
+        shareEventIDEditText = (EditText) shareAppDialogOptions.findViewById(R.id.share_event_id);
+
+        shareImageButton = (ImageButton) shareAppDialogOptions.findViewById(R.id.share_image_button);
+
+        shareImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String shareEventID = shareEventIDEditText.getText().toString();
+                String shareEventMessage = shareEventMessageEditText.getText().toString();
+                String shareMessage;
+                if(shareEventID == null || shareEventMessage == null || shareEventID.isEmpty() || shareEventMessage.isEmpty()){
+                   shareMessage = "Download Tisy from play store using this link:\nhttps://play.google.com/store/apps/details?id=com.shubham.hidy.mpshl=en.";
+
+                }else {
+                    shareMessage = "Download Tisy from play store using this link:\nhttps://play.google.com/store/apps/details?id=com.shubham.hidy.mpshl=en.\n\n" + shareEventMessage+ "\n"+shareEventID ;
+                }
+                shareAppDialogOptions.dismiss();
+                shareApp(shareMessage);
+
+            }
+        });
+
+
+        Window window = shareAppDialogOptions.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        shareAppDialogOptions.setCanceledOnTouchOutside(true);
+        shareAppDialogOptions.show();
+
+    }
+    void shareApp(String message){
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sendIntent.setType("text/plain");
+        MainActivity.this.startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+    }
     void toCreateEvent() {
         intent = new Intent(MainActivity.this, CreateEvent.class);
         startActivity(intent);

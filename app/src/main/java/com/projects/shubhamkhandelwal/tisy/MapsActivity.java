@@ -791,6 +791,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         cancelEditDestinationImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                destinationLocationChangeDialog.dismiss();
                 eventInfoDialog();
             }
         });
@@ -808,6 +809,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         editDestinationFirebase.updateChildren(editLocationMap, new Firebase.CompletionListener() {
                             @Override
                             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                destinationLocationChangeDialog.dismiss();
                                 eventInfo.setdLocation(String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
                                 eventInfo.setdLocationDesc(destinationDesc);
                                 zoomFitMembers();
@@ -822,6 +824,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        Window window = destinationLocationChangeDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        destinationLocationChangeDialog.setCanceledOnTouchOutside(true);
+        destinationLocationChangeDialog.show();
 
     }
 

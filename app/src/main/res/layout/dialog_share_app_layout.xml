@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="fill_parent"
+           android:padding="16dp"
+            android:layout_height="fill_parent">
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Share this app:"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="6dp"
+        android:textColor="@android:color/white"
+        />
+
+    <TextView
+        android:padding="4dp"
+        android:layout_gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Download Tisy from play store using this link: "
+        android:textSize="16dp"
+        android:textColor="#9e9e9e"
+        android:gravity="center"
+        />
+    <TextView
+        android:padding="4dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:textStyle="normal"
+        android:textSize="16dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColorLink="@android:color/holo_blue_dark"
+        android:text="https://play.google.com/store/apps/details?id=com.shubham.hidy.mpshl=en"
+        />
+
+        <TextView
+            android:padding="6dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Include an event to share: (optional)"
+            android:textSize="16dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:textColor="@android:color/white"
+        android:layout_height="wrap_content"
+        android:text="Write about the event:"
+        android:textStyle="normal"
+        android:padding="4dp"
+        android:textSize="16dp"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+   <EditText
+       android:id="@+id/share_event_message"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:hint="about the event..."
+       android:layout_gravity="center"
+       android:textSize="16dp"
+       android:padding="8dp"
+       android:singleLine="true"
+        android:textColor="@android:color/white"
+       android:textCursorDrawable="@drawable/edit_text_curson_color_style"
+       />
+
+
+    <EditText
+
+        android:id="@+id/share_event_id"
+        android:singleLine="true"
+        android:layout_margin="16dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/share_app_edit_text_background"
+        android:textSize="18dp"
+        android:hint="enter an event ID"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center"
+        android:textCursorDrawable="@drawable/edit_text_curson_color_style"
+        android:gravity="center"
+        android:padding="16dp"
+        />
+    <android.support.v7.widget.AppCompatImageButton
+
+        android:id="@+id/share_image_button"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:elevation="20dp"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/share_right_arrow_image_icon" />
+    <TextView
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/white"
+        />
+   <TextView
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:textSize="16dp"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:textStyle="normal"
+       android:textColor="@android:color/white"
+       android:text="Or, scan the QR to get TISY: "/></LinearLayout>
+    </ScrollView>
+</LinearLayout>

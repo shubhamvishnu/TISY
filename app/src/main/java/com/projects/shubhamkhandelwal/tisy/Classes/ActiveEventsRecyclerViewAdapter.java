@@ -22,11 +22,14 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.projects.shubhamkhandelwal.tisy.MainActivity;
 import com.projects.shubhamkhandelwal.tisy.MapsActivity;
 import com.projects.shubhamkhandelwal.tisy.R;
+
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -320,6 +323,8 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                         progressDialog.show();
 
                         addMember(getPosition());
+                    }else{
+                        Toast.makeText(context, "Oops! no internet connection...", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -330,6 +335,8 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                     if (checkInternetConnection()) {
                         progressDialog.show();
                         deleteRequest(getPosition());
+                    }else{
+                        Toast.makeText(context, "Oops! no internet connection...", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
