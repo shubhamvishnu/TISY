@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -36,8 +37,12 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.projects.shubhamkhandelwal.tisy.Classes.ActiveEventsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
@@ -45,7 +50,9 @@ import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
+import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 import com.tiancaicc.springfloatingactionmenu.MenuItemView;
@@ -76,7 +83,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     String userPhotoUri; // user profile photo url.
     String username; // unique username of the user.
-
+    GoogleApiClient mGoogleApiClient;
     // objects
     Intent intent; // common intent to perform intent actions.
     Dialog userAccountDialog; // reference for the user account dialog created; so that their appearance can be manipulated from outside the block.
@@ -108,7 +115,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
          */
         SharedPreferences loginCheck = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         if (loginCheck.contains("login")) {
+
            initMain();
+            initLogout();
             //removeNotification();
             // initPlacesAdd();
             //initCreateEventAdd();
@@ -203,6 +212,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .build();
 
     }
+    void initLogout(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        mGoogleApiClient.connect();
+    }
 void initMain(){
     if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
         startService(new Intent(getBaseContext(), LocationListenerService.class));
@@ -269,7 +287,8 @@ void initMain(){
             initializeUserInformation();
         }
         if(label.equals(SHARE_APP_TAG)){
-            shareAppDialogOption();
+           // shareAppDialogOption();
+            shareApp("Download tisy from play store using this link:");
         }
     }
 
@@ -465,6 +484,21 @@ void initMain(){
     }
 
     void logout() {
+
+
+
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                       loggedout();
+                        // [END_EXCLUDE]
+                    }
+                });
+
+
+  /*
         if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
             ((ActivityManager) getApplicationContext().getSystemService(ACTIVITY_SERVICE))
                     .clearApplicationUserData(); // note: it has a return value!
@@ -472,7 +506,7 @@ void initMain(){
         } else {
             loggedout();
         }
-
+*/
 
     }
 
@@ -481,6 +515,9 @@ void initMain(){
         getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE).edit().clear().apply();
         getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).edit().clear().apply();
         getSharedPreferences(SharedPreferencesName.CHATS_READ_COUNT, MODE_PRIVATE).edit().clear().apply();
+
+        SQLiteDatabaseConnection sqLiteDatabaseConnection = new SQLiteDatabaseConnection(MainActivity.this);
+        sqLiteDatabaseConnection.emptyTable();
 
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();

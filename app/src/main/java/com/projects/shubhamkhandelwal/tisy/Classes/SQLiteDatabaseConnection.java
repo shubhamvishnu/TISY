@@ -36,6 +36,10 @@ public class SQLiteDatabaseConnection {
             return false;
         }
     }
+    public void emptyTable(){
+        SQLiteDatabase sqLiteDatabase = databaseConnection.getWritableDatabase();
+        sqLiteDatabase.delete(DatabaseConnection.TABLE_NAME, null, null);
+    }
     public long insertRow(String eventID, int chatsReadCount){
         SQLiteDatabase sqLiteDatabase = databaseConnection.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -64,6 +68,7 @@ public class SQLiteDatabaseConnection {
         int count = sqLiteDatabase.update(DatabaseConnection.TABLE_NAME, contentValues, DatabaseConnection.EVENT_ID_COL + "=?", whereArgs);
         return count;
     }
+
 
     static public class DatabaseConnection extends SQLiteOpenHelper {
         private final static String DB_NAME = "tisy_database";

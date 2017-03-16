@@ -54,6 +54,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.LocationNote;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +74,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     CoordinatorLayout trackCoordinatorLayout;
     ImageButton trackActivityZoomFit;
     LatLngBounds.Builder builder;
-    boolean turnOnGPS = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,10 +166,16 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     void showAddNoteDialog(final LatLng location, final String locationTitle) {
         final Dialog dialog = new Dialog(this, R.style.event_dialogs);
         dialog.setContentView(R.layout.dialog_add_note_layout);
+
         ImageButton cancelImageButton = (ImageButton) dialog.findViewById(R.id.cancel_add_note_image_button);
         ImageButton editLocationImageButton = (ImageButton) dialog.findViewById(R.id.note_edit_location_image_button);
+
+
         addNoteTitleEditText = (EditText) dialog.findViewById(R.id.note_title_edit_text);
         final EditText noteDescriptionEditText = (EditText) dialog.findViewById(R.id.note_description_edit_text);
+
+
+
         ImageButton saveNoteButton = (ImageButton) dialog.findViewById(R.id.save_note_button);
         cancelImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +183,10 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 dialog.dismiss();
             }
         });
+
+
+
+
         if (!(locationTitle == null || locationTitle.isEmpty())) {
             addNoteTitleEditText.setText(locationTitle);
         }
@@ -347,46 +357,23 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         // check for GPS is enabled, if not show snackbar, else just call the location Action
         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            if (mMap != null) {
-                mMap.setPadding(0, 0, 0, 200);
-            }
-            if (turnOnGPS) {
-                showGPSDialog();
-                turnOnGPS = false;
-            } else {
-                showSnackBar();
-            }
+            showGPSAlert();
         } else {
             initializeMap();
         }
     }
-
-    void showGPSDialog() {
-        final Dialog gpsDialog = new Dialog(this, R.style.event_info_dialog_style);
-        gpsDialog.setContentView(R.layout.dialog_turn_on_gps_layout);
-        ImageButton turnonGPSImageButton = (ImageButton) gpsDialog.findViewById(R.id.turn_on_gps_image_button);
-        Button turnOnGPSButton = (Button) gpsDialog.findViewById(R.id.turn_on_gps_button);
-        turnonGPSImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gpsDialog.dismiss();
-                openGPSSettings();
-            }
-        });
-        turnOnGPSButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gpsDialog.dismiss();
-                openGPSSettings();
-            }
-        });
-        Window window = gpsDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        gpsDialog.setCanceledOnTouchOutside(true);
-        gpsDialog.show();
-
-
+    void showGPSAlert() {
+        Alerter.create(this)
+                .setTitle("Turn on GPS")
+                .setText("TISY uses GPS to locate and track users.")
+                .setBackgroundColor(R.color.colorAccent)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openGPSSettings();
+                    }
+                })
+                .show();
     }
 
     void initializeMap() {

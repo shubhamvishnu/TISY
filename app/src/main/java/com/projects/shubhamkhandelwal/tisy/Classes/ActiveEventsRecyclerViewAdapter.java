@@ -9,6 +9,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -183,7 +185,10 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         if (getItemViewType(position) == VIEW_TYPE_ACTIVE_EVENT) {
             int finalPosition = position - receviedRequestsList.size();
 
-            ((ActiveEventsRecyclerViewHolder) holder).activeEventTitleTextView.setText(activeEventIds.get(finalPosition).getTitle());
+            SpannableString content = new SpannableString(activeEventIds.get(finalPosition).getTitle());
+            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+
+            ((ActiveEventsRecyclerViewHolder) holder).activeEventTitleTextView.setText(content);
             ((ActiveEventsRecyclerViewHolder) holder).activeEventAssociation.setText(activeEventIds.get(finalPosition).getAssociation());
             ((ActiveEventsRecyclerViewHolder) holder).activeEventIdTextView.setText(activeEventIds.get(finalPosition).getEventId());
 

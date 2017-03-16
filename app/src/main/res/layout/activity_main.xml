@@ -39,7 +39,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Create an event"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorPrimaryDark"
                 android:textStyle="normal"
                 android:textSize="16dp"
                 android:layout_gravity="center"

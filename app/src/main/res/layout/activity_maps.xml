@@ -53,6 +53,17 @@
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/multimedia_chat_icon" />
             <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/maps_screenshot_icon"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="10dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:elevation="6dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/multimedia_zoom_fit_icon"
+                />
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/maps_zoom_fit_icon"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -61,7 +72,7 @@
                 android:background="@android:color/transparent"
                 android:elevation="6dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/multimedia_zoom_fit_icon" />
+                app:srcCompat="@drawable/zoomfit_image_icon" />
 
 
         </LinearLayout>

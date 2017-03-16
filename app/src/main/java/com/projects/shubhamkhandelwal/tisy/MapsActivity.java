@@ -1,7 +1,10 @@
 package com.projects.shubhamkhandelwal.tisy;
 
+import android.*;
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,8 +25,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -96,7 +102,13 @@ import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +119,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
 
+    public static final int REQUEST_ACCESS_WRITE_STORAGE = 2;
     public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
     public static final int PLACE_PICKER_REQUEST = 1; // used for the place picker intent
     public static boolean zoomFit; // if true: fits the specified LatLng into the view
@@ -217,12 +230,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         zoomFitImageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
                 LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     showGPSAlert();
                 } else {
                     zoomFitMembers();
                 }
+            }
+        });
+
+        ImageButton screenshotImageIcon = (ImageButton) findViewById(R.id.maps_screenshot_icon);
+        screenshotImageIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkForWriteStoragePermission();
             }
         });
 
@@ -259,6 +283,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         init();
         initAdd();
     }
+    void checkForWriteStoragePermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+           checkWritePermission();
+        }else{
+            captureScreen();
+        }
+
+    }
+void checkWritePermission(){
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // toast the reason why we need the permission
+               showWritePermissionAlert();
+            }
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_ACCESS_WRITE_STORAGE);
+        }
+    }
+}
+    void showWritePermissionAlert(){
+        Alerter.create(MapsActivity.this)
+                .setTitle("Enable Write Permission")
+                .setText("To take screen shots of the view, give Tisy write permission.")
+                .setBackgroundColor(R.color.colorPrimaryDark)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openSettings();
+                    }
+                })
+                .show();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_ACCESS_WRITE_STORAGE) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                showWritePermissionAlert();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        }
+    }
 
     void initAdd() {
         mInterstitialAd = new InterstitialAd(this);
@@ -274,18 +343,140 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         requestNewInterstitial();
     }
+    public void openShareImageDialog(String filePath)
+    {
+        File file = this.getFileStreamPath(filePath);
 
-    void initServices(){
-        if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
+        if(!filePath.equals(""))
+        {
+            final ContentValues values = new ContentValues(2);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+            final Uri contentUriFile = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("image/jpeg");
+            intent.putExtra(android.content.Intent.EXTRA_STREAM, contentUriFile);
+            startActivity(Intent.createChooser(intent, "Share Image"));
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), "share failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void captureScreen() {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            Bitmap bitmap;
+
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                // TODO Auto-generated method stub
+//                bitmap = snapshot;
+//                String filePath = Environment.getExternalStorageDirectory().toString() + "/" + System.currentTimeMillis() + ".jpg";
+//                try {
+//
+//                    File imageFile = new File(filePath);
+//
+//                    FileOutputStream outputStream = new FileOutputStream(imageFile);
+//                    int quality = 100;
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+//                    outputStream.flush();
+//                    outputStream.close();
+//
+//                   openShareImageDialog(fi);
+//
+//                } catch (Throwable e) {
+//                    // Several error may come out with file handling or OOM
+//                    e.printStackTrace();
+//                }
+
+
+
+
+
+
+                bitmap = snapshot;
+
+                OutputStream fout = null;
+
+                String filePath = System.currentTimeMillis() + ".jpeg";
+
+                try
+                {
+                    fout = openFileOutput(filePath,
+                            MODE_WORLD_READABLE);
+
+                    // Write the string to the file
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fout);
+                    fout.flush();
+                    fout.close();
+                }
+                catch (FileNotFoundException e)
+                {
+
+                }
+                catch (IOException e)
+                {
+
+                }
+
+                openShareImageDialog(filePath);
+
+            }
+        };
+
+        mMap.snapshot(callback);
+    }
+
+    private void takeScreenshot() {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+
+            // create bitmap screen capture
+            View v1 = this.getWindow().getDecorView().getRootView();
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(mPath);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            openScreenshot(imageFile);
+        } catch (Throwable e) {
+            // Several error may come out with file handling or OOM
+            e.printStackTrace();
+        }
+    }
+
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
+    }
+
+    void initServices() {
+        if (!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS) {
             startService(new Intent(getBaseContext(), LocationListenerService.class));
         }
-        if(!Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
+        if (!Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
             startService(new Intent(getBaseContext(), ChatNotificationService.class));
         }
-        if(!Constants.REQUEST_NOTIFICATION_SERVICE_STATUS){
+        if (!Constants.REQUEST_NOTIFICATION_SERVICE_STATUS) {
             startService(new Intent(getBaseContext(), RequestNotificationService.class));
         }
     }
+
     void checkCount() {
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
@@ -1067,9 +1258,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editDestinationLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eventInfoDialog.dismiss();
-                editDestinationLocation = true;
-                placePickerDialog();
+                LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+                if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    eventInfoDialog.dismiss();
+                    editDestinationLocation = true;
+                    placePickerDialog();
+                } else {
+                    Toast.makeText(MapsActivity.this, "Turn on GPS", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -1391,7 +1588,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setPadding(0, 250, 0, 0);
+        mMap.setPadding(0, 120, 0, 0);
         initializeMapStyle();
         initializeMapType();
         GPSEnabledCheck();
@@ -1488,7 +1685,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 if (mMap != null) {
-                    mMap.setPadding(0, 250, 0, 0);
+                    mMap.setPadding(0, 120, 0, 0);
                 }
             }
 
@@ -1504,7 +1701,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void openGPSSettings() {
         if (mMap != null) {
-            mMap.setPadding(0, 250, 0, 0);
+            mMap.setPadding(0, 120, 0, 0);
         }
         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
     }
@@ -1527,7 +1724,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onClick(View view) {
                         if (mMap != null) {
-                            mMap.setPadding(0, 250, 0, 0);
+                            mMap.setPadding(0, 120, 0, 0);
                         }
                         openSettings();
                     }
@@ -2254,7 +2451,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void showStreetViewNotAvailableSnackBar() {
         if (mMap != null) {
-            mMap.setPadding(0, 250, 0, 200);
+            mMap.setPadding(0, 120, 0, 200);
         }
         final Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "Oops! Street view isn't available here...", Snackbar.LENGTH_SHORT);
@@ -2263,7 +2460,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 if (mMap != null) {
-                    mMap.setPadding(0, 250, 0, 0);
+                    mMap.setPadding(0, 120, 0, 0);
                 }
             }
 
@@ -2278,7 +2475,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void showStreetViewSnackBar(final Marker marker) {
         if (mMap != null) {
-            mMap.setPadding(0, 250, 0, 200);
+            mMap.setPadding(0, 120, 0, 200);
         }
         final Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, "See how it looks?", Snackbar.LENGTH_LONG)
@@ -2295,7 +2492,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 if (mMap != null) {
-                    mMap.setPadding(0, 250, 0, 0);
+                    mMap.setPadding(0, 120, 0, 0);
                 }
             }
 

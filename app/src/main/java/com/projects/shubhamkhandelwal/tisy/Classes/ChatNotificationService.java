@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
+import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -18,6 +19,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.projects.shubhamkhandelwal.tisy.MainActivity;
 import com.projects.shubhamkhandelwal.tisy.R;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,6 +120,7 @@ void chatNotification(){
         showUnreadChatsNotification();
     }
 }
+
     void showUnreadChatsNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.multimedia_chat_icon);
