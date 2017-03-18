@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.projects.shubhamkhandelwal.tisy.JoinEventActvity">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/no_request_layout"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/no_request_image_icon"
+                    android:layout_width="150dp"
+                    android:layout_marginTop="170dp"
+                    android:layout_height="150dp"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/no_event_joined_icon" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="normal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Join an event"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                >
+                <!--<Button-->
+                    <!--android:id="@+id/dialog_join_request_button"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:text="Join event"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--android:textSize="14dp"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:layout_marginBottom="16dp"-->
+                    <!--android:background="@drawable/join_event_background"-->
+                    <!--/>-->
+
+                <TextView
+                    android:id="@+id/sent_requests_text_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Sent requests:"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    android:textSize="14dp"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/join_event_background" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/dialog_sent_requests_recycler_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="6dp"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:scrollbars="vertical" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

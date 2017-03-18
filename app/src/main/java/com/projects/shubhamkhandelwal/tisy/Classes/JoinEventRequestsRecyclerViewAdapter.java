@@ -29,45 +29,11 @@ public class JoinEventRequestsRecyclerViewAdapter extends RecyclerView.Adapter<J
     String username;
     private LayoutInflater inflator;
 
-    public JoinEventRequestsRecyclerViewAdapter(android.content.Context context) {
+    public JoinEventRequestsRecyclerViewAdapter(android.content.Context context, List<JoinEventInfo> joinEventIds) {
         this.context = context;
         inflator = LayoutInflater.from(context);
         username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);
-        initializeRequests();
-    }
-
-    void initializeRequests() {
-        firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
-        firebase.keepSynced(true);
-        firebase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                int position = joinEventIds.size();
-                JoinEventInfo joinEventInfo = new JoinEventInfo(dataSnapshot.getKey(), dataSnapshot.getValue().toString());
-                joinEventIds.add(joinEventInfo);
-                notifyItemInserted(position);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+        this.joinEventIds = joinEventIds;
     }
 
     @Override

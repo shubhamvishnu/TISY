@@ -37,7 +37,7 @@ public class EventDialogs {
             showAllEventsDialog(context, dialog);
         } else if (type == Constants.TYPE_SENT_REQUESTS) {
             dialog.setContentView(R.layout.dialog_requests_layout);
-            showSentRequestDialog(context, dialog);
+
         } else if (type == Constants.TYPE_DELETE_MEMBERS) {
             dialog.setContentView(R.layout.dialog_delete_event_members_layout);
             showMembersDialog(context, dialog);
@@ -137,56 +137,6 @@ public class EventDialogs {
 
     }
 
-    void showSentRequestDialog(final Context context, final Dialog dialog) {
-        final LinearLayout noRequestLinearLayout = (LinearLayout) dialog.findViewById(R.id.no_request_layout);
-        final TextView sentRequestsTextView = (TextView) dialog.findViewById(R.id.sent_requests_text_view);
-        Button joinRequestButton = (Button) dialog.findViewById(R.id.dialog_join_request_button);
-        final RecyclerView joinEventRequestsRecyclerView = (RecyclerView) dialog.findViewById(R.id.dialog_sent_requests_recycler_view);
-
-        Firebase checkRequests = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
-        checkRequests.keepSynced(true);
-        checkRequests.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    noRequestLinearLayout.setVisibility(View.INVISIBLE);
-                    sentRequestsTextView.setVisibility(View.VISIBLE);
-                    joinEventRequestsRecyclerView.setVisibility(View.VISIBLE);
-                    JoinEventRequestsRecyclerViewAdapter joinEventRequestsRecyclerViewAdapter;
-
-
-                    joinEventRequestsRecyclerView.setHasFixedSize(true);
-
-                    LinearLayoutManager linearLayoutManagerSentRequests = new LinearLayoutManager(dialog.getContext());
-                    joinEventRequestsRecyclerView.setLayoutManager(linearLayoutManagerSentRequests);
-
-                    joinEventRequestsRecyclerViewAdapter = new JoinEventRequestsRecyclerViewAdapter(context);
-                    joinEventRequestsRecyclerView.setAdapter(joinEventRequestsRecyclerViewAdapter);
-
-
-                } else {
-
-                    noRequestLinearLayout.setVisibility(View.VISIBLE);
-                    sentRequestsTextView.setVisibility(View.INVISIBLE);
-                    joinEventRequestsRecyclerView.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-
-        joinRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                joinRequestDialog(context);
-            }
-        });
-    }
 
     void showRequests(final Context context, final Dialog dialog) {
 
@@ -210,55 +160,7 @@ public class EventDialogs {
 
     }
 
-    void joinRequestDialog(Context context) {
 
-        final EditText searchEditText;
-        final ImageButton searchButton;
-        final Dialog searchOptionDialog = new Dialog(context, R.style.event_info_dialog_style);
-        searchOptionDialog.setContentView(R.layout.dialog_join_request_layout);
-        final RecyclerView joinRequestSearchResultRecyclerView = (RecyclerView) searchOptionDialog.findViewById(R.id.join_request_dialog_recycler_view);
-        searchEditText = (EditText) searchOptionDialog.findViewById(R.id.join_request_dialog_search_edit_text);
-        searchButton = (ImageButton) searchOptionDialog.findViewById(R.id.join_request_dialog_search_image_button);
-
-        joinRequestSearchResultRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(searchOptionDialog.getContext());
-        joinRequestSearchResultRecyclerView.setLayoutManager(linearLayoutManager);
-
-        searchEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (i == KeyEvent.KEYCODE_ENTER) {
-                    String nameSearch = searchEditText.getText().toString();
-                    if (!nameSearch.trim().isEmpty()) {
-                        JoinRequestSearchResultRecyclerViewAdapter joinRequestSearchResultRecyclerViewAdapter = new JoinRequestSearchResultRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
-                        joinRequestSearchResultRecyclerView.setAdapter(joinRequestSearchResultRecyclerViewAdapter);
-                    }
-                }
-                return false;
-            }
-        });
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String nameSearch = searchEditText.getText().toString();
-                if (!nameSearch.isEmpty()) {
-                    JoinRequestSearchResultRecyclerViewAdapter joinRequestSearchResultRecyclerViewAdapter = new JoinRequestSearchResultRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
-                    joinRequestSearchResultRecyclerView.setAdapter(joinRequestSearchResultRecyclerViewAdapter);
-                }
-            }
-        });
-
-
-        Window window = searchOptionDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        searchOptionDialog.setCanceledOnTouchOutside(true);
-        searchOptionDialog.show();
-
-
-    }
 
     /*
     void showReceviedRequests(Context context, final Dialog dialog){
@@ -282,27 +184,6 @@ public class EventDialogs {
             }
         });
     }*/
-    void showAllRequestsDialog(Context context, final Dialog dialog) {
-        ImageButton exitImageButton;
-        RecyclerView joinEventRequestsRecyclerView;
-        JoinEventRequestsRecyclerViewAdapter joinEventRequestsRecyclerViewAdapter;
-        exitImageButton = (ImageButton) dialog.findViewById(R.id.all_requests_back_arrow_image_button);
-        joinEventRequestsRecyclerView = (RecyclerView) dialog.findViewById(R.id.user_requests_recycler_view);
-        joinEventRequestsRecyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
-        joinEventRequestsRecyclerView.setLayoutManager(linearLayoutManager);
-
-        joinEventRequestsRecyclerViewAdapter = new JoinEventRequestsRecyclerViewAdapter(context);
-        joinEventRequestsRecyclerView.setAdapter(joinEventRequestsRecyclerViewAdapter);
-        exitImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-    }
 
     void showAllEventsDialog(Context context, final Dialog dialog) {
         ImageButton exitImageButton;

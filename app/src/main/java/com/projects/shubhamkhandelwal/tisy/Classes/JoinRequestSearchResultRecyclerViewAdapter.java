@@ -1,17 +1,12 @@
 package com.projects.shubhamkhandelwal.tisy.Classes;
 
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.v7.app.ActionBar;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +34,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
     String username;
     List<String> eventIdList;
     Firebase firebase;
+    ProgressDialog progressDialog;
 
     public JoinRequestSearchResultRecyclerViewAdapter(Context context, String name) {
         this.context = context;
@@ -50,6 +46,28 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         firebase = null;
         username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);
         populateViewWithResults();
+        initProgressDialog();
+
+    }
+
+    void initProgressDialog() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Send Request");
+        progressDialog.setMessage("sending your request...");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
     }
 
     void populateViewWithResults() {
@@ -155,6 +173,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         return eventIdList.size();
     }
 
+    /*
     void sendRequest(final String eventID) {
         final Dialog dialog = new Dialog(context, R.style.event_dialogs);
         dialog.setContentView(R.layout.dialog_join_event_layout);
@@ -192,9 +211,9 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         window.setGravity(Gravity.CENTER);
         dialog.show();
     }
-
+*/
     // sends the request to join an event
-    void sendJoinRequest(final String requestEventId, final String requestEventDesc) {
+    void sendJoinRequest(final String requestEventId, final String requestEventDesc, final int position) {
         Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + requestEventId);
         firebase.keepSynced(true);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -211,7 +230,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                         @Override
                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                             // send request for the user to join the event
-                            setValues(requestEventId, requestEventDesc);
+                            setValues(requestEventId, requestEventDesc, position);
                         }
                     });
 
@@ -234,7 +253,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
      * @param rID   : holds the event unique id
      * @param rDesc : holds the description along with the request
      */
-    void setValues(final String rID, final String rDesc) {
+    void setValues(final String rID, final String rDesc, final int position) {
 
         Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
         firebase.keepSynced(true);
@@ -243,6 +262,11 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         firebase.updateChildren(request, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                eventIdList.remove(position);
+                notifyItemRemoved(position);
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
                 Toast.makeText(context, "Request sent successfully to " + rID, Toast.LENGTH_SHORT).show();
             }
         });
@@ -265,14 +289,16 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.search_option_add_member_image_view: {
-                    Toast.makeText(context, "clicked item position " + getPosition() + eventIdList.get(getPosition()), Toast.LENGTH_SHORT).show();
-                    sendRequest(eventIdList.get(getPosition()));
-                    eventIdList.remove(getPosition());
-                    notifyItemRemoved(getPosition());
+                    progressDialog.show();
+                    sendJoinRequest(eventIdList.get(getPosition()), "would like to join your event", getPosition());
+                    // sendRequest(eventIdList.get(getPosition()));
+
+
                     break;
                 }
             }
         }
     }
+
 
 }

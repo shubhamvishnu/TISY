@@ -153,24 +153,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     CoordinatorLayout coordinatorLayout;
 
     // event infomation variables
-    List<String> membersList; // members (username) in the event
-    List<String> memberCoordinate; // coordinates (LatLng) of the members in the event
-    List<String> memberProfileImageUrls; // profile Image URL of every member in the event
+   List<String> memberProfileImageUrls; // profile Image URL of every member in the event
     List<String> lastSeenInfo;
     List<String> memberProfileName; // member name for users in the event
-    String timeStamp; // date and time of when the event was created
-    String eventTitle; // title of the event
-
-    String destLocationTextView; // destination location description of the event
-    String eventDescription; // event description
-    int memberUriCount; // number of URL's fetched of the members
 
     // search variables
     String nameSearch; // name/username/eventID searched for by the user
     RecyclerView searchOptionChoiceRecyclerView; // search option recyclerview
     SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter; // search option recyclerview adapter
 
-    List<String> eventMemberList;
+    ProgressDialog progressDialog;
+
     InterstitialAd mInterstitialAd;
     boolean editDestinationLocation;
 
@@ -264,8 +257,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         eventInfo = new EventInfo();
 
         // initializing Collection Objects
-        membersList = new ArrayList<>();
-        memberCoordinate = new ArrayList<>();
+
         lastSeenInfo = new ArrayList<>();
         memberProfileImageUrls = new ArrayList<>();
         memberProfileName = new ArrayList<>();
@@ -282,13 +274,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         init();
         initAdd();
+        initProgressDialog();
     }
     void checkForWriteStoragePermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
            checkWritePermission();
         }else{
+
+            progressDialog.show();
             captureScreen();
         }
+
+    }
+    void initProgressDialog(){
+     progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Screenshot");
+        progressDialog.setMessage("capturing snapshot of the view for you...");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
 
     }
 void checkWritePermission(){
@@ -353,6 +368,10 @@ void checkWritePermission(){
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
             values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
             final Uri contentUriFile = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            if(progressDialog.isShowing()){
+                progressDialog.dismiss();
+            }
 
             final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setType("image/jpeg");
@@ -656,7 +675,7 @@ void checkWritePermission(){
             @Override
             public void onClick(View view) {
                 allInOneDialog.dismiss();
-                eventInfoDialog();
+                toEventInfoActivity();
             }
         });
         mapTypeImageButton.setOnClickListener(new View.OnClickListener() {
@@ -942,22 +961,8 @@ void checkWritePermission(){
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                if (editDestinationLocation) {
-                    editDestinationLocation = false;
-
-                    if (checkInternetConnection()) {
-                        Place place = PlacePicker.getPlace(data, this);
-                        showDestinationLocationChangeDialog(place.getLatLng());
-                    } else {
-                        Alerter.create(this)
-                                .setText("Oops! no internet connection...")
-                                .setBackgroundColor(R.color.colorAccent)
-                                .show();
-                    }
-
-                } else {
                     Place place = PlacePicker.getPlace(data, this);
-                    if (checkInternetConnection()) {
+                    if (checkInternetConnection() && (!place.getLatLng().toString().isEmpty())) {
                         showCheckPointAddOptionDialog(place.getLatLng(), place.getName().toString());
                     } else {
                         Alerter.create(this)
@@ -968,10 +973,9 @@ void checkWritePermission(){
                     // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
 
                 }
-            }
         }
     }
-
+/*
     void showDestinationLocationChangeDialog(final LatLng latLng) {
         final Dialog destinationLocationChangeDialog = new Dialog(this, R.style.event_info_dialog_style);
         destinationLocationChangeDialog.setContentView(R.layout.dialog_edit_destination_location_layout);
@@ -1023,7 +1027,7 @@ void checkWritePermission(){
         destinationLocationChangeDialog.show();
 
     }
-
+*/
     void sendMemberRequest() {
 
         final Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
@@ -1129,7 +1133,12 @@ void checkWritePermission(){
     }
 
 
-    void eventInfoDialog() {
+    void toEventInfoActivity(){
+        Intent intent = new Intent(MapsActivity.this, EventInfoActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+/*    void eventInfoDialog() {
         membersList = new ArrayList<>();
         memberCoordinate = new ArrayList<>();
         timeStamp = new String();
@@ -1252,7 +1261,7 @@ void checkWritePermission(){
         timeStampTextView.setText(timeStamp);
 
         eventInfoMembersRecyclerView.setHasFixedSize(true);
-        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, eventInfoDialog, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName, lastSeenInfo);
+        EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName, lastSeenInfo);
         eventInfoMembersRecyclerView.setAdapter(adapter);
 
         editDestinationLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -1351,7 +1360,7 @@ void checkWritePermission(){
         dialog.show();
         dialog.setCanceledOnTouchOutside(true);
     }
-
+*/
     void showSuggestionDialog() {
         final Dialog suggestionDialog = new Dialog(this, R.style.event_info_dialog_style);
         suggestionDialog.setContentView(R.layout.dialog_suggestion_layout);

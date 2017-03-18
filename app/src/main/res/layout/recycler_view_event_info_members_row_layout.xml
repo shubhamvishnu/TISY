@@ -9,7 +9,7 @@
         android:id="@+id/left_side_message_border_text_view_recycler_view"
         android:layout_width="2dp"
         android:layout_height="fill_parent"
-        android:background="@android:color/white" />
+        android:background="@color/colorAccent" />
 
     <LinearLayout
         android:layout_width="fill_parent"

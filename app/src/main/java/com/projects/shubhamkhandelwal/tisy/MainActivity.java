@@ -47,6 +47,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.ActiveEventsRecyclerViewAdapt
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
+import com.projects.shubhamkhandelwal.tisy.Classes.JoinEventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
@@ -281,7 +282,7 @@ void initMain(){
             new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
         }
         if (label.equals(SENT_REQUESTS_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_SENT_REQUESTS);
+           toJoinEventActivity();
         }
         if (label.equals(MY_ACCOUNT_TAG)) {
             initializeUserInformation();
@@ -292,6 +293,12 @@ void initMain(){
         }
     }
 
+    void toJoinEventActivity(){
+        Intent intent = new Intent(MainActivity.this, JoinEventActvity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
     void shareAppDialogOption(){
         final Dialog shareAppDialogOptions = new Dialog(this, R.style.event_info_dialog_style); // initialize the dialog object.
         shareAppDialogOptions.setContentView(R.layout.dialog_share_app_layout); // initialize the dialog layout; xml layout;

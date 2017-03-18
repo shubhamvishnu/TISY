@@ -28,16 +28,16 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     List<String> memberProfileImageUrl;
     List<String> memberProfileName;
     List<String> lastSeen;
-    Dialog dialog;
+
 
 
     private LayoutInflater inflator;
 
 
-    public EventInfoRecyclerViewAdapter(Context context, Dialog dialog, List<String> memberList, List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName, List<String> lastSeen) {
+    public EventInfoRecyclerViewAdapter(Context context, List<String> memberList, List<String> memberCoordinate, List<String> memberProfileImageUrl, List<String> memberProfileName, List<String> lastSeen) {
         this.context = context;
         inflator = LayoutInflater.from(context);
-        this.dialog = dialog;
+
         this.memberList = memberList;
         this.memberCoordinate = memberCoordinate;
         this.memberProfileImageUrl = memberProfileImageUrl;
@@ -66,12 +66,6 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
         return memberList.size();
     }
 
-    void showTracks(int position) {
-        dialog.dismiss();
-        Intent intent = new Intent(context, TrackActivity.class);
-        intent.putExtra("username", memberList.get(position));
-        context.startActivity(intent);
-    }
 
     class EventInfoRecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView memberTextView;

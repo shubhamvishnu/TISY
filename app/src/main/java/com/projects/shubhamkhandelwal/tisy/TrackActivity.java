@@ -175,7 +175,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         final EditText noteDescriptionEditText = (EditText) dialog.findViewById(R.id.note_description_edit_text);
 
 
-
         ImageButton saveNoteButton = (ImageButton) dialog.findViewById(R.id.save_note_button);
         cancelImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,8 +182,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 dialog.dismiss();
             }
         });
-
-
 
 
         if (!(locationTitle == null || locationTitle.isEmpty())) {

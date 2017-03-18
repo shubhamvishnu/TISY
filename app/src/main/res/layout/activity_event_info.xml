@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.projects.shubhamkhandelwal.tisy.EventInfoActivity">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+
+            android:background="@drawable/chennai_anna_nagar_static_map"
+            tools:context="com.projects.shubhamkhandelwal.tisy.EventInfoActivity">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/create_event_rounded_white_background"
+                android:layout_margin="16dp"
+                >
+
+                <TextView
+                    android:id="@+id/event_title_text_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp"
+                    android:textStyle="bold|italic" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/create_event_rounded_white_background"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+                <TextView
+                    android:id="@+id/event_id_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/create_event_item_desc_background"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="Event-ID:"
+                    android:textColor="#2f4f4f"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/event_id_info_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/created_time_background"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:text="Generating event-ID..."
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/time_stamp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="16dp"
+                    android:gravity="right"
+                    android:background="@drawable/created_time_background"
+                   android:textColor="@android:color/white"
+                    android:textSize="12dp"
+                    android:padding="6dp"/>
+
+
+                <TextView
+
+                    android:id="@+id/dLocationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="Destination location:"
+                    android:textColor="#d3d3d3"
+                    android:textSize="12dp"
+                    android:padding="6dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_marginBottom="20dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/dest_location_desc_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:padding="6dp"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="#bcbcbc"
+                        android:textSize="16dp" />
+                    <Button
+                        android:id="@+id/edit_destination_location_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="normal"
+                        android:text="Edit"
+                        android:layout_gravity="right"
+                        android:gravity="center"
+                        android:textSize="12dp"
+                        android:textAllCaps="false"
+                        android:background="@android:color/transparent"
+                        android:textColor="@android:color/white"
+                        />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_centerHorizontal="true"
+                    android:text="Description:"
+                    android:textColor="#d3d3d3"
+                    android:textSize="12dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/event_desc_text_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:gravity="left"
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:padding="6dp"/>
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/member_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Event Members:"
+                        android:textColor="#d3d3d3"
+                        android:textSize="12dp"
+                        android:padding="6dp"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/editMembersImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:elevation="20dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/member_edit_option_image_icon" />
+                </LinearLayout>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/members_recycler_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+        </ScrollView></RelativeLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
