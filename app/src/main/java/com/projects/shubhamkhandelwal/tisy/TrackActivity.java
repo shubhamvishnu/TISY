@@ -184,9 +184,6 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         });
 
 
-        if (!(locationTitle == null || locationTitle.isEmpty())) {
-            addNoteTitleEditText.setText(locationTitle);
-        }
         editLocationImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,7 +195,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 String locationDesc = noteDescriptionEditText.getText().toString();
-                if (!(locationDesc.isEmpty() || locationDesc == null || location == null)) {
+                String locationNoteTitle = addNoteTitleEditText.getText().toString();
+                if (!(locationDesc.isEmpty() || locationDesc == null || location == null || locationNoteTitle.isEmpty() || locationNoteTitle == null )) {
                     dialog.dismiss();
                     saveNote(location, locationTitle, locationDesc);
                 } else {
@@ -359,6 +357,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             initializeMap();
         }
     }
+
     void showGPSAlert() {
         Alerter.create(this)
                 .setTitle("Turn on GPS")

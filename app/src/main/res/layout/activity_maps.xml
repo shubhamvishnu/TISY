@@ -8,8 +8,8 @@
     tools:context=".MapsActivity">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -23,58 +23,73 @@
             android:id="@+id/active_event_member_recycler_view_maps"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
-        <LinearLayout
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginTop="120dp"-->
+            <!--android:orientation="vertical">-->
+
+
+            <!--<ImageButton-->
+                <!--android:id="@+id/allInOneOptionImageButton"-->
+                <!--android:layout_width="42dp"-->
+                <!--android:layout_height="42dp"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:elevation="6dp"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:src="@drawable/menu_icon" />-->
+            <!--<android.support.v7.widget.AppCompatImageButton-->
+                <!--android:id="@+id/maps_chat_icon"-->
+                <!--android:layout_width="42dp"-->
+                <!--android:layout_height="42dp"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:elevation="6dp"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--app:srcCompat="@drawable/multimedia_chat_icon" />-->
+            <!--<android.support.v7.widget.AppCompatImageButton-->
+                <!--android:id="@+id/maps_screenshot_icon"-->
+                <!--android:layout_width="42dp"-->
+                <!--android:layout_height="42dp"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:elevation="6dp"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--app:srcCompat="@drawable/multimedia_zoom_fit_icon"-->
+                <!--/>-->
+            <!--<android.support.v7.widget.AppCompatImageButton-->
+                <!--android:id="@+id/maps_zoom_fit_icon"-->
+                <!--android:layout_width="42dp"-->
+                <!--android:layout_height="42dp"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:elevation="6dp"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--app:srcCompat="@drawable/zoomfit_image_icon" />-->
+
+
+        <!--</LinearLayout>-->
+
+        <client.yalantis.com.foldingtabbar.FoldingTabBar
+            android:id="@+id/folding_tab_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="120dp"
-            android:orientation="vertical">
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            app:mainImage="@drawable/options_fab_image_icon"
+            android:layout_centerHorizontal="true"
+            app:selectionColor="@color/colorAccent"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            app:menu="@menu/menu_tab_items"/>
 
 
-            <ImageButton
-                android:id="@+id/allInOneOptionImageButton"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_margin="10dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:elevation="6dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/menu_icon" />
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/maps_chat_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_margin="10dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:elevation="6dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/multimedia_chat_icon" />
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/maps_screenshot_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_margin="10dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:elevation="6dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/multimedia_zoom_fit_icon"
-                />
-            <android.support.v7.widget.AppCompatImageButton
-                android:id="@+id/maps_zoom_fit_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_margin="10dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:elevation="6dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/zoomfit_image_icon" />
 
-
-        </LinearLayout>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

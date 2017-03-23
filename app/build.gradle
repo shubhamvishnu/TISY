@@ -58,6 +58,8 @@ dependencies {
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     compile 'com.tapadoo.android:alerter:1.0.6'
     compile 'com.google.firebase:firebase-ads:9.4.0'
-    
+    compile 'com.github.Yalantis:OfficialFoldingTabBar.Android:v0.9'
+    compile 'com.github.joaquimley:faboptions:1.1.2'
+
 }
 apply plugin: 'com.google.gms.google-services'

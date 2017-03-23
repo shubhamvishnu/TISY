@@ -268,6 +268,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         editor.putString("name", name);
         editor.apply();
 
+        Toast.makeText(Login.this, "username:" + username, Toast.LENGTH_SHORT).show();
         SharedPreferences loginPreferences = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         SharedPreferences.Editor loginEditor = loginPreferences.edit();
         loginEditor.putBoolean("login", true);
