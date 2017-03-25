@@ -311,7 +311,7 @@ boolean fabOptionsClicked;
                 String locationNoteTitle = addNoteTitleEditText.getText().toString();
                 if (!(locationDesc.isEmpty() || locationDesc == null || location == null || locationNoteTitle.isEmpty() || locationNoteTitle == null )) {
                     dialog.dismiss();
-                    saveNote(location, locationNoteTitle, locationDesc);
+                    saveNote(location, locationNoteTitle.trim(), locationDesc.trim());
                 } else {
                     Toast.makeText(TrackActivity.this, "enter all the details", Toast.LENGTH_SHORT).show();
                 }
@@ -327,7 +327,7 @@ boolean fabOptionsClicked;
     void showNoteListDialog(){
 
         final Dialog dialog = new Dialog(this, R.style.event_dialogs);
-        dialog.setContentView(R.layout.dialog_add_note_layout);
+        dialog.setContentView(R.layout.dialog_notes_list_layout);
 
         RecyclerView allNotesRecyclerView=(RecyclerView) dialog.findViewById(R.id.notes_recycler_view);
 
@@ -342,7 +342,7 @@ boolean fabOptionsClicked;
 
 
         Window window = dialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         dialog.show();
         dialog.setCanceledOnTouchOutside(true);
