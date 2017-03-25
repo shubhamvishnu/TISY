@@ -195,9 +195,9 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             final EventInfo info = activeEventIds.get(finalPosition).getEventInfo();
 
 
-            ((ActiveEventsRecyclerViewHolder) holder).activeEventdLocationDesc.setText(info.getdLocationDesc());
+            //((ActiveEventsRecyclerViewHolder) holder).activeEventdLocationDesc.setText(info.getdLocationDesc());
             //((ActiveEventsRecyclerViewHolder) holder).activeEventRequests.setText(activeEventIds.get(finalPosition).getRequests());
-            ((ActiveEventsRecyclerViewHolder) holder).activeEventTimeCreated.setText(activeEventIds.get(finalPosition).getTimeCreated());
+            //((ActiveEventsRecyclerViewHolder) holder).activeEventTimeCreated.setText(activeEventIds.get(finalPosition).getTimeCreated());
 
             ((ActiveEventsRecyclerViewHolder) holder).activeMembersRecyclerViewAdapter = new ActiveMembersRecyclerViewAdapter(context, activeEventIds.get(finalPosition).getMemberList());
             ((ActiveEventsRecyclerViewHolder) holder).activeEventMemberRecyclerView.setAdapter(((ActiveEventsRecyclerViewHolder) holder).activeMembersRecyclerViewAdapter);
@@ -356,10 +356,10 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
     class ActiveEventsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView activeEventIdTextView;
 
-        TextView activeEventdLocationDesc;
+        //TextView activeEventdLocationDesc;
         TextView activeEventTitleTextView;
         //TextView activeEventRequests;
-        TextView activeEventTimeCreated;
+        //TextView activeEventTimeCreated;
         TextView activeEventAssociation;
 
         RecyclerView activeEventMemberRecyclerView;
@@ -374,10 +374,10 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             view = itemView;
             activeEventIdTextView = (TextView) itemView.findViewById(R.id.active_event_id_text_view);
 
-            activeEventdLocationDesc = (TextView) itemView.findViewById(R.id.active_event_dLocationDesc);
+            //activeEventdLocationDesc = (TextView) itemView.findViewById(R.id.active_event_dLocationDesc);
             activeEventTitleTextView = (TextView) itemView.findViewById(R.id.active_event_title_text_view);
            //activeEventRequests = (TextView) itemView.findViewById(R.id.active_event_requests);
-            activeEventTimeCreated = (TextView) itemView.findViewById(R.id.active_event_time_created);
+            //activeEventTimeCreated = (TextView) itemView.findViewById(R.id.active_event_time_created);
             activeEventAssociation = (TextView) itemView.findViewById(R.id.active_event_association_text_view);
 
             activeEventMemberRecyclerView = (RecyclerView) itemView.findViewById(R.id.active_event_member_recycler_view);
@@ -389,10 +389,10 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             activeEventMemberRecyclerView.setLayoutManager(layoutManager);
 
             activeEventIdTextView.setOnClickListener(this);
-            activeEventdLocationDesc.setOnClickListener(this);
+           // activeEventdLocationDesc.setOnClickListener(this);
             activeEventTitleTextView.setOnClickListener(this);
             //activeEventRequests.setOnClickListener(this);
-            activeEventTimeCreated.setOnClickListener(this);
+            //activeEventTimeCreated.setOnClickListener(this);
             activeEventAssociation.setOnClickListener(this);
 
             view.setOnClickListener(this);

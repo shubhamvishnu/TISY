@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final static String RECEIVED_REQUESTS_TAG = "Invites";
     public final static String MY_ACCOUNT_TAG = "My account";
     public final static String PLACES_TAG = "My places";
-    public final static String SHARE_APP_TAG = "Share";
+    public final static String SHARE_APP_TAG = "Share Tisy";
 
 
     ProgressDialog progressDialog;

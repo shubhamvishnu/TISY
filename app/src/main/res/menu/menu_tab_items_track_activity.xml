@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ftb_shutter_track_activity"
+        android:icon="@drawable/shutter_fab_image_icon"
+        android:title="snapshot" />
+
+    <item
+        android:id="@+id/ftb_new_track_activity"
+        android:icon="@drawable/note_pin_marker_icon"
+        android:title="chat" />
+    <item
+        android:id="@+id/ftb_list_track_activity"
+        android:icon="@drawable/create_new_event_icon"
+        android:title="more" />
+
+    <item
+        android:id="@+id/ftb_zoom_fit_track_activity"
+        android:icon="@drawable/binoculars_fab_image_icon"
+        android:title="zoom-fit" />
+
+
+</menu>

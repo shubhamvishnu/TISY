@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".TrackActivity">
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -50,5 +50,18 @@
                 android:src="@drawable/zoomfit_image_icon" />
 
         </LinearLayout>
+
+        <client.yalantis.com.foldingtabbar.FoldingTabBar
+            android:id="@+id/folding_tab_bar_track_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            app:mainImage="@drawable/options_fab_image_icon"
+            android:layout_centerHorizontal="true"
+            app:selectionColor="@color/colorPrimaryDark"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            app:menu="@menu/menu_tab_items_track_activity"/>
+
     </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>

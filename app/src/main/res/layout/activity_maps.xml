@@ -77,6 +77,7 @@
 
         <!--</LinearLayout>-->
 
+
         <client.yalantis.com.foldingtabbar.FoldingTabBar
             android:id="@+id/folding_tab_bar"
             android:layout_width="wrap_content"
@@ -85,10 +86,9 @@
             android:layout_centerInParent="true"
             app:mainImage="@drawable/options_fab_image_icon"
             android:layout_centerHorizontal="true"
-            app:selectionColor="@color/colorAccent"
+            app:selectionColor="@color/colorPrimaryDark"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             app:menu="@menu/menu_tab_items"/>
-
 
 
     </RelativeLayout>

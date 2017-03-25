@@ -1,28 +1,41 @@
 package com.projects.shubhamkhandelwal.tisy;
 
+import android.*;
+import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +58,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.projects.shubhamkhandelwal.tisy.Classes.ActiveEventsRecyclerViewAdapter;
+import com.projects.shubhamkhandelwal.tisy.Classes.AllNotesRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
@@ -56,14 +71,22 @@ import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.tapadoo.alerter.Alerter;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import client.yalantis.com.foldingtabbar.FoldingTabBar;
 
 public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
     GoogleMap mMap;
     String username;
-
+    public static final int REQUEST_ACCESS_WRITE_STORAGE = 2;
     ImageButton addNoteImageButton;
 
     int PLACE_PICKER_REQUEST = 1;
@@ -74,7 +97,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     CoordinatorLayout trackCoordinatorLayout;
     ImageButton trackActivityZoomFit;
     LatLngBounds.Builder builder;
-
+    ProgressDialog progressDialog;
+boolean fabOptionsClicked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +143,96 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             }
         });
 
+        initProgressDialog();
 
+        FoldingTabBar tabBar = (FoldingTabBar) findViewById(R.id.folding_tab_bar_track_activity);
+        tabBar.setOnFoldingItemClickListener(new FoldingTabBar.OnFoldingItemSelectedListener() {
+            @Override
+            public boolean onFoldingItemSelected(@NotNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.ftb_shutter_track_activity: {
+                        checkForWriteStoragePermission();
+                        break;
+                    }
+                    case R.id.ftb_list_track_activity: {
+                        LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+                        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            showGPSAlert();
+                        } else {
+                            if(tagNoteMap != null && tagNoteMap.size() > 0){
+                                showNoteListDialog();
+                            }
+
+                        }
+                        break;
+                    }
+                    case R.id.ftb_new_track_activity: {
+                        if (ActivityCompat.checkSelfPermission(TrackActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            showPermissionAlert();
+                        } else {
+                            LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+                            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                                showGPSAlert();
+                            } else {
+                                placePickerDialog();
+                            }
+
+                        }
+                        break;
+                    }
+                    case R.id.ftb_zoom_fit_track_activity: {
+
+
+                        LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
+                        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            showGPSAlert();
+                        } else {
+                            zoomFit();
+                        }
+                        break;
+                    }
+
+                }
+                return false;
+            }
+        });
+        fabOptionsClicked = false;
+
+        tabBar.setOnMainButtonClickListener(new FoldingTabBar.OnMainButtonClickedListener() {
+            @Override
+            public void onMainButtonClicked() {
+                if(fabOptionsClicked){
+                    if(mMap !=null){
+                        mMap.setPadding(0, 0, 0, 0);
+                    }
+                    fabOptionsClicked = false;
+                }else{
+                    if(mMap !=null){
+                        mMap.setPadding(0, 0, 0, 320);
+                        fabOptionsClicked = true;
+                    }
+                }
+
+            }
+        });
+        tabBar.setBackground(getResources().getDrawable(R.drawable.active_members_recycler_view_item_background));
+
+
+    }
+
+    void showPermissionAlert(){
+        Alerter.create(this)
+                .setTitle("Enable location permission")
+                .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
+                .setBackgroundColor(R.color.colorAccent)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openSettings();
+                    }
+                })
+                .show();
     }
     void initServices(){
         if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
@@ -198,12 +311,35 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
                 String locationNoteTitle = addNoteTitleEditText.getText().toString();
                 if (!(locationDesc.isEmpty() || locationDesc == null || location == null || locationNoteTitle.isEmpty() || locationNoteTitle == null )) {
                     dialog.dismiss();
-                    saveNote(location, locationTitle, locationDesc);
+                    saveNote(location, locationNoteTitle, locationDesc);
                 } else {
                     Toast.makeText(TrackActivity.this, "enter all the details", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        Window window = dialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(true);
+    }
+    void showNoteListDialog(){
+
+        final Dialog dialog = new Dialog(this, R.style.event_dialogs);
+        dialog.setContentView(R.layout.dialog_add_note_layout);
+
+        RecyclerView allNotesRecyclerView=(RecyclerView) findViewById(R.id.notes_recycler_view);
+
+
+        allNotesRecyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TrackActivity.this);
+        allNotesRecyclerView.setLayoutManager(linearLayoutManager);
+
+        AllNotesRecyclerViewAdapter allNotesRecyclerViewAdapter = new AllNotesRecyclerViewAdapter(TrackActivity.this, tagNoteMap);
+        allNotesRecyclerView.setAdapter(allNotesRecyclerViewAdapter);
+
 
         Window window = dialog.getWindow();
         window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
@@ -383,23 +519,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
 
     }
 
-    void showPermissionSnackBar() {
 
-        Snackbar snackbar = Snackbar
-                .make(trackCoordinatorLayout, "enable location permission", Snackbar.LENGTH_INDEFINITE)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mMap != null) {
-                            mMap.setPadding(0, 0, 0, 0);
-                        }
-                        openSettings();
-                    }
-                });
-
-        snackbar.setActionTextColor(Color.parseColor("#009688"));
-        snackbar.show();
-    }
 
     void openSettings() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -414,7 +534,8 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
             if (mMap != null) {
                 mMap.setPadding(0, 0, 0, 200);
             }
-            showPermissionSnackBar();
+            showPermissionAlert();
+
         } else {
             addNoteImageButton.setVisibility(View.VISIBLE);
             trackActivityZoomFit.setVisibility(View.VISIBLE);
@@ -572,5 +693,149 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+    void checkForWriteStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            checkWritePermission();
+        } else {
+
+            progressDialog.show();
+            captureScreen();
+        }
+
+    }
+    void checkWritePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                if (shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    // toast the reason why we need the permission
+                    showWritePermissionAlert();
+                }
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_ACCESS_WRITE_STORAGE);
+            }
+        }
+    }
+    public void openShareImageDialog(String filePath) {
+        File file = this.getFileStreamPath(filePath);
+
+        if (!filePath.equals("")) {
+            final ContentValues values = new ContentValues(2);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+            final Uri contentUriFile = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
+            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("image/jpeg");
+            intent.putExtra(android.content.Intent.EXTRA_STREAM, contentUriFile);
+            startActivity(Intent.createChooser(intent, "Share Image"));
+        } else {
+            Toast.makeText(getApplicationContext(), "share failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void captureScreen() {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            Bitmap bitmap;
+
+            @Override
+            public void onSnapshotReady(Bitmap snapshot) {
+                // TODO Auto-generated method stub
+//                bitmap = snapshot;
+//                String filePath = Environment.getExternalStorageDirectory().toString() + "/" + System.currentTimeMillis() + ".jpg";
+//                try {
+//
+//                    File imageFile = new File(filePath);
+//
+//                    FileOutputStream outputStream = new FileOutputStream(imageFile);
+//                    int quality = 100;
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+//                    outputStream.flush();
+//                    outputStream.close();
+//
+//                   openShareImageDialog(fi);
+//
+//                } catch (Throwable e) {
+//                    // Several error may come out with file handling or OOM
+//                    e.printStackTrace();
+//                }
+
+
+                bitmap = snapshot;
+
+                OutputStream fout = null;
+
+                String filePath = System.currentTimeMillis() + ".jpeg";
+
+                try {
+                    fout = openFileOutput(filePath,
+                            MODE_WORLD_READABLE);
+
+                    // Write the string to the file
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fout);
+                    fout.flush();
+                    fout.close();
+                } catch (FileNotFoundException e) {
+
+                } catch (IOException e) {
+
+                }
+
+                openShareImageDialog(filePath);
+
+            }
+        };
+
+        mMap.snapshot(callback);
+    }
+    void showWritePermissionAlert() {
+        Alerter.create(TrackActivity.this)
+                .setTitle("Enable Write Permission")
+                .setText("To take screen shots of the view, give Tisy write permission.")
+                .setBackgroundColor(R.color.colorPrimaryDark)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openSettings();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_ACCESS_WRITE_STORAGE) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                showWritePermissionAlert();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        }
+    }
+    void initProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Screenshot");
+        progressDialog.setMessage("capturing snapshot of the view for you...");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
+
     }
 }

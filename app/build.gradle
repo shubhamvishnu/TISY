@@ -53,13 +53,11 @@ dependencies {
     compile 'com.tumblr:backboard:0.1.0'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
     compile 'com.tapadoo.android:alerter:1.0.6'
     compile 'com.google.firebase:firebase-ads:9.4.0'
     compile 'com.github.Yalantis:OfficialFoldingTabBar.Android:v0.9'
-    compile 'com.github.joaquimley:faboptions:1.1.2'
+
 
 }
 apply plugin: 'com.google.gms.google-services'
