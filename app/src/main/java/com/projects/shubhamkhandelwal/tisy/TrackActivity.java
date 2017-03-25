@@ -329,7 +329,7 @@ boolean fabOptionsClicked;
         final Dialog dialog = new Dialog(this, R.style.event_dialogs);
         dialog.setContentView(R.layout.dialog_add_note_layout);
 
-        RecyclerView allNotesRecyclerView=(RecyclerView) findViewById(R.id.notes_recycler_view);
+        RecyclerView allNotesRecyclerView=(RecyclerView) dialog.findViewById(R.id.notes_recycler_view);
 
 
         allNotesRecyclerView.setHasFixedSize(true);
