@@ -62,7 +62,7 @@ import com.tiancaicc.springfloatingactionmenu.SpringFloatingActionMenu;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
     // variables
     // FAB sub-action button tags; to identify which sub-action button was clicked.
@@ -78,22 +78,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     ProgressDialog progressDialog;
 
-    long activeEventCount; // number of active event of the user.
-    long createdEventCount; // number of events created; count of no. of events the user is the admin of.
-    long joinedEventCount; // number of events user has joined.
 
-    String userPhotoUri; // user profile photo url.
     String username; // unique username of the user.
-    GoogleApiClient mGoogleApiClient;
+
     // objects
     Intent intent; // common intent to perform intent actions.
-    Dialog userAccountDialog; // reference for the user account dialog created; so that their appearance can be manipulated from outside the block.
-    Firebase firebase; // reference for the firebase object.
+
+
     CoordinatorLayout coordinatorLayoutMainActivity; // reference of the coordinator layout view in the activity_main.xml.
-    ImageButton centerFAB; // reference for center main FAB button.
+
     ImageView mainActivityBackgroundImageView;
-    InterstitialAd mInterstitialPlacesAd;
-    InterstitialAd mInterstitialCreateEventAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +113,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (loginCheck.contains("login")) {
 
            initMain();
-            initLogout();
+
             //removeNotification();
             // initPlacesAdd();
             //initCreateEventAdd();
@@ -133,7 +128,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
 
         coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity); // initialize the view object.
-        userAccountDialog = null;
+
 
         /**
          * create two FAB - center main FAB; user account information FAB
@@ -213,15 +208,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .build();
 
     }
-    void initLogout(){
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        mGoogleApiClient.connect();
-    }
+
 void initMain(){
     if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
         startService(new Intent(getBaseContext(), LocationListenerService.class));
@@ -285,14 +272,19 @@ void initMain(){
            toJoinEventActivity();
         }
         if (label.equals(MY_ACCOUNT_TAG)) {
-            initializeUserInformation();
+           showUserInfo();
         }
         if(label.equals(SHARE_APP_TAG)){
            // shareAppDialogOption();
             shareApp("Download tisy from play store using this link:");
         }
     }
-
+    void showUserInfo(){
+        Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
     void toJoinEventActivity(){
         Intent intent = new Intent(MainActivity.this, JoinEventActvity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -405,136 +397,6 @@ void initMain(){
     }
 
 
-    /**
-     * fetches information about the user.
-     * after fetching-user information dialog is shown.
-     */
-    void initializeUserInformation() {
-
-        Firebase userInfoFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
-        userInfoFirebase.keepSynced(true);
-        userInfoFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                activeEventCount = 0; // total number of events user is a part of currently.
-                createdEventCount = 0; // total number of events user has created.
-                joinedEventCount = 0; // total number of events user has joined.
-                userPhotoUri = new String(); // holds the profile photo image url.
-
-                userPhotoUri = dataSnapshot.child("userPhotoUri").getValue().toString();
-                activeEventCount = dataSnapshot.child("activeEvent").getChildrenCount();
-
-                for (DataSnapshot children : dataSnapshot.child("activeEvent").getChildren()) {
-                    if (children.getValue().toString().equals("created")) {
-                        ++createdEventCount;
-                    } else if (children.getValue().toString().equals("joined")) {
-                        ++joinedEventCount;
-                    }
-                }
-
-                // call to show the user information dialog after initialization.
-                showInformationDialog();
-            }
-
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-
-    // show the user information dialog
-    void showInformationDialog() {
-        userAccountDialog = new Dialog(this, R.style.event_info_dialog_style); // initialize the dialog object.
-        userAccountDialog.setContentView(R.layout.dialog_user_account_layout); // initialize the dialog layout; xml layout;
-
-        // initialize the view items in the dialog.
-        TextView nameEditText = (TextView) userAccountDialog.findViewById(R.id.name_text_view);
-        TextView userIdEditText = (TextView) userAccountDialog.findViewById(R.id.user_id_text_view);
-        TextView activeEventscountTextView = (TextView) userAccountDialog.findViewById(R.id.active_events_count_text_view);
-        TextView createdEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.created_events_count_text_view);
-        TextView joinedEventsCountTextView = (TextView) userAccountDialog.findViewById(R.id.joined_events_count_text_view);
-        CircleImageView profileImageView = (CircleImageView) userAccountDialog.findViewById(R.id.profile_image_circle_image_view);
-        Button logoutButton = (Button) userAccountDialog.findViewById(R.id.logout_button);
-
-        Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
-        SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
-        nameEditText.setText(userInfoPreference.getString("name", null));
-        userIdEditText.setText(userInfoPreference.getString("username", null));
-
-        activeEventscountTextView.setText(String.valueOf(activeEventCount));
-        createdEventsCountTextView.setText(String.valueOf(createdEventCount));
-        joinedEventsCountTextView.setText(String.valueOf(joinedEventCount));
-
-        Window window = userAccountDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        userAccountDialog.setCanceledOnTouchOutside(true);
-        userAccountDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                userAccountDialog = null;
-            }
-        });
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                userAccountDialog.dismiss();
-                progressDialog.show();
-                logout();
-            }
-        });
-        userAccountDialog.show();
-
-    }
-
-    void logout() {
-
-
-
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                       loggedout();
-                        // [END_EXCLUDE]
-                    }
-                });
-
-
-  /*
-        if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
-            ((ActivityManager) getApplicationContext().getSystemService(ACTIVITY_SERVICE))
-                    .clearApplicationUserData(); // note: it has a return value!
-            loggedout();
-        } else {
-            loggedout();
-        }
-*/
-
-    }
-
-    void loggedout() {
-        getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE).edit().clear().apply();
-        getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE).edit().clear().apply();
-        getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).edit().clear().apply();
-        getSharedPreferences(SharedPreferencesName.CHATS_READ_COUNT, MODE_PRIVATE).edit().clear().apply();
-
-        SQLiteDatabaseConnection sqLiteDatabaseConnection = new SQLiteDatabaseConnection(MainActivity.this);
-        sqLiteDatabaseConnection.emptyTable();
-
-        if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-
-        Intent intent = new Intent(MainActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -552,8 +414,5 @@ void initMain(){
         finish();
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
 }

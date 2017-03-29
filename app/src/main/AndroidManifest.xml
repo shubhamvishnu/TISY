@@ -66,7 +66,9 @@
             android:name=".EventInfoActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".JoinEventActvity" />
-        <activity android:name=".SearchEventActivity"></activity>
+        <activity android:name=".SearchEventActivity" />
+        <activity android:name=".UserInfoActivity" />
+        <activity android:name=".AboutUsActivity" />
     </application>
 
 </manifest>

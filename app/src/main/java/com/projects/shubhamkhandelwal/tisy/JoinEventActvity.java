@@ -41,35 +41,8 @@ public class JoinEventActvity extends FragmentActivity {
     }
 
     void initFAB(){
-        ImageView newRequestImageIcon = new ImageView(this); // Create an icon imageview.
-        newRequestImageIcon.setBackgroundColor(getResources().getColor(R.color.main_activity_create_event));
-        newRequestImageIcon.setImageResource(R.drawable.create_event_icon);
 
-        // create menu
-//        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this) //builder for the user account information FAB.
-//                .setContentView(newRequestImageIcon)
-//                .setBackgroundDrawable(R.drawable.join_event_fab_background_selector)
-//                .build();
-//
-//        newRequestImageIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toSearchEventActivity();
-//            }
-//        });
-        final com.melnykov.fab.FloatingActionButton fab = new com.melnykov.fab.FloatingActionButton(this);
-        fab.setType(com.melnykov.fab.FloatingActionButton.TYPE_NORMAL);
-        fab.setImageResource(R.drawable.create_event_icon);
-        fab.setColorPressedResId(R.color.main_activity_create_event);
-        fab.setColorNormalResId(R.color.main_activity_create_event);
-        fab.setColorRippleResId(R.color.main_activity_create_event);
-        fab.setShadow(true);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(JoinEventActvity.this, "clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+
     }
 
     void showSentJoinRequests() {
