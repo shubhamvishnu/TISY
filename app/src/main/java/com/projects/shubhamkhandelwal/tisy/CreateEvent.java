@@ -343,11 +343,11 @@ void initAdd(){
     }
 
     void showDestinationIconDialog() {
-        ImageButton destinationWalking, destinationSwimming, destinationSpa, destinationGym, destinationFootBall, destinationBicycle, destinationRunning;
-        ImageButton destinationDrinks, destinationCasino, destinationZoo, destinationBowlingAlley, destinationAmusementPark, destinationAquarium, destinationNightClub, destinationGaming;
+        ImageButton destinationWalking, destinationSwimming, destinationSpa, destinationGym, destinationFootBall, destinationBicycle, destinationRunning, destinationDance, destinationProtest;
+        ImageButton destinationDrinks, destinationCasino, destinationZoo, destinationBowlingAlley, destinationAmusementPark, destinationAquarium, destinationMovie, destinationNightClub, destinationGaming;
         ImageButton destinationCafe, destinationRestaurant, destinationDinning, destinationPizza;
-        ImageButton destinationHotel, destinationUniversity, destinationLibrary, destinationMuseum, destinationStadium, destinationSchool, destinationBeautySalon, destinationHome, destinationPark;
-        ImageButton destinationPharmacy, destinationHospital, destinationWorship;
+        ImageButton destinationHotel, destinationUniversity, destinationLibrary, destinationMuseum, destinationStadium, destinationSchool, destinationBeautySalon, destinationHome, destinationPark, destinationConference;
+        ImageButton destinationPharmacy, destinationHospital, destinationWorship, destinationYoga;
         ImageButton destinationMall, destinationBookStore, destinationConvenienceStore, destinationLiquorStore, destinationLaundry, destinationGrocery, destinationPrintShop;
         ImageButton destinationParking, destinationAirport, destinationTrainStation, destinationBusStation, destinationSubwayStation, destinationTram;
 
@@ -401,6 +401,57 @@ void initAdd(){
         destinationBusStation = (ImageButton) dialog.findViewById(R.id.destination_bus_station);
         destinationSubwayStation = (ImageButton) dialog.findViewById(R.id.destination_subway_station);
         destinationTram = (ImageButton) dialog.findViewById(R.id.destination_tram);
+
+        destinationDance=(ImageButton) dialog.findViewById(R.id.destination_dance);
+        destinationProtest=(ImageButton) dialog.findViewById(R.id.destination_protest);
+        destinationMovie=(ImageButton) dialog.findViewById(R.id.destination_movie);
+        destinationConference=(ImageButton) dialog.findViewById(R.id.destination_conference);
+        destinationYoga=(ImageButton) dialog.findViewById(R.id.destination_yoga);
+
+        destinationDance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+                destinationIconClickListener(view);
+            }
+        });
+
+        destinationProtest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+                destinationIconClickListener(view);
+            }
+        });
+
+        destinationConference.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+                destinationIconClickListener(view);
+            }
+        });
+
+        destinationYoga.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+                destinationIconClickListener(view);
+            }
+        });
+
+        destinationMovie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+
+                destinationIconClickListener(view);
+            }
+        });
 
         closeDestinationIconDialogButton = (Button) dialog.findViewById(R.id.close_destination_icon_dialog_button);
         closeDestinationIconDialogButton.setOnClickListener(new View.OnClickListener() {
@@ -972,6 +1023,26 @@ void initAdd(){
                     dLocationIconImageButton.setImageResource(R.drawable.destination_icon_tram);
                     break;
                 }
+                case 46: {
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_dance);
+                    break;
+                }
+                case 47: {
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_protest);
+                    break;
+                }
+                case 48: {
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_conference);
+                    break;
+                }
+                case 49: {
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_yoga);
+                    break;
+                }
+                case 50: {
+                    dLocationIconImageButton.setImageResource(R.drawable.destination_movie);
+                    break;
+                }
             }
         }
     }
@@ -997,27 +1068,6 @@ void initAdd(){
         }
     }
 
-    /*void storeDestinationIconFirebase(Drawable drawable) {
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        //  StorageReference storageReference = firebaseStorage.getReferenceFromUrl("gs://fir-trio.appspot.com");
-        StorageReference imageStorageReference = firebaseStorage.getReferenceFromUrl("gs://fir-trio.appspot.com/" + eventId + "/dIcon");
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = imageStorageReference.putBytes(data);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(CreateEvent.this, "destination icon uploaded successfully.", Toast.LENGTH_SHORT).show();
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-               // iconResourceId = downloadUrl.toString();
-            }
-        });
-
-
-    }*/
 
     // generates a new temporary event ID (since event is not created and stored in Firebase database)
     void generate(int count) {
@@ -1123,20 +1173,7 @@ void initAdd(){
                 })
                 .show();
     }
-    void showSnackBar() {
 
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "enable location permission", Snackbar.LENGTH_INDEFINITE)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openSettings();
-                    }
-                });
-
-        snackbar.setActionTextColor(Color.parseColor("#F7BF8E"));
-        snackbar.show();
-    }
 
     void openSettings() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);

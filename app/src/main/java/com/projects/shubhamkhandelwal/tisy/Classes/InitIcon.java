@@ -210,6 +210,26 @@ public class InitIcon {
                 iconResourceId = 45;
                 break;
             }
+            case R.id.destination_dance: {
+                iconResourceId = 46;
+                break;
+            }
+            case R.id.destination_protest: {
+                iconResourceId = 47;
+                break;
+            }  case R.id.destination_conference: {
+                iconResourceId = 48;
+                break;
+            }
+            case R.id.destination_yoga: {
+                iconResourceId = 49;
+                break;
+            }
+            case R.id.destination_movie: {
+                iconResourceId = 50;
+                break;
+            }
+
 
         }
         return iconResourceId;
@@ -490,6 +510,26 @@ public class InitIcon {
                 destinationIconBitmap = getBitmapFromVectorDrawable(context, R.drawable.destination_icon_tram);
 
 
+                break;
+            }
+            case 46: {
+                destinationIconBitmap = getBitmapFromVectorDrawable(context, R.drawable.destination_dance);
+                break;
+            }
+            case 47: {
+                destinationIconBitmap = getBitmapFromVectorDrawable(context, R.drawable.destination_protest);
+                break;
+            }
+            case 48: {
+                destinationIconBitmap = getBitmapFromVectorDrawable(context, R.drawable.destination_conference);
+                break;
+            }
+            case 49: {
+                destinationIconBitmap = getBitmapFromVectorDrawable(context, R.drawable.destination_yoga);
+                break;
+            }
+            case 50: {
+                destinationIconBitmap = getBitmapFromVectorDrawable(context, R.drawable.destination_movie);
                 break;
             }
 
