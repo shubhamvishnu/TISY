@@ -29,6 +29,7 @@ public class TimeStamp {
       Date date = new Date();
         return "last updated: at " + timeFormat.format(date)+ " on " + dateFormat.format(date);
     }
+
     public static String getHour(){
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "HH", Locale.getDefault());

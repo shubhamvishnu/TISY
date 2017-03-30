@@ -31,6 +31,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
     LayoutInflater inflator;
     String name;
     List<String> nameList;
+    List<String> usernameList;
     String username;
     List<String> eventIdList;
     Firebase firebase;
@@ -43,6 +44,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         Toast.makeText(context, "name :" + this.name, Toast.LENGTH_SHORT).show();
         eventIdList = new ArrayList<>();
         nameList = new ArrayList<>();
+        usernameList = new ArrayList<>();
         firebase = null;
         username = context.getSharedPreferences(SharedPreferencesName.USER_DETAILS, Context.MODE_PRIVATE).getString("username", null);
         populateViewWithResults();
@@ -73,6 +75,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
     void populateViewWithResults() {
         nameList = new ArrayList<>();
         eventIdList = new ArrayList<>();
+        usernameList = new ArrayList<>();
         final List<String> activeEventList = new ArrayList<>();
         Firebase searchResultFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS);
 
@@ -121,6 +124,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                                                         int position = eventIdList.size();
                                                         eventIdList.add(eventSnapshot.getKey());
                                                         nameList.add(snapshot.child("name").getValue().toString());
+                                                        usernameList.add(snapshot.getKey());
                                                         notifyItemInserted(position);
                                                     }
                                                 } else {
@@ -128,6 +132,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                                                         int position = eventIdList.size();
                                                         eventIdList.add(eventSnapshot.getKey());
                                                         nameList.add(snapshot.child("name").getValue().toString());
+                                                        usernameList.add(snapshot.getKey());
                                                         notifyItemInserted(position);
                                                     }
                                                 }
@@ -166,6 +171,8 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
     public void onBindViewHolder(SearchResultsRecyclerViewHolder holder, int position) {
         holder.nameTextView.setText(nameList.get(position));
         holder.eventIdTextView.setText(eventIdList.get(position));
+        holder.usernameTextView.setText("username: "+usernameList.get(position));
+
     }
 
     @Override
@@ -262,6 +269,8 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         firebase.updateChildren(request, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                nameList.remove(position);
+                usernameList.remove(position);
                 eventIdList.remove(position);
                 notifyItemRemoved(position);
                 if (progressDialog.isShowing()) {
@@ -276,12 +285,14 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         TextView nameTextView;
         TextView eventIdTextView;
         ImageView addMemberImageView;
+        TextView usernameTextView;
 
         public SearchResultsRecyclerViewHolder(View itemView) {
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.search_option_choice_name_text_view);
             eventIdTextView = (TextView) itemView.findViewById(R.id.search_option_choice_event_id_text_view);
             addMemberImageView = (ImageView) itemView.findViewById(R.id.search_option_add_member_image_view);
+            usernameTextView = (TextView) itemView.findViewById(R.id.search_option_choice_username_text_view);
             addMemberImageView.setOnClickListener(this);
         }
 

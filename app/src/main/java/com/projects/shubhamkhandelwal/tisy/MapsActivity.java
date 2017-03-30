@@ -63,6 +63,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -96,6 +97,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
@@ -192,7 +194,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644~7949777217");
         initServices();
 
         // initialize the GoogleMaps with the activity's context. To create custom icons for the markers.
@@ -373,7 +375,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void initAdd() {
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("ca-app-pub-2840079713824644/6953624816");
 
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -1645,18 +1647,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             showGPSAlert();
         } else {
-            updateStatus();
             initializeMap();
         }
     }
 
-    void updateStatus() {
-        Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
-        updateLastKnowStatus.keepSynced(true);
-        Map<String, Object> lastSeenMap = new HashMap<>();
-        lastSeenMap.put("lastSeen", "Online");
-        updateLastKnowStatus.updateChildren(lastSeenMap);
-    }
+
 
     void showGPSAlert() {
         Alerter.create(this)
@@ -2028,6 +2023,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         checkNearCheckPoint(location);
                         updateUserCurrentLocation(location);
                     } else {
+                        updateStatus();
                         updateMyLocation(location);
                     }
                 }
@@ -2037,6 +2033,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+    void updateStatus(){
+        Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
+        updateLastKnowStatus.keepSynced(true);
+        Map<String, Object> lastSeenMap = new HashMap<>();
+        lastSeenMap.put("lastSeen", TimeStamp.getLastSeen());
+        updateLastKnowStatus.updateChildren(lastSeenMap);
+
+    }
+
 
     void showPermissionAlert() {
         Alerter.create(this)

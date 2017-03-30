@@ -36,6 +36,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -107,7 +108,7 @@ public class CreateEvent extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644~7949777217");
         // Firebase context
         Firebase.setAndroidContext(this);
 
@@ -278,7 +279,7 @@ public class CreateEvent extends Activity {
     }
 void initAdd(){
     mInterstitialAd = new InterstitialAd(this);
-    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+    mInterstitialAd.setAdUnitId("ca-app-pub-2840079713824644/4000158413");
 
     mInterstitialAd.setAdListener(new AdListener() {
         @Override

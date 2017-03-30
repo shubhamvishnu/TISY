@@ -57,6 +57,7 @@ dependencies {
     compile 'com.tapadoo.android:alerter:1.0.6'
     compile 'com.google.firebase:firebase-ads:9.4.0'
     compile 'com.github.Yalantis:OfficialFoldingTabBar.Android:v0.9'
+    compile 'com.google.android.gms:play-services-ads:9.6.1'
 
 
 }

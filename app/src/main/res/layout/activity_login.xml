@@ -5,8 +5,8 @@
     android:id="@+id/coordinatorLayoutLoginActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:alpha="0.9"
-    android:background="@drawable/login_background"
+
+    android:background="@drawable/chennai_anna_nagar_static_map"
     tools:context=".Login">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,8 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
+
         android:padding="16dp"
+        android:background="@drawable/login_activity_background"
         tools:context=".Login">
+
+
 
         <LinearLayout
             android:layout_width="fill_parent"

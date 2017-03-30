@@ -88,6 +88,7 @@ public class EventInfoActivity extends FragmentActivity {
         timeStamp = new String();
         eventTitle = new String();
         firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId);
+        firebase.keepSynced(true);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -140,6 +141,7 @@ public class EventInfoActivity extends FragmentActivity {
         memberUriCount = 0;
         for (String name : membersList) {
             firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + name);
+            firebase.keepSynced(true);
             firebase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -218,7 +220,7 @@ public class EventInfoActivity extends FragmentActivity {
                         Toast.makeText(EventInfoActivity.this, "enter a destination title", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(EventInfoActivity.this, "no internet connection", Toast.LENGTH_SHORT).show();
+                    showNoInternetConnectionAlert();
                 }
             }
         });
@@ -229,6 +231,12 @@ public class EventInfoActivity extends FragmentActivity {
         destinationLocationChangeDialog.setCanceledOnTouchOutside(true);
         destinationLocationChangeDialog.show();
 
+    }
+    void showNoInternetConnectionAlert(){
+        Alerter.create(this)
+                .setText("Oops! No internet connection")
+                .setBackgroundColor(R.color.colorAccent)
+                .show();
     }
     boolean checkInternetConnection() {
 
@@ -290,7 +298,7 @@ public class EventInfoActivity extends FragmentActivity {
                     if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                          placePickerDialog();
                     } else {
-                        Toast.makeText(EventInfoActivity.this, "Turn on GPS", Toast.LENGTH_SHORT).show();
+                      showGPSAlert();
                     }
 
                 }
@@ -304,6 +312,22 @@ public class EventInfoActivity extends FragmentActivity {
                 }
             });
         }
+    void showGPSAlert(){
+        Alerter.create(this)
+                .setTitle("Turn on GPS")
+                .setText("TISY uses GPS to locate and track users.")
+                .setBackgroundColor(R.color.colorAccent)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openGPSSettings();
+                    }
+                })
+                .show();
+    }
+    void openGPSSettings() {
+        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+    }
 
     void showMembersDialog() {
         final ProgressDialog progressDialog = new ProgressDialog(this);

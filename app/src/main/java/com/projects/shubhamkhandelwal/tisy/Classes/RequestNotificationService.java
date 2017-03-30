@@ -102,8 +102,8 @@ public class RequestNotificationService extends Service {
     }
     void showRequestNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.drawable.invite_icon);
-        mBuilder.setLargeIcon(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.invite_icon, 300,300));
+        mBuilder.setSmallIcon(R.drawable.no_event_joined_icon);
+        mBuilder.setLargeIcon(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.no_event_joined_icon, 300,300));
         mBuilder.setAutoCancel(true);
         mBuilder.setContentTitle("Tisy");
         mBuilder.setContentText("Your events have join requests");

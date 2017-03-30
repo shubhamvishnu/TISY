@@ -123,8 +123,8 @@ void chatNotification(){
 
     void showUnreadChatsNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.drawable.multimedia_chat_icon);
-        mBuilder.setLargeIcon(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.multimedia_chat_icon, 300,300));
+        mBuilder.setSmallIcon(R.drawable.chat_fab_image_icon);
+        mBuilder.setLargeIcon(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.chat_fab_image_icon, 300,300));
         mBuilder.setContentTitle("Tisy");
         StringBuffer notificationContent = new StringBuffer();
 

@@ -188,7 +188,7 @@ public class LocationListenerService extends Service {
             Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
             updateLastKnowStatus.keepSynced(true);
             Map<String, Object> lastSeenMap = new HashMap<>();
-            lastSeenMap.put("lastSeen", "Online");
+            lastSeenMap.put("lastSeen", TimeStamp.getLastSeen());
             updateLastKnowStatus.updateChildren(lastSeenMap);
 
 
