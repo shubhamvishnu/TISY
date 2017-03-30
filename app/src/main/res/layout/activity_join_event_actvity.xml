@@ -91,5 +91,16 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
+    <ru.dimorinny.floatingtextbutton.FloatingTextButton
+        android:id="@+id/send_join_request_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="16dp"
+
+        app:floating_background_color="?attr/colorPrimary"
+        app:floating_icon="@drawable/ic_add_white_24dp"
+        app:floating_title="join an event"
+        app:floating_title_color="@android:color/white"/>
 
 </android.support.design.widget.CoordinatorLayout>

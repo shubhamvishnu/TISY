@@ -290,7 +290,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
             switch (view.getId()) {
                 case R.id.search_option_add_member_image_view: {
                     progressDialog.show();
-                    sendJoinRequest(eventIdList.get(getPosition()), "would like to join your event", getPosition());
+                    sendJoinRequest(eventIdList.get(getPosition()), "you sent request to join this event", getPosition());
                     // sendRequest(eventIdList.get(getPosition()));
 
 

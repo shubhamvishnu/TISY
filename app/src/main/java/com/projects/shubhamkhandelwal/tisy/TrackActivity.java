@@ -87,15 +87,15 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     GoogleMap mMap;
     String username;
     public static final int REQUEST_ACCESS_WRITE_STORAGE = 2;
-    ImageButton addNoteImageButton;
+
 
     int PLACE_PICKER_REQUEST = 1;
     PlacePicker.IntentBuilder placePickerBuilder;
     EditText addNoteTitleEditText;
     Boolean fromDialog;
     Map<Integer, Note> tagNoteMap;
-    CoordinatorLayout trackCoordinatorLayout;
-    ImageButton trackActivityZoomFit;
+
+
     LatLngBounds.Builder builder;
     ProgressDialog progressDialog;
 boolean fabOptionsClicked;
@@ -123,25 +123,25 @@ boolean fabOptionsClicked;
 
         initServices();
 
-        addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
-        addNoteImageButton.setVisibility(View.INVISIBLE);
-
-        trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
-        addNoteImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                placePickerDialog();
-            }
-        });
-
-        trackActivityZoomFit = (ImageButton) findViewById(R.id.track_activity_zoom_fit_icon);
-        trackActivityZoomFit.setVisibility(View.INVISIBLE);
-        trackActivityZoomFit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zoomFit();
-            }
-        });
+//        addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
+//        addNoteImageButton.setVisibility(View.INVISIBLE);
+//
+//        trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
+//        addNoteImageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                placePickerDialog();
+//            }
+//        });
+//
+//        trackActivityZoomFit = (ImageButton) findViewById(R.id.track_activity_zoom_fit_icon);
+//        trackActivityZoomFit.setVisibility(View.INVISIBLE);
+//        trackActivityZoomFit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                zoomFit();
+//            }
+//        });
 
         initProgressDialog();
 
@@ -537,8 +537,8 @@ boolean fabOptionsClicked;
             showPermissionAlert();
 
         } else {
-            addNoteImageButton.setVisibility(View.VISIBLE);
-            trackActivityZoomFit.setVisibility(View.VISIBLE);
+//            addNoteImageButton.setVisibility(View.VISIBLE);
+//            trackActivityZoomFit.setVisibility(View.VISIBLE);
             init();
             mMap.setMyLocationEnabled(true);
             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -550,33 +550,7 @@ boolean fabOptionsClicked;
         }
     }
 
-    void showSnackBar() {
-        Snackbar snackbar = Snackbar
-                .make(trackCoordinatorLayout, "enable location setting", Snackbar.LENGTH_INDEFINITE)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openGPSSettings();
-                    }
-                });
-        snackbar.setCallback(new Snackbar.Callback() {
 
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                if (mMap != null) {
-                    mMap.setPadding(0, 0, 0, 0);
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-
-
-            }
-        });
-        snackbar.setActionTextColor(Color.parseColor("#009688"));
-        snackbar.show();
-    }
 
     void openGPSSettings() {
         if (mMap != null) {

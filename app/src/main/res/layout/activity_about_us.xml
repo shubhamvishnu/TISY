@@ -266,33 +266,6 @@
                     android:textColor="@android:color/black"
                     android:textSize="14dp" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:padding="1dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-
-
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="4dp"
-                    android:text="Varsha Surana"
-                    android:textColor="@android:color/black"
-                    android:textSize="14dp" />
-
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

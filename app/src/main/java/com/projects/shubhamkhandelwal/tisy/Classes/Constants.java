@@ -49,6 +49,11 @@ public class Constants {
     public static boolean LOCATION_NOTIFICATION_SERVICE_STATUS = false;
 
 
+    public static String LOGIN_TYPE_FACEBOOK = "facebook";
+    public static String LOGIN_TYPE_GOOGLE = "google";
+
+
+
 
 
 }

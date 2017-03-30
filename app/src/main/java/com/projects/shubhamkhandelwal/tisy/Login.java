@@ -1,8 +1,12 @@
 package com.projects.shubhamkhandelwal.tisy;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,8 +16,19 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -25,9 +40,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.tapadoo.alerter.Alerter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +67,9 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     boolean noPhoto;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
+    CallbackManager callbackManager;
+    LoginButton fbloginButton;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +77,93 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
-
+        FacebookSdk.sdkInitialize(getApplicationContext());
         // Firebase context
         Firebase.setAndroidContext(this);
+
+        initProgressDialog();
+
         noPhoto = false;
 
+        callbackManager = CallbackManager.Factory.create();
+        fbloginButton = (LoginButton) findViewById(R.id.login_button);
+        fbloginButton.setReadPermissions(Arrays.asList("email"));
+
+        fbloginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            private ProfileTracker mProfileTracker;
+
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                final AccessToken accessToken = loginResult.getAccessToken();
+                Profile profile = Profile.getCurrentProfile();
+                if (profile != null) {
+                    final String name = profile.getName();
+                    final Uri uri = profile.getProfilePictureUri(200, 200);
+
+                    // void actionOnSucess(String email, Uri photoUrl, String name) {
+                    GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            Bundle bFacebookData = getFacebookData(object);
+                            String email = bFacebookData.getString("email", null);
+                            if (email == null || email.isEmpty()) {
+                                LoginManager.getInstance().logOut();
+                                showEmailAlert();
+                            } else {
+                                actionOnSucess(email, uri, name, Constants.LOGIN_TYPE_FACEBOOK);
+                            }
+                        }
+                    });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id, email");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                } else {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                            mProfileTracker.stopTracking();
+                            if (profile2 != null) {
+                                final String name = profile2.getName();
+                                final Uri uri = profile2.getProfilePictureUri(200, 200);
+
+                                // void actionOnSucess(String email, Uri photoUrl, String name) {
+                                GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+
+                                    @Override
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        Bundle bFacebookData = getFacebookData(object);
+                                        String email = bFacebookData.getString("email", null);
+                                        if (email == null || email.isEmpty()) {
+                                            LoginManager.getInstance().logOut();
+                                            showEmailAlert();
+                                        } else {
+                                            actionOnSucess(email, uri, name, Constants.LOGIN_TYPE_FACEBOOK);
+                                        }
+                                    }
+                                });
+                                Bundle parameters = new Bundle();
+                                parameters.putString("fields", "id, email");
+                                request.setParameters(parameters);
+                                request.executeAsync();
+                            }
+
+                        }
+                    };
+                }
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+
+            }
+        });
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -98,46 +204,63 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
             }
         });
 
-
-//
-//        // initialize all the view items
-//        usernameEditText = (EditText) findViewById(R.id.usernameEditText);
-//
-//        //TODO: change the password from editText to passwordField
-//        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-//        loginButton = (Button) findViewById(R.id.loginButton);
-//
-//
-//        loginButton.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                switch (motionEvent.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        loginButton.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                        loginButton.setBackgroundColor(Color.parseColor("#0DFFFFFF"));
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
-//        loginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                username = usernameEditText.getText().toString();
-//                password = passwordEditText.getText().toString();
-//
-//                // check for empty fields
-//                if (username.isEmpty() || password.isEmpty()) {
-//
-//                } else {
-//                    userAction();
-//                }
-//            }
-//        });
     }
 
+    void initProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle("Sign In");
+        progressDialog.setMessage("Performing authentication... ");
+        progressDialog.setCancelable(false);
+        progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
+
+    }
+
+    boolean checkInternetConnection() {
+
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+
+    }
+
+    void showEmailAlert() {
+        Alerter.create(Login.this)
+                .setTitle("Give email permission")
+                .setText("Tisy uses email address to verify and authorize it's users. Kindly grant email permission.")
+                .setBackgroundColor(R.color.facebook_login_email)
+                .show();
+    }
+
+    private Bundle getFacebookData(JSONObject object) {
+        Bundle bundle = new Bundle();
+        try {
+
+            String id = object.getString("id");
+            bundle.putString("fb_id", id);
+            if (object.has("email"))
+                bundle.putString("email", object.getString("email"));
+
+        } catch (JSONException e) {
+            Alerter.create(Login.this)
+                    .setText("Oops! There seemed to be some problem.")
+                    .setBackgroundColor(R.color.facebook_login_email)
+                    .show();
+        }
+        return bundle;
+    }
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -148,9 +271,13 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+        } else {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+
         }
     }
 
@@ -158,20 +285,27 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            Toast.makeText(Login.this, "signed in", Toast.LENGTH_SHORT).show();
-            actionOnSucess(acct.getEmail(), acct.getPhotoUrl(), acct.getDisplayName());
+            actionOnSucess(acct.getEmail(), acct.getPhotoUrl(), acct.getDisplayName(), Constants.LOGIN_TYPE_GOOGLE);
         } else {
             // Signed out, show unauthenticated UI.
         }
     }
 
-    void actionOnSucess(String email, Uri photoUrl, String name) {
+    void actionOnSucess(String email, Uri photoUrl, String name, String type) {
+        progressDialog.show();
         String[] dotSplit = email.split("\\.");
         String tempUsername = dotSplit[0] + "-" + dotSplit[1];
 
-        username = tempUsername.split("@")[0];
 
-        if(name!= null){
+        if (type.equals(Constants.LOGIN_TYPE_FACEBOOK)) {
+            username = tempUsername.split("@")[0] + "-fb";
+        } else if (type.equals(Constants.LOGIN_TYPE_GOOGLE)) {
+            username = tempUsername.split("@")[0];
+        }
+
+        saveLoginType(type);
+
+        if (name != null) {
             this.name = name;
         }
         if (photoUrl == null) {
@@ -180,8 +314,15 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
             noPhoto = false;
             userPhotoUrl = photoUrl;
         }
-        Toast.makeText(Login.this, username, Toast.LENGTH_SHORT).show();
+
         userAction();
+    }
+
+    void saveLoginType(String type) {
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("login_type", type);
+        editor.apply();
     }
 
 
@@ -207,6 +348,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
                     save();
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
@@ -214,7 +356,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         });
     }
 
-    void updateUserProfilePhotoInfo(){
+    void updateUserProfilePhotoInfo() {
         Map<String, Object> details = new HashMap<>();
         if (noPhoto) {
             details.put("userPhotoUri", noPhoto);
@@ -233,6 +375,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         });
 
     }
+
     // creates a new user in firebase
     public void save() {
         // has the password and the count (No. of events created)
@@ -268,11 +411,14 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         editor.putString("name", name);
         editor.apply();
 
-        Toast.makeText(Login.this, "username:" + username, Toast.LENGTH_SHORT).show();
         SharedPreferences loginPreferences = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         SharedPreferences.Editor loginEditor = loginPreferences.edit();
         loginEditor.putBoolean("login", true);
         loginEditor.apply();
+
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
         next();
     }
 

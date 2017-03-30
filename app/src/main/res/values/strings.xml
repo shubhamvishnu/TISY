@@ -14,5 +14,6 @@
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="send_to">Share</string>
     <string name="title_activity_event_info">EventInfoActivity</string>
+    <string name="facebook_app_id">1826596187666719</string>
 
 </resources>

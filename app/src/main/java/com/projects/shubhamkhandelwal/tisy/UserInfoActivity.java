@@ -1,7 +1,9 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +19,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -27,7 +31,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
+import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
+import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
+import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.squareup.picasso.Picasso;
@@ -49,6 +57,7 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         initializeUserInformation();
         initLogout();
         initProgressDialog();
@@ -148,29 +157,31 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
 
 
 
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        loggedout();
-                        // [END_EXCLUDE]
-                    }
-                });
-
-
-  /*
-        if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
-            ((ActivityManager) getApplicationContext().getSystemService(ACTIVITY_SERVICE))
-                    .clearApplicationUserData(); // note: it has a return value!
-            loggedout();
-        } else {
-            loggedout();
+        String type = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE).getString("login_type", null);
+        if(type != null){
+            if(type.equals(Constants.LOGIN_TYPE_GOOGLE)){
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                // [START_EXCLUDE]
+                                loggedout();
+                                // [END_EXCLUDE]
+                            }
+                        });
+            }else if(type.equals(Constants.LOGIN_TYPE_FACEBOOK)){
+                LoginManager.getInstance().logOut();
+                loggedout();
+            }
         }
-*/
+
+
+
+
 
     }
     void initLogout(){
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -180,6 +191,14 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
         mGoogleApiClient.connect();
     }
     void loggedout() {
+
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancelAll();
+
+        stopService(new Intent(getBaseContext(), ChatNotificationService.class));
+        stopService(new Intent(getBaseContext(), LocationListenerService.class));
+        stopService(new Intent(getBaseContext(), RequestNotificationService.class));
+
         getSharedPreferences(SharedPreferencesName.MAP_CONFIG, MODE_PRIVATE).edit().clear().apply();
         getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE).edit().clear().apply();
         getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).edit().clear().apply();

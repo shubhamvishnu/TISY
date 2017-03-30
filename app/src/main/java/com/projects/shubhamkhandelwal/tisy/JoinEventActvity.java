@@ -25,6 +25,8 @@ import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.dimorinny.floatingtextbutton.FloatingTextButton;
+
 public class JoinEventActvity extends FragmentActivity {
     String username;
     List<JoinEventInfo> joinEventIds;
@@ -34,7 +36,13 @@ public class JoinEventActvity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_event_actvity);
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
-
+        FloatingTextButton joinButton = (FloatingTextButton) findViewById(R.id.send_join_request_button);
+        joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toSearchEventActivity();
+            }
+        });
         initFAB();
         showSentJoinRequests();
 
