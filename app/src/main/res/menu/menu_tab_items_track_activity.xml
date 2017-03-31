@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/ftb_new_track_activity"
-        android:icon="@drawable/note_pin_marker_icon"
+        android:icon="@drawable/ic_add_white_24dp"
         android:title="chat" />
     <item
         android:id="@+id/ftb_list_track_activity"

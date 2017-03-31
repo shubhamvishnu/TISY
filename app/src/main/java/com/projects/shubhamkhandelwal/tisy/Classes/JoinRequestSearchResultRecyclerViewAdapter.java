@@ -41,7 +41,6 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         this.context = context;
         inflator = LayoutInflater.from(context);
         this.name = name.trim().replaceAll("\\s{2,}", " ");
-        Toast.makeText(context, "name :" + this.name, Toast.LENGTH_SHORT).show();
         eventIdList = new ArrayList<>();
         nameList = new ArrayList<>();
         usernameList = new ArrayList<>();

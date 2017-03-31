@@ -44,6 +44,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.projects.shubhamkhandelwal.tisy.Classes.ActiveEventsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
@@ -62,6 +63,7 @@ import com.tiancaicc.springfloatingactionmenu.OnMenuActionListener;
 import com.tiancaicc.springfloatingactionmenu.SpringFloatingActionMenu;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -96,11 +98,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644~7949777217");
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
+
 
         mainActivityBackgroundImageView = (ImageView) findViewById(R.id.main_activity_backgound_image_view);
 
@@ -292,6 +290,13 @@ void initMain(){
         startActivity(intent);
         finish();
     }
+    void toSearchEventActivity(){
+        Intent intent = new Intent(MainActivity.this, SearchEventActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     void shareAppDialogOption(){
         final Dialog shareAppDialogOptions = new Dialog(this, R.style.event_info_dialog_style); // initialize the dialog object.
         shareAppDialogOptions.setContentView(R.layout.dialog_share_app_layout); // initialize the dialog layout; xml layout;
@@ -363,6 +368,8 @@ void initMain(){
 
     void showAllEventsDialog() {
         final RecyclerView activeEventsRecyclerView = (RecyclerView) findViewById(R.id.active_events_recycler_view);
+        final FloatingTextButton createEventFtb = (FloatingTextButton) findViewById(R.id.create_ftb_button);
+        final FloatingTextButton joinEventFtb = (FloatingTextButton) findViewById(R.id.join_request_ftb_button);
 
         Firebase checkForEvent = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent");
         checkForEvent.keepSynced(true);
@@ -385,6 +392,7 @@ void initMain(){
                     activeEventsRecyclerView.setVisibility(View.INVISIBLE);
                     RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.no_active_event_relative_layout);
                     relativeLayout.setVisibility(View.VISIBLE);
+
                 }
             }
 
@@ -393,7 +401,19 @@ void initMain(){
 
             }
         });
+        createEventFtb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toCreateEvent();
+            }
+        });
 
+        joinEventFtb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toSearchEventActivity();
+            }
+        });
 
     }
 

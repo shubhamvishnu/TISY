@@ -19,37 +19,6 @@
             tools:context="com.projects.shubhamkhandelwal.tisy.TrackActivity">
         </fragment>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="50dp"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/track_activity_add_note"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_margin="10dp"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:elevation="6dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/note_pin_marker_icon" />
-
-            <ImageButton
-                android:id="@+id/track_activity_zoom_fit_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:adjustViewBounds="true"
-                android:layout_margin="10dp"
-                android:background="@android:color/transparent"
-                android:elevation="6dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/zoomfit_image_icon" />
-
-        </LinearLayout>
 
         <client.yalantis.com.foldingtabbar.FoldingTabBar
             android:id="@+id/folding_tab_bar_track_activity"

@@ -15,35 +15,53 @@
 
         <RelativeLayout
             android:id="@+id/no_active_event_relative_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:visibility="invisible">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
             <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/main_activity_backgound_image_view"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
                 android:padding="8dp"
+                android:layout_marginBottom="6dp"
+                android:layout_gravity="center_horizontal"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/create_new_event_icon" />
-            <TextView
-                android:layout_marginTop="16dp"
-                android:layout_width="fill_parent"
+
+            <ru.dimorinny.floatingtextbutton.FloatingTextButton
+                android:id="@+id/join_request_ftb_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Create an event"
-                android:textColor="@color/colorPrimaryDark"
-                android:textStyle="normal"
-                android:textSize="16dp"
-                android:layout_gravity="center"
-                android:gravity="center"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                app:floating_background_color="?attr/colorPrimary"
+                app:floating_icon="@drawable/ic_add_white_24dp"
+                app:floating_title="Join an event"
+                app:floating_title_color="@android:color/white"/>
+
+            <ru.dimorinny.floatingtextbutton.FloatingTextButton
+                android:id="@+id/create_ftb_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                app:floating_background_color="?attr/colorPrimary"
+                app:floating_icon="@drawable/ic_add_white_24dp"
+                app:floating_title="Create an event"
+                app:floating_title_color="@android:color/white"/>
+
+
+
 
         </LinearLayout>
         </RelativeLayout>
