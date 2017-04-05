@@ -62,6 +62,9 @@ import com.tiancaicc.springfloatingactionmenu.MenuItemView;
 import com.tiancaicc.springfloatingactionmenu.OnMenuActionListener;
 import com.tiancaicc.springfloatingactionmenu.SpringFloatingActionMenu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
@@ -78,7 +81,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public final static String PLACES_TAG = "My places";
     public final static String SHARE_APP_TAG = "Share Tisy";
 
-
+    List<String> activeEventList;
     ProgressDialog progressDialog;
 
 
@@ -112,6 +115,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (loginCheck.contains("login")) {
 
            initMain();
+            initDatabase();
 
             //removeNotification();
             // initPlacesAdd();
@@ -207,7 +211,37 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .build();
 
     }
+void initDatabase(){
 
+
+    Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent");
+    firebase.keepSynced(true);
+    firebase.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            activeEventList = new ArrayList<>();
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                activeEventList.add(snapshot.getKey());
+            }
+            checkForExistence(activeEventList);
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+
+        }
+    });
+}
+
+    void checkForExistence(List<String> activeEventList) {
+        SQLiteDatabaseConnection sqLiteDatabaseConnection = new SQLiteDatabaseConnection(this);
+        for (int i = 0; i < activeEventList.size(); i++) {
+            if (!sqLiteDatabaseConnection.checkForEvent(activeEventList.get(i))) {
+                sqLiteDatabaseConnection.insertRow(activeEventList.get(i), 0);
+            }
+        }
+
+    }
 void initMain(){
     if(!Constants.LOCATION_NOTIFICATION_SERVICE_STATUS){
         startService(new Intent(getBaseContext(), LocationListenerService.class));

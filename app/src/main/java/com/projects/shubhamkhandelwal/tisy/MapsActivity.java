@@ -98,7 +98,6 @@ import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdap
 import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
-import com.squareup.picasso.Picasso;
 import com.tapadoo.alerter.Alerter;
 
 import org.jetbrains.annotations.NotNull;
@@ -168,27 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     InterstitialAd mInterstitialAd;
     boolean editDestinationLocation;
 
-    /**
-     * converts the vector drawables to bitmap
-     *
-     * @param context    : to reference to the location of the vector in the res/drawable directory
-     * @param drawableId : the id of the vector drawable in the res/drawable directory
-     * @return : return the bitmap object of the vector drawable
-     */
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = AppCompatDrawableManager.get().getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
 
-        Bitmap bitmap = Bitmap.createBitmap(120,
-                102, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,12 +182,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // initializing objects and variables
         // initalizing view objects
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-
-
-
-
-
-
 
 
         // initializing variable
@@ -259,8 +232,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         break;
                     }
                     case R.id.ftb_zoom_fit: {
-
-
                         LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
                         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                             showGPSAlert();
@@ -988,65 +959,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             .setBackgroundColor(R.color.colorAccent)
                             .show();
                 }
-                // saveCheckPoint(place.getLatLng().latitude, place.getLatLng().longitude);
-
             }
         }
     }
 
-    /*
-        void showDestinationLocationChangeDialog(final LatLng latLng) {
-            final Dialog destinationLocationChangeDialog = new Dialog(this, R.style.event_info_dialog_style);
-            destinationLocationChangeDialog.setContentView(R.layout.dialog_edit_destination_location_layout);
-            final TextView editDestinationEditText = (TextView) destinationLocationChangeDialog.findViewById(R.id.edit_destination_edit_text);
-            ImageButton cancelEditDestinationImageButton = (ImageButton) destinationLocationChangeDialog.findViewById(R.id.cancel_edit_destination_image_button);
-            ImageButton confirmEditDestinationImageButton = (ImageButton) destinationLocationChangeDialog.findViewById(R.id.confirm_edit_destination_button);
 
-            cancelEditDestinationImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    destinationLocationChangeDialog.dismiss();
-                    eventInfoDialog();
-                }
-            });
-            confirmEditDestinationImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (checkInternetConnection()) {
-                        final String destinationDesc = editDestinationEditText.getText().toString();
-                        if (!(destinationDesc == null || destinationDesc.isEmpty())) {
-                            Firebase editDestinationFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/info");
-                            editDestinationFirebase.keepSynced(true);
-                            Map<String, Object> editLocationMap = new HashMap<String, Object>();
-                            editLocationMap.put("dLocation", String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
-                            editLocationMap.put("dLocationDesc", destinationDesc);
-                            editDestinationFirebase.updateChildren(editLocationMap, new Firebase.CompletionListener() {
-                                @Override
-                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                                    destinationLocationChangeDialog.dismiss();
-                                    eventInfo.setdLocation(String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude));
-                                    eventInfo.setdLocationDesc(destinationDesc);
-                                    zoomFitMembers();
-                                    eventInfoDialog();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(MapsActivity.this, "enter a destination title", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-
-                    }
-                }
-            });
-
-            Window window = destinationLocationChangeDialog.getWindow();
-            window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-            window.setGravity(Gravity.CENTER);
-            destinationLocationChangeDialog.setCanceledOnTouchOutside(true);
-            destinationLocationChangeDialog.show();
-
-        }
-    */
     void sendMemberRequest() {
 
         final Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
@@ -1158,229 +1075,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent);
     }
 
-    /*    void eventInfoDialog() {
-            membersList = new ArrayList<>();
-            memberCoordinate = new ArrayList<>();
-            timeStamp = new String();
-            eventTitle = new String();
-            firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId);
-            firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot snapshot : dataSnapshot.child("info").getChildren()) {
-                        if (snapshot.getKey().equals("dLocationDesc")) {
-                            destLocationTextView = snapshot.getValue().toString();
-                        }
-                    }
-                    eventDescription = dataSnapshot.child("desc").getValue().toString();
-                    timeStamp = dataSnapshot.child("time").getValue().toString();
-                    eventTitle = dataSnapshot.child("title").getValue().toString();
-
-                    for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
-                        membersList.add(snapshot.getKey());
-                        memberCoordinate.add(snapshot.getValue().toString());
-                    }
-                    //showEventInfoDialog();
-                    loadProfileInfo();
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-        }
-
-        void loadProfileInfo() {
-            lastSeenInfo = new ArrayList<>();
-            memberProfileImageUrls = new ArrayList<>();
-            memberProfileName = new ArrayList<>();
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setTitle("Loading");
-            progressDialog.setMessage("fetching event details for you!");
-            progressDialog.setCancelable(false);
-            progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    showEventInfoDialog();
-                }
-            });
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-
-                }
-            });
-            progressDialog.show();
-            memberUriCount = 0;
-            for (String name : membersList) {
-                firebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + name);
-                firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        ++memberUriCount;
-                        memberProfileImageUrls.add(dataSnapshot.child("userPhotoUri").getValue().toString());
-                        memberProfileName.add(dataSnapshot.child("name").getValue().toString());
-                        lastSeenInfo.add(dataSnapshot.child("lastSeen").getValue().toString());
-                        if (membersList.size() == memberUriCount) {
-                            progressDialog.dismiss();
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-            }
-
-
-        }
-
-        void showEventInfoDialog() {
-
-            TextView eventIdDialogTextView;
-
-            TextView destLocationDialogTextView;
-            TextView eventDescriptionTextView;
-            TextView timeStampTextView;
-            TextView titleTextView;
-            RecyclerView eventInfoMembersRecyclerView;
-            ImageButton editMembersImageButton;
-            Button editDestinationLocationButton;
-
-            final Dialog eventInfoDialog = new Dialog(this, R.style.event_info_dialog_style);
-            eventInfoDialog.setContentView(R.layout.dialog_event_info_layout);
-
-            eventIdDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.event_id_info_text_view);
-
-            destLocationDialogTextView = (TextView) eventInfoDialog.findViewById(R.id.dest_location_desc_text_view);
-            eventDescriptionTextView = (TextView) eventInfoDialog.findViewById(R.id.event_desc_text_view);
-            timeStampTextView = (TextView) eventInfoDialog.findViewById(R.id.time_stamp_text_view);
-            titleTextView = (TextView) eventInfoDialog.findViewById(R.id.event_title_text_view);
-
-            editDestinationLocationButton = (Button) eventInfoDialog.findViewById(R.id.edit_destination_location_button);
-
-
-            editMembersImageButton = (ImageButton) eventInfoDialog.findViewById(R.id.editMembersImageButton);
-            if (!Constants.eventAdmin) {
-                editMembersImageButton.setVisibility(View.GONE);
-                editDestinationLocationButton.setVisibility(View.GONE);
-            }
-            eventInfoMembersRecyclerView = (RecyclerView) eventInfoDialog.findViewById(R.id.members_recycler_view);
-            eventInfoMembersRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-            titleTextView.setText(eventTitle);
-            eventIdDialogTextView.setText(Constants.currentEventId);
-
-
-            destLocationDialogTextView.setText(destLocationTextView);
-            eventDescriptionTextView.setText(eventDescription);
-            timeStampTextView.setText(timeStamp);
-
-            eventInfoMembersRecyclerView.setHasFixedSize(true);
-            EventInfoRecyclerViewAdapter adapter = new EventInfoRecyclerViewAdapter(this, membersList, memberCoordinate, memberProfileImageUrls, memberProfileName, lastSeenInfo);
-            eventInfoMembersRecyclerView.setAdapter(adapter);
-
-            editDestinationLocationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LocationManager manager = (LocationManager) getSystemService(android.content.Context.LOCATION_SERVICE);
-                    if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        eventInfoDialog.dismiss();
-                        editDestinationLocation = true;
-                        placePickerDialog();
-                    } else {
-                        Toast.makeText(MapsActivity.this, "Turn on GPS", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            });
-
-            editMembersImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //    new EventDialogs().showDialog(MapsActivity.this, Constants.TYPE_DELETE_MEMBERS);
-                    showMembersDialog();
-                }
-            });
-
-            Window window = eventInfoDialog.getWindow();
-            window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-            window.setGravity(Gravity.CENTER);
-            eventInfoDialog.setCanceledOnTouchOutside(true);
-            eventInfoDialog.show();
-
-        }
-
-        void showMembersDialog() {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setTitle("Loading");
-            progressDialog.setMessage("fetching event members!");
-            progressDialog.setCancelable(false);
-            progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-
-                }
-            });
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-
-                }
-            });
-            progressDialog.show();
-            eventMemberList = new ArrayList<>();
-            Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
-            firebase.keepSynced(true);
-            firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.hasChildren()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (!Objects.equals(snapshot.getKey(), username)) {
-                                eventMemberList.add(snapshot.getKey());
-                            }
-                        }
-                        progressDialog.dismiss();
-                        initDeleteEventMemberRecyclerView(eventMemberList);
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-
-
-        }
-
-        void initDeleteEventMemberRecyclerView(List<String> members) {
-            final Dialog dialog = new Dialog(this, R.style.event_dialogs);
-            dialog.setContentView(R.layout.dialog_delete_event_members_layout);
-            RecyclerView deleteEventMemberRecyclerView;
-            EventMembersRecyclerViewAdapater eventMembersRecyclerViewAdapater;
-
-            deleteEventMemberRecyclerView = (RecyclerView) dialog.findViewById(R.id.delete_event_members_recycler_view);
-            deleteEventMemberRecyclerView.setHasFixedSize(true);
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
-            deleteEventMemberRecyclerView.setLayoutManager(linearLayoutManager);
-
-            eventMembersRecyclerViewAdapater = new EventMembersRecyclerViewAdapater(this, members);
-            deleteEventMemberRecyclerView.setAdapter(eventMembersRecyclerViewAdapater);
-            Window window = dialog.getWindow();
-            window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-            window.setGravity(Gravity.CENTER);
-            dialog.show();
-            dialog.setCanceledOnTouchOutside(true);
-        }
-    */
     void showSuggestionDialog() {
         final Dialog suggestionDialog = new Dialog(this, R.style.event_info_dialog_style);
         suggestionDialog.setContentView(R.layout.dialog_suggestion_layout);
@@ -1499,13 +1193,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     void showChatsDialog() {
-        TextView eventIdTextView;
+
         ImageButton backArrowImageView;
         final Dialog chatsDialog = new Dialog(this, R.style.chat_dialog_style);
 
         chatsDialog.setContentView(R.layout.recycler_view_chats_layout);
-
-        eventIdTextView = (TextView) chatsDialog.findViewById(R.id.chatsEventIdTextView);
 
         backArrowImageView = (ImageButton) chatsDialog.findViewById(R.id.back_arrow_image_button_chat_dialog);
 
@@ -1694,33 +1386,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    void showSnackBar() {
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Turn on GPS", Snackbar.LENGTH_INDEFINITE)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openGPSSettings();
-                    }
-                });
-        snackbar.setCallback(new Snackbar.Callback() {
-
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                if (mMap != null) {
-                    mMap.setPadding(0, 120, 0, 0);
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-
-
-            }
-        });
-        snackbar.setActionTextColor(Color.parseColor("#009688"));
-        snackbar.show();
-    }
 
     void openGPSSettings() {
         if (mMap != null) {
@@ -1736,25 +1401,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
-    }
-
-    // updates the location of the user in firebase
-    void showPermissionSnackBar() {
-
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "enable location permission", Snackbar.LENGTH_INDEFINITE)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mMap != null) {
-                            mMap.setPadding(0, 120, 0, 0);
-                        }
-                        openSettings();
-                    }
-                });
-
-        snackbar.setActionTextColor(Color.parseColor("#009688"));
-        snackbar.show();
     }
 
     void openSettings() {
@@ -1805,39 +1451,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    /*
-        void showRequestNotification(int numberOfRequests, boolean added) {
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            if (numberOfRequests <= 0) {
-                notificationManager.cancel(Constants.EVENT_REQUEST_NOTIFICATION_ID);
-            } else {
-                // TODO: start from here
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-                notificationBuilder.setSmallIcon(R.drawable.sample_notification_icon);
-                notificationBuilder.setContentTitle("Requests");
-                notificationBuilder.setContentText(numberOfRequests + " of them would love to join " + Constants.currentEventId);
-                Intent notificationIntent = new Intent(this, MainActivity.class);
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                // Adds the back stack for the Intent (but not the Intent itself)
-                stackBuilder.addParentStack(MainActivity.class);
-                // Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(notificationIntent);
-                PendingIntent notificationPendingIntent =
-                        stackBuilder.getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
-                notificationBuilder.setContentIntent(notificationPendingIntent);
-                if (added) {
-                    Uri defaultNotificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    notificationBuilder.setSound(defaultNotificationSoundUri);
-                }
-                notificationBuilder.setAutoCancel(true);
-                notificationManager.notify(Constants.EVENT_REQUEST_NOTIFICATION_ID , notificationBuilder.build());
-            }
-        }
-    */
+
     void showEventRequestDialog() {
 
 //        List<RequestsDetails> request = joinRequests;
@@ -1894,7 +1508,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void exitEvent() {
         mMap.setOnMyLocationChangeListener(null);
-        userExit();
+        if(checkInternetConnection()){
+
+        userExit();}else{
+            Alerter.create(this)
+                    .setText("Oops! No internet connection...")
+                    .setBackgroundColor(R.color.colorAccent)
+                    .show();
+        }
     }
 
     void userExit() {
@@ -2091,19 +1712,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         v.vibrate(500);
     }
 
-    void showIneternetConnectionSnackBar(String message) {
-        Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
 
-        snackbar.setAction("SETTINGS", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openInternetSettings();
-            }
-        });
-        snackbar.setActionTextColor(Color.parseColor("#009688"));
-        snackbar.show();
-    }
 
     void openInternetSettings() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -2229,24 +1838,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-//    void updateUserProfileImage(String username) {
-//        Firebase imageURLFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/userPhotoUri");
-//        imageURLFirebase.keepSynced(true);
-//        imageURLFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                memberProfileImageUrls.add(dataSnapshot.getValue().toString());
-//                if (members.size() == memberProfileImageUrls.size()) {
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//
-//            }
-//        });
-//    }
 
     void updateMapMembers() {
 
@@ -2338,17 +1929,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    Bitmap generateIconfromProfileImage(int position) {
-        Bitmap bitmap = null;
-        IconGenerator iconGenerator = new IconGenerator(this);
-        CircleImageView circleImageView = new CircleImageView(this);
-        circleImageView.setLayoutParams(new ViewGroup.LayoutParams(170, 170));
-        Picasso.with(this).load(Uri.parse(memberProfileImageUrls.get(position))).error(R.drawable.default_profile_image_icon).into(circleImageView);
-        iconGenerator.setContentView(circleImageView);
-        iconGenerator.setBackground(null);
-        bitmap = iconGenerator.makeIcon();
-        return bitmap;
-    }
+
 
     void updateMemberLocation(DataSnapshot dataSnapshot) {
         Marker marker = (Marker) memberLocationMarkers.get(dataSnapshot.getKey().toString());
@@ -2488,68 +2069,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         intent.putExtra("latitude", latitude);
         intent.putExtra("longitude", longitude);
         startActivity(intent);
-//                } else {
-//                    // TODO: show dialog to say streetview unavailable and finish() on OK
-//                    showStreetViewNotAvailableSnackBar();
-//                }
-    }
-
-    void showStreetViewNotAvailableSnackBar() {
-        if (mMap != null) {
-            mMap.setPadding(0, 120, 0, 200);
-        }
-        final Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "Oops! Street view isn't available here...", Snackbar.LENGTH_SHORT);
-        snackbar.setCallback(new Snackbar.Callback() {
-
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                if (mMap != null) {
-                    mMap.setPadding(0, 120, 0, 0);
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-
-
-            }
-        });
-        snackbar.show();
-    }
-
-    void showStreetViewSnackBar(final Marker marker) {
-        if (mMap != null) {
-            mMap.setPadding(0, 120, 0, 200);
-        }
-        final Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, "See how it looks?", Snackbar.LENGTH_LONG)
-                .setAction("SEE IT", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showStreetView(marker.getPosition().latitude, marker.getPosition().longitude);
-
-
-                    }
-                });
-        snackbar.setCallback(new Snackbar.Callback() {
-
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                if (mMap != null) {
-                    mMap.setPadding(0, 120, 0, 0);
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-
-
-            }
-        });
-        snackbar.setActionTextColor(Color.parseColor("#009688"));
-        snackbar.show();
-
     }
 
     public class EventMemberViewRecyclerViewAdapter extends RecyclerView.Adapter<EventMemberViewRecyclerViewAdapter.EventMembersViewRecyclerViewHolder> {

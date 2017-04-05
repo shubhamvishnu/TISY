@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="@drawable/chennai_anna_nagar_static_map"
+
     tools:context=".Login">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -22,7 +22,7 @@
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:gravity="center"
-                android:hint="Search using eventID/name/username"
+                android:hint="Search using event ID or username"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:padding="16dp"
