@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:singleLine="true"
             android:layout_gravity="center"
-            android:hint="Title"
+            android:hint="Title for the note"
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textCursorDrawable="@drawable/edit_text_curson_color_style"

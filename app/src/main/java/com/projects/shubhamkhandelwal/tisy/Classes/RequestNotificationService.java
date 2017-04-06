@@ -110,7 +110,7 @@ public class RequestNotificationService extends Service {
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
 
-        inboxStyle.setBigContentTitle(requestedUserList.size() + " events have received requests");
+        inboxStyle.setBigContentTitle("join requests for events");
 
 
         for(int i = 0; i < requestedUserList.size(); i++){

@@ -387,27 +387,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onSnapshotReady(Bitmap snapshot) {
-                // TODO Auto-generated method stub
-//                bitmap = snapshot;
-//                String filePath = Environment.getExternalStorageDirectory().toString() + "/" + System.currentTimeMillis() + ".jpg";
-//                try {
-//
-//                    File imageFile = new File(filePath);
-//
-//                    FileOutputStream outputStream = new FileOutputStream(imageFile);
-//                    int quality = 100;
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-//                    outputStream.flush();
-//                    outputStream.close();
-//
-//                   openShareImageDialog(fi);
-//
-//                } catch (Throwable e) {
-//                    // Several error may come out with file handling or OOM
-//                    e.printStackTrace();
-//                }
-
-
                 bitmap = snapshot;
 
                 OutputStream fout = null;
@@ -434,43 +413,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
 
         mMap.snapshot(callback);
-    }
-
-    private void takeScreenshot() {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-
-        try {
-            // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
-
-            // create bitmap screen capture
-            View v1 = this.getWindow().getDecorView().getRootView();
-            v1.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-            v1.setDrawingCacheEnabled(false);
-
-            File imageFile = new File(mPath);
-
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            int quality = 100;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-            openScreenshot(imageFile);
-        } catch (Throwable e) {
-            // Several error may come out with file handling or OOM
-            e.printStackTrace();
-        }
-    }
-
-    private void openScreenshot(File imageFile) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(imageFile);
-        intent.setDataAndType(uri, "image/*");
-        startActivity(intent);
     }
 
     void initServices() {
@@ -554,25 +496,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    /*  void loadEventInfo(){
-          FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-          StorageReference imageStorageReference = firebaseStorage.getReferenceFromUrl("gs://fir-trio.appspot.com/" + Constants.currentEventId + "/dIcon");
-`
-          final long ONE_MEGABYTE = 1024 * 1024;
-          imageStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-              @Override
-              public void onSuccess(byte[] bytes) {
-                  Toast.makeText(MapsActivity.this, bytes.toString(), Toast.LENGTH_SHORT).show();
-                  destinationIcon = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-              }
-          }).addOnFailureListener(new OnFailureListener() {
-              @Override
-              public void onFailure(@NonNull Exception exception) {
-                  // Handle any errors
-              }
-          });
-      }
-      */
 
     public void destinationIconInit() {
 
@@ -600,27 +523,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-    }
-
-    // to apply custom color to a bitmap
-    Bitmap applyCustomBitmapColor(Bitmap myBitmap, String color) {
-
-        Paint pnt = new Paint();
-        Bitmap myBit = myBitmap;
-
-        Canvas myCanvas = new Canvas(myBit);
-        int myColor = myBit.getPixel(0, 0);
-
-        // Set the colour to replace.
-        // TODO: change color later
-        ColorFilter filter = new LightingColorFilter(myColor, Color.parseColor(color));
-
-        pnt.setColorFilter(filter);
-
-        // Draw onto new bitmap. result Bitmap is newBit
-        myCanvas.drawBitmap(myBit, 0, 0, pnt);
-
-        return myBit;
     }
 
     void showAllInOneDialog() {
@@ -929,6 +831,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             Alerter.create(this)
                     .setText("Oops! no internet connection...")
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            openInternetSettings();
+                        }
+                    })
                     .setBackgroundColor(R.color.colorAccent)
                     .show();
 
@@ -956,13 +864,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     Alerter.create(this)
                             .setText("Oops! no internet connection...")
+                            .setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    openInternetSettings();
+                                }
+                            })
                             .setBackgroundColor(R.color.colorAccent)
                             .show();
                 }
             }
         }
     }
-
 
     void sendMemberRequest() {
 
@@ -1067,7 +980,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchOptionDialog.show();
 
     }
-
 
     void toEventInfoActivity() {
         Intent intent = new Intent(MapsActivity.this, EventInfoActivity.class);
@@ -1343,8 +1255,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-
     void showGPSAlert() {
         Alerter.create(this)
                 .setTitle("Turn on GPS")
@@ -1358,7 +1268,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 })
                 .show();
     }
-
 
     void initializeMap() {
         userlocationAction();
@@ -1385,7 +1294,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         activeEventMemberRecyclerView.setAdapter(activeMembersRecyclerViewAdapter);
 
     }
-
 
     void openGPSSettings() {
         if (mMap != null) {
@@ -1451,7 +1359,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
     void showEventRequestDialog() {
 
 //        List<RequestsDetails> request = joinRequests;
@@ -1513,6 +1420,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userExit();}else{
             Alerter.create(this)
                     .setText("Oops! No internet connection...")
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            openInternetSettings();
+                        }
+                    })
                     .setBackgroundColor(R.color.colorAccent)
                     .show();
         }
@@ -1625,7 +1538,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         finish();
     }
 
-    // Version 2: STARTS HERE
     void userlocationAction() {
 
         // enable user location
@@ -1654,6 +1566,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
     void updateStatus(){
         Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
         updateLastKnowStatus.keepSynced(true);
@@ -1662,7 +1575,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateLastKnowStatus.updateChildren(lastSeenMap);
 
     }
-
 
     void showPermissionAlert() {
         Alerter.create(this)
@@ -1711,8 +1623,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Vibrate for 500 milliseconds
         v.vibrate(500);
     }
-
-
 
     void openInternetSettings() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -1838,7 +1748,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
     void updateMapMembers() {
 
         Marker destinationMarker = null;
@@ -1928,8 +1837,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             zoomFit = false;
         }
     }
-
-
 
     void updateMemberLocation(DataSnapshot dataSnapshot) {
         Marker marker = (Marker) memberLocationMarkers.get(dataSnapshot.getKey().toString());
@@ -2064,12 +1971,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
-    void showStreetView(final Double latitude, final Double longitude) {
-        Intent intent = new Intent(MapsActivity.this, StreetViewActivity.class);
-        intent.putExtra("latitude", latitude);
-        intent.putExtra("longitude", longitude);
-        startActivity(intent);
-    }
 
     public class EventMemberViewRecyclerViewAdapter extends RecyclerView.Adapter<EventMemberViewRecyclerViewAdapter.EventMembersViewRecyclerViewHolder> {
         List<String> memberList;
@@ -2168,6 +2069,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    // version 2: ENDS HERE
 
 }

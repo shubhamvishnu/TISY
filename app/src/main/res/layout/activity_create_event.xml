@@ -121,7 +121,7 @@
                             android:layout_width="0dp"
                             android:layout_height="38dp"
                             android:layout_weight="1"
-                            android:hint="destination location description"
+                            android:hint="Give a place name"
                             android:scrollbarAlwaysDrawVerticalTrack="true"
                             android:scrollbars="vertical"
                             android:textColor="@android:color/white"

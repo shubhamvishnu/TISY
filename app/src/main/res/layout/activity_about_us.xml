@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:background="#d3d3d3"
     android:orientation="vertical">
@@ -175,11 +176,14 @@
                 android:orientation="horizontal"
                 android:padding="6dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <android.support.v7.widget.AppCompatImageButton
 
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center" />
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/women_image_icon" />
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -250,12 +254,14 @@
                 android:orientation="horizontal"
                 android:padding="1dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-
+                <android.support.v7.widget.AppCompatImageButton
 
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center" />
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/women_image_icon" />
 
                 <TextView
                     android:layout_width="fill_parent"

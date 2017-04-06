@@ -1,6 +1,5 @@
 package com.projects.shubhamkhandelwal.tisy;
 
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -8,56 +7,36 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Point;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.projects.shubhamkhandelwal.tisy.Classes.ActiveEventsRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
-import com.projects.shubhamkhandelwal.tisy.Classes.EventDialogs;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
-import com.projects.shubhamkhandelwal.tisy.Classes.JoinEventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 
-import com.squareup.picasso.Picasso;
-import com.tapadoo.alerter.Alerter;
 import com.tiancaicc.springfloatingactionmenu.MenuItemView;
 import com.tiancaicc.springfloatingactionmenu.OnMenuActionListener;
 import com.tiancaicc.springfloatingactionmenu.SpringFloatingActionMenu;
@@ -65,7 +44,6 @@ import com.tiancaicc.springfloatingactionmenu.SpringFloatingActionMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
@@ -177,7 +155,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 //add menu item via addMenuItem(bgColor,icon,label,label color,onClickListener)
                 //添加菜单按钮参数依次是背景颜色,图标,标签,标签的颜色,点击事件
                 .addMenuItem(R.color.main_activity_create_event, R.drawable.create_event_icon, CREATE_EVENT_TAG, android.R.color.white, this)
-                .addMenuItem(R.color.main_activity_option_user_info, R.drawable.info_icon, MY_ACCOUNT_TAG, android.R.color.white, this)
+                .addMenuItem(R.color.main_activity_option_user_info, R.drawable.user_info_image_icon, MY_ACCOUNT_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_option_synergize, R.drawable.synergize_icon, SENT_REQUESTS_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_share_app_option, R.drawable.share_app_image_icon, SHARE_APP_TAG, android.R.color.white, this)
 
@@ -294,12 +272,6 @@ void initMain(){
 
             toTrackActivity();
             //checkAdDisplayStatus();
-        }
-        if (label.equals(ALL_EVENTS_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_ALL_EVENTS);
-        }
-        if (label.equals(RECEIVED_REQUESTS_TAG)) {
-            new EventDialogs().showDialog(MainActivity.this, Constants.TYPE_RECEIVED_REQUESTS);
         }
         if (label.equals(SENT_REQUESTS_TAG)) {
            toJoinEventActivity();

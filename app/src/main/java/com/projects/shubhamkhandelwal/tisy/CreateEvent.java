@@ -231,6 +231,12 @@ public class CreateEvent extends Activity {
                                     Alerter.create(CreateEvent.this)
                                             .setText("Oops! no internet connection...")
                                             .setBackgroundColor(R.color.colorAccent)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    openInternetSettings();
+                                                }
+                                            })
                                             .show();
                                 } else {
 
@@ -258,12 +264,23 @@ public class CreateEvent extends Activity {
                     } else {
                         Alerter.create(CreateEvent.this)
                                 .setText("Oops! no internet connection...")
+                                .setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        openInternetSettings();
+                                    }
+                                })
                                 .setBackgroundColor(R.color.colorAccent)
                                 .show();
                     }
                 }
             }
         });
+    }
+    void openInternetSettings() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setClassName("com.android.phone", "com.android.phone.NetworkSetting");
+        startActivity(intent);
     }
 
     void initServices(){
@@ -1091,10 +1108,7 @@ void initAdd(){
                         if (!(locationDesc.isEmpty())) {
                             dLocation.setVisibility(View.INVISIBLE);
                             dLocationLinearLayout.setVisibility(View.VISIBLE);
-                            // show the destination location description text
-                            dLocationDescEditText.setText("(Coord:");
-                            dLocationDescEditText.append(eventInfo.getdLocationDesc());
-                            dLocationDescEditText.append(")");
+
 
                         }
                         break;
@@ -1259,9 +1273,4 @@ void initAdd(){
         finish();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 }

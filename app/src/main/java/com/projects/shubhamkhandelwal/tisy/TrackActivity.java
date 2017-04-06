@@ -270,13 +270,13 @@ boolean fabOptionsClicked;
                     addNoteTitleEditText.setText(locationDesc);
                     fromDialog = false;
                 } else {
-                    showAddNoteDialog(latLng, locationDesc);
+                    showAddNoteDialog(latLng);
                 }
             }
         }
     }
 
-    void showAddNoteDialog(final LatLng location, final String locationTitle) {
+    void showAddNoteDialog(final LatLng location) {
         final Dialog dialog = new Dialog(this, R.style.event_dialogs);
         dialog.setContentView(R.layout.dialog_add_note_layout);
 

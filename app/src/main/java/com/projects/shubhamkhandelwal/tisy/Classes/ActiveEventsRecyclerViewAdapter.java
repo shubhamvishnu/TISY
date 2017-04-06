@@ -213,7 +213,7 @@ public class ActiveEventsRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
                 @Override
                 public void onError() {
-                    Toast.makeText(context, "loaded offline", Toast.LENGTH_SHORT).show();
+
                     Picasso.with(context).load(Uri.parse("https://maps.googleapis.com/maps/api/staticmap?location=" + info.getdLocation() + "&size=600x600&maptype=roadmap&markers=color:blue%7Clabel:D%7C" + info.getdLocation() + "&key=AIzaSyDHngp3Jx-K8YZYSCNfdljE2gy5p8gcYQQ")).error(R.drawable.chennai_anna_nagar_static_map).into(((ActiveEventsRecyclerViewHolder) holder).activeEventCardImageView);
                 }
             });

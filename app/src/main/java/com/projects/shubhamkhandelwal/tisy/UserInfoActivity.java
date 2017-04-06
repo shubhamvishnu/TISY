@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -48,7 +49,7 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
     long joinedEventCount; // number of events user has joined.
     GoogleApiClient mGoogleApiClient;
     String userPhotoUri; // user profile photo url.
-    String username; // unique username of the user.
+
 
 
     ProgressDialog progressDialog;
@@ -141,10 +142,30 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
             @Override
             public void onClick(View view) {
                 progressDialog.show();
-                logout();
+                showConfirmationDialog();
+
             }
         });
 
+    }
+    void showConfirmationDialog(){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        logout();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to logout?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     void toAboutUs(){
