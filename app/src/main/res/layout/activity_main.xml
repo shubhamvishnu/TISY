@@ -37,7 +37,16 @@
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/create_new_event_icon" />
-
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="16dp"
+                android:padding="8dp"
+                android:textColor="@android:color/black"
+                android:text="Join or create an event right away!"
+                android:gravity="center"
+                />
             <ru.dimorinny.floatingtextbutton.FloatingTextButton
                 android:id="@+id/join_request_ftb_button"
                 android:layout_width="wrap_content"
@@ -48,6 +57,8 @@
                 app:floating_icon="@drawable/ic_add_white_24dp"
                 app:floating_title="Join an event"
                 app:floating_title_color="@android:color/white"/>
+
+
 
             <ru.dimorinny.floatingtextbutton.FloatingTextButton
                 android:id="@+id/create_ftb_button"
@@ -60,10 +71,31 @@
                 app:floating_title="Create an event"
                 app:floating_title_color="@android:color/white"/>
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="14dp"
+                android:padding="8dp"
+                android:textColor="@android:color/black"
+                android:text="Not sure what to do?"
+                android:gravity="center"
+                />
+            <ru.dimorinny.floatingtextbutton.FloatingTextButton
+                android:id="@+id/help_main_ftb_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                app:floating_background_color="?attr/colorAccent"
+                app:floating_icon="@drawable/info_icon"
+                app:floating_title="Help"
+                app:floating_title_color="@android:color/white"/>
 
 
 
         </LinearLayout>
+
         </RelativeLayout>
 
         <LinearLayout

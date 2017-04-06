@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -111,36 +112,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         coordinatorLayoutMainActivity = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutMainActivity); // initialize the view object.
 
 
-        /**
-         * create two FAB - center main FAB; user account information FAB
-         * Steps to create a FAB:
-         *      create view items
-         *      create menu items
-         *      create the menu with items
-         * center FAB button:
-         *      contains two view items-ImageButton and TextView; These two view are added inside a linear layout.
-         */
 
-        // FAB for user account information view.
-       /* ImageView userAccountImageIcon = new ImageView(this); // Create an icon imageview.
-        userAccountImageIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        userAccountImageIcon.setImageResource(R.drawable.user_account_icon);
-
-        // create menu
-        FloatingActionButton floatingActionButton = new FloatingActionButton.Builder(this) //builder for the user account information FAB.
-                .setContentView(userAccountImageIcon)
-                .setBackgroundDrawable(R.drawable.floating_action_button_selector)
-                .build();
-        userAccountImageIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // initializes user information upon request to view the user information
-                //initializeUserInformation();
-                intent = new Intent(MainActivity.this, CreateEvent.class);
-                startActivity(intent);
-            }
-        });
-*/
         final com.melnykov.fab.FloatingActionButton fab = new com.melnykov.fab.FloatingActionButton(this);
         fab.setType(com.melnykov.fab.FloatingActionButton.TYPE_NORMAL);
         fab.setImageResource(R.drawable.edit_slocation_icon);
@@ -152,36 +124,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         new SpringFloatingActionMenu.Builder(this)
                 .fab(fab)
-                //add menu item via addMenuItem(bgColor,icon,label,label color,onClickListener)
-                //添加菜单按钮参数依次是背景颜色,图标,标签,标签的颜色,点击事件
+
                 .addMenuItem(R.color.main_activity_create_event, R.drawable.create_event_icon, CREATE_EVENT_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_option_user_info, R.drawable.user_info_image_icon, MY_ACCOUNT_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_option_synergize, R.drawable.synergize_icon, SENT_REQUESTS_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_share_app_option, R.drawable.share_app_image_icon, SHARE_APP_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_my_places_tag, R.drawable.my_places_location_marker_icon, PLACES_TAG, android.R.color.white, this)
-                //  .addMenuItem(R.color.main_activity_option_invite, R.drawable.invite_icon, RECEIVED_REQUESTS_TAG, android.R.color.white,this)
-                //you can choose menu layout animation
-                //设置动画类型
+
                 .animationType(SpringFloatingActionMenu.ANIMATION_TYPE_TUMBLR)
-                //setup reveal color while the menu opening
-                //设置reveal效果的颜色
+
                 .revealColor(R.color.colorPrimaryDark)
 
-                //set FAB location, only support bottom center and bottom right
-                //设置FAB的位置,只支持底部居中和右下角的位置
+
                 .gravity(Gravity.RIGHT | Gravity.BOTTOM)
                 .onMenuActionListner(new OnMenuActionListener() {
                     @Override
                     public void onMenuOpen() {
-                        //set FAB icon when the menu opened
-                        //设置FAB的icon当菜单打开的时候
+
                         fab.setImageResource(R.drawable.close_icon);
                     }
 
                     @Override
                     public void onMenuClose() {
-                        //set back FAB icon when the menu closed
-                        //设置回FAB的图标当菜单关闭的时候
+
                         fab.setImageResource(R.drawable.edit_slocation_icon);
                     }
                 })
@@ -302,44 +267,7 @@ void initMain(){
         finish();
     }
 
-    void shareAppDialogOption(){
-        final Dialog shareAppDialogOptions = new Dialog(this, R.style.event_info_dialog_style); // initialize the dialog object.
-        shareAppDialogOptions.setContentView(R.layout.dialog_share_app_layout); // initialize the dialog layout; xml layout;
 
-        final EditText shareEventMessageEditText, shareEventIDEditText;
-        ImageButton shareImageButton;
-
-        shareEventMessageEditText = (EditText) shareAppDialogOptions.findViewById(R.id.share_event_message);
-        shareEventIDEditText = (EditText) shareAppDialogOptions.findViewById(R.id.share_event_id);
-
-        shareImageButton = (ImageButton) shareAppDialogOptions.findViewById(R.id.share_image_button);
-
-        shareImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String shareEventID = shareEventIDEditText.getText().toString();
-                String shareEventMessage = shareEventMessageEditText.getText().toString();
-                String shareMessage;
-                if(shareEventID == null || shareEventMessage == null || shareEventID.isEmpty() || shareEventMessage.isEmpty()){
-                   shareMessage = "Download Tisy from play store using this link:\nhttps://play.google.com/store/apps/details?id=com.shubham.hidy.mpshl=en.";
-
-                }else {
-                    shareMessage = "Download Tisy from play store using this link:\nhttps://play.google.com/store/apps/details?id=com.shubham.hidy.mpshl=en.\n\n" + shareEventMessage+ "\n"+shareEventID ;
-                }
-                shareAppDialogOptions.dismiss();
-                shareApp(shareMessage);
-
-            }
-        });
-
-
-        Window window = shareAppDialogOptions.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        shareAppDialogOptions.setCanceledOnTouchOutside(true);
-        shareAppDialogOptions.show();
-
-    }
     void shareApp(String message){
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -352,13 +280,6 @@ void initMain(){
         startActivity(intent);
     }
 
-
-    void toStreetViewActivity() {
-        Intent intent = new Intent(MainActivity.this, StreetViewForLocationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
 
     void toTrackActivity() {
         Intent intent = new Intent(MainActivity.this, TrackActivity.class);
@@ -375,8 +296,8 @@ void initMain(){
         final RecyclerView activeEventsRecyclerView = (RecyclerView) findViewById(R.id.active_events_recycler_view);
         final FloatingTextButton createEventFtb = (FloatingTextButton) findViewById(R.id.create_ftb_button);
         final FloatingTextButton joinEventFtb = (FloatingTextButton) findViewById(R.id.join_request_ftb_button);
-
-        Firebase checkForEvent = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent");
+        final FloatingTextButton helpFtb = (FloatingTextButton) findViewById(R.id.help_main_ftb_button);
+        final Firebase checkForEvent = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent");
         checkForEvent.keepSynced(true);
         checkForEvent.addValueEventListener(new ValueEventListener() {
             @Override
@@ -397,6 +318,7 @@ void initMain(){
                     activeEventsRecyclerView.setVisibility(View.INVISIBLE);
                     RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.no_active_event_relative_layout);
                     relativeLayout.setVisibility(View.VISIBLE);
+                    checkForFirstTime();
 
                 }
             }
@@ -420,9 +342,68 @@ void initMain(){
             }
         });
 
+        helpFtb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showIntroDialog();
+
+            }
+        });
     }
+void checkForFirstTime(){
+    SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
+    if (sharedPreferences.contains("main_navigation_help")) {
 
+    } else {
+        showIntroDialog();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("main_navigation_help", "done");
+        editor.apply();
+    }
+}
+    void showIntroDialog(){
+        final Dialog introDialog = new Dialog(this, R.style.event_info_dialog_style); // initialize the dialog object.
+        introDialog.setContentView(R.layout.dialog_intro_layout); // initialize the dialog layout; xml layout;
 
+        FloatingTextButton createFtb = (FloatingTextButton) introDialog.findViewById(R.id.create_intro_ftb);
+        FloatingTextButton joinFtb = (FloatingTextButton) introDialog.findViewById(R.id.join_intro_ftb);
+        FloatingTextButton myPlacesFtb = (FloatingTextButton) introDialog.findViewById(R.id.my_places_intro_ftb);
+        Button doneButton = (Button) introDialog.findViewById(R.id.done_intro_button);
+        createFtb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                introDialog.dismiss();
+                toCreateEvent();
+            }
+        });
+        joinFtb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                introDialog.dismiss();
+                toSearchEventActivity();
+            }
+        });
+        myPlacesFtb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                introDialog.dismiss();
+                toTrackActivity();
+            }
+        });
+
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                introDialog.dismiss();
+            }
+        });
+
+        Window window = introDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        introDialog.setCanceledOnTouchOutside(true);
+        introDialog.show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

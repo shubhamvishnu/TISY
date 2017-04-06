@@ -270,12 +270,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void checkForFirstTime() {
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
-        if (sharedPreferences.contains("first_time")) {
+        if (sharedPreferences.contains("map_navigation_help")) {
 
         } else {
             showHelpDialog();
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("first_time", "done");
+            editor.putString("map_navigation_help", "done");
             editor.apply();
         }
     }
@@ -606,13 +606,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-        addNewMemberImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                allInOneDialog.dismiss();
-                sendMemberRequest();
-            }
-        });
+
         addNewCheckPointImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -885,109 +879,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    void sendMemberRequest() {
-
-        final Dialog sendMemberRequestDialog = new Dialog(this, R.style.event_info_dialog_style);
-        sendMemberRequestDialog.setContentView(R.layout.dialog_send_request_from_event_layout);
-        final LinearLayout eventJoinRequestRecyclerViewLinearLayout = (LinearLayout) sendMemberRequestDialog.findViewById(R.id.event_join_request_recycler_view);
-
-        final LinearLayout noInvitesSentLinearLayout = (LinearLayout) sendMemberRequestDialog.findViewById(R.id.no_invites_sent_linear_layout);
-        ImageButton searchButton = (ImageButton) sendMemberRequestDialog.findViewById(R.id.search_choice_dialog_button);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendMemberRequestDialog.dismiss();
-                showSearchOptionDialog(sendMemberRequestDialog.getContext());
-            }
-        });
 
 
-        firebase = new Firebase(FirebaseReferences.FIREBASE_EVENT_SENT_REQUESTS + Constants.currentEventId);
-        firebase.keepSynced(true);
-        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    noInvitesSentLinearLayout.setVisibility(View.GONE);
-                    eventJoinRequestRecyclerViewLinearLayout.setVisibility(View.VISIBLE);
-
-                    RecyclerView eventJoinRequestSendRecyclerView = (RecyclerView) sendMemberRequestDialog.findViewById(R.id.dialog_event_join_request_sent_recycler_view);
-                    eventJoinRequestSendRecyclerView.setLayoutManager(new LinearLayoutManager(sendMemberRequestDialog.getContext()));
-                    eventJoinRequestSendRecyclerView.setHasFixedSize(true);
-
-                    SentEventJoinRequestRecyclerViewAdapter adapter = new SentEventJoinRequestRecyclerViewAdapter(MapsActivity.this);
-                    eventJoinRequestSendRecyclerView.setAdapter(adapter);
-
-                } else {
-                    noInvitesSentLinearLayout.setVisibility(View.VISIBLE);
-                    eventJoinRequestRecyclerViewLinearLayout.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-
-        Window window = sendMemberRequestDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        sendMemberRequestDialog.setCanceledOnTouchOutside(true);
-        sendMemberRequestDialog.show();
-
-
-    }
-
-    void showSearchOptionDialog(Context context) {
-
-        final EditText searchEditText;
-        ImageButton searchButton;
-        final Dialog searchOptionDialog = new Dialog(context, R.style.event_info_dialog_style);
-        searchOptionDialog.setContentView(R.layout.dialog_search_option_layout);
-
-        searchEditText = (EditText) searchOptionDialog.findViewById(R.id.search_option_choice_dialog_edit_text);
-        searchButton = (ImageButton) searchOptionDialog.findViewById(R.id.search_option_choice_dialog_button);
-        searchOptionChoiceRecyclerView = (RecyclerView) searchOptionDialog.findViewById(R.id.dialog_search_results_recycler_view);
-        searchOptionChoiceRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(searchOptionDialog.getContext());
-        searchOptionChoiceRecyclerView.setLayoutManager(linearLayoutManager);
-        searchEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (i == KeyEvent.KEYCODE_ENTER) {
-                    {
-                        nameSearch = searchEditText.getText().toString();
-                        if (!nameSearch.trim().isEmpty()) {
-                            searchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
-                            searchOptionChoiceRecyclerView.setAdapter(searchResultsRecyclerViewAdapter);
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                nameSearch = searchEditText.getText().toString();
-                if (!nameSearch.isEmpty()) {
-                    searchResultsRecyclerViewAdapter = new SearchResultsRecyclerViewAdapter(searchOptionDialog.getContext(), nameSearch);
-                    searchOptionChoiceRecyclerView.setAdapter(searchResultsRecyclerViewAdapter);
-                }
-            }
-        });
-
-
-        Window window = searchOptionDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        searchOptionDialog.setCanceledOnTouchOutside(true);
-        searchOptionDialog.show();
-
-    }
 
     void toEventInfoActivity() {
         Intent intent = new Intent(MapsActivity.this, EventInfoActivity.class);
@@ -2000,6 +1893,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sendIDButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                helpDialog.dismiss();
                 sendID();
             }
         });

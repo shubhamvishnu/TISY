@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@android:color/white"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     android:orientation="vertical">
 
     <ScrollView
@@ -44,8 +46,8 @@
                     android:background="@android:color/transparent"
                     android:padding="6dp"
                     android:scaleType="fitCenter"
-                    android:tint="@color/main_activity_create_event"
-                    app:srcCompat="@drawable/create_event_icon" />
+
+                    app:srcCompat="@drawable/create_event_intro_icon" />
 
 
                 <TextView
@@ -107,7 +109,7 @@
                     android:textSize="16dp" />
             </LinearLayout>
             <ru.dimorinny.floatingtextbutton.FloatingTextButton
-                android:id="@+id/create_ftb_button"
+                android:id="@+id/create_intro_ftb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -126,7 +128,6 @@
                 android:padding="6dp">
 
                 <android.support.v7.widget.AppCompatImageButton
-
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
@@ -163,7 +164,7 @@
 
 
             <ru.dimorinny.floatingtextbutton.FloatingTextButton
-                android:id="@+id/join_request_ftb_button"
+                android:id="@+id/join_intro_ftb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -212,13 +213,23 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:padding="4dp"
-                    android:text="Create an event"
-                    android:textColor="@android:color/black"
+                    android:text="Found an interesting place? Add it to your places with a note!"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                    android:textStyle="normal" />
 
 
             </LinearLayout>
+            <ru.dimorinny.floatingtextbutton.FloatingTextButton
+                android:id="@+id/my_places_intro_ftb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                app:floating_background_color="?attr/colorPrimary"
+                app:floating_icon="@drawable/ic_add_white_24dp"
+                app:floating_title="New note"
+                app:floating_title_color="@android:color/white"/>
             <Button
                 android:id="@+id/done_intro_button"
                 android:layout_width="fill_parent"
