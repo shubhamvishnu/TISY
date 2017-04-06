@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
@@ -64,8 +65,7 @@
             android:scrollbars="vertical"
             android:inputType="textMultiLine"
             android:textColor="@android:color/white" />
-
-        <ImageButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/chatsSendButton"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -73,6 +73,7 @@
             android:background="@android:color/transparent"
             android:elevation="20dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/message_send_icon" />
+            app:srcCompat="@drawable/send_message_icon" />
+
     </LinearLayout>
 </RelativeLayout>

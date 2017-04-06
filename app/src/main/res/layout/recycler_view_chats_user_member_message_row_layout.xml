@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:gravity="right"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:padding="16dp"
         android:background="@drawable/chats_user_message_bubble"
         android:layout_gravity="right"

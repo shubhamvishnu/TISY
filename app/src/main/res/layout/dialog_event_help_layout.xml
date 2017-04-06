@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="16dp"
     android:orientation="vertical">
 
     <ScrollView
@@ -45,14 +46,14 @@
                 android:layout_margin="8dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="ksdncklsdn"
+                android:text="event ID"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
-
+                android:id="@+id/help_event_id_text_view"
                 android:padding="6dp"/>
 
             <ru.dimorinny.floatingtextbutton.FloatingTextButton
-                android:id="@+id/send_join_request_button"
+                android:id="@+id/send_id_fab_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -174,23 +175,18 @@
                     android:textSize="16dp" />
 
             </LinearLayout>
-            <LinearLayout
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
                 android:background="@drawable/join_event_background"
-                android:gravity="center">
-                <android.support.v7.widget.AppCompatImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:adjustViewBounds="true"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitCenter"
-                    android:layout_gravity="center"
-                    android:padding="6dp"
-                    app:srcCompat="@drawable/more_fab_image_icon" />
-
-            </LinearLayout>
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="More features"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="14dp" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -321,6 +317,7 @@
 
             </LinearLayout>
             <Button
+                android:id="@+id/done_help_button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

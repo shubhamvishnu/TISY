@@ -141,7 +141,7 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressDialog.show();
+
                 showConfirmationDialog();
 
             }
@@ -154,6 +154,7 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
+                        progressDialog.show();
                         logout();
                         break;
 
@@ -185,9 +186,7 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
                         new ResultCallback<Status>() {
                             @Override
                             public void onResult(Status status) {
-                                // [START_EXCLUDE]
                                 loggedout();
-                                // [END_EXCLUDE]
                             }
                         });
             }else if(type.equals(Constants.LOGIN_TYPE_FACEBOOK)){

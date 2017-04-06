@@ -43,15 +43,11 @@ public class JoinEventActvity extends FragmentActivity {
                 toSearchEventActivity();
             }
         });
-        initFAB();
+
         showSentJoinRequests();
 
     }
 
-    void initFAB(){
-
-
-    }
 
     void showSentJoinRequests() {
 

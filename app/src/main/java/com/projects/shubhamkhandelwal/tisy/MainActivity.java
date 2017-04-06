@@ -158,7 +158,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .addMenuItem(R.color.main_activity_option_user_info, R.drawable.user_info_image_icon, MY_ACCOUNT_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_option_synergize, R.drawable.synergize_icon, SENT_REQUESTS_TAG, android.R.color.white, this)
                 .addMenuItem(R.color.main_activity_share_app_option, R.drawable.share_app_image_icon, SHARE_APP_TAG, android.R.color.white, this)
-
                 .addMenuItem(R.color.main_activity_my_places_tag, R.drawable.my_places_location_marker_icon, PLACES_TAG, android.R.color.white, this)
                 //  .addMenuItem(R.color.main_activity_option_invite, R.drawable.invite_icon, RECEIVED_REQUESTS_TAG, android.R.color.white,this)
                 //you can choose menu layout animation

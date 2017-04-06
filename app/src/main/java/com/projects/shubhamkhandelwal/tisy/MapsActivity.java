@@ -11,12 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -24,18 +19,14 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -104,17 +95,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import client.yalantis.com.foldingtabbar.FoldingTabBar;
-import de.hdodenhof.circleimageview.CircleImageView;
+import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -151,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // View Objects
     CoordinatorLayout coordinatorLayout;
+    ImageButton helpOptionImageButton;
 
     // event infomation variables
     List<String> memberProfileImageUrls; // profile Image URL of every member in the event
@@ -168,7 +158,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean editDestinationLocation;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,7 +171,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // initializing objects and variables
         // initalizing view objects
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-
+        helpOptionImageButton = (ImageButton) findViewById(R.id.help_option_image_button);
+        helpOptionImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showHelpDialog();
+            }
+        });
 
         // initializing variable
         //initializing String variables
@@ -212,6 +207,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        checkForFirstTime();
 
         FoldingTabBar tabBar = (FoldingTabBar) findViewById(R.id.folding_tab_bar);
         tabBar.setOnFoldingItemClickListener(new FoldingTabBar.OnFoldingItemSelectedListener() {
@@ -245,18 +241,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
-       fabOptionsClicked = false;
+        fabOptionsClicked = false;
 
         tabBar.setOnMainButtonClickListener(new FoldingTabBar.OnMainButtonClickedListener() {
             @Override
             public void onMainButtonClicked() {
-                if(fabOptionsClicked){
-                    if(mMap !=null){
+                if (fabOptionsClicked) {
+                    if (mMap != null) {
                         mMap.setPadding(0, 120, 0, 0);
                     }
                     fabOptionsClicked = false;
-                }else{
-                    if(mMap !=null){
+                } else {
+                    if (mMap != null) {
                         mMap.setPadding(0, 120, 0, 320);
                         fabOptionsClicked = true;
                     }
@@ -270,6 +266,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         init();
         initAdd();
         initProgressDialog();
+    }
+
+    void checkForFirstTime() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
+        if (sharedPreferences.contains("first_time")) {
+
+        } else {
+            showHelpDialog();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("first_time", "done");
+            editor.apply();
+        }
     }
 
     void checkForWriteStoragePermission() {
@@ -1415,9 +1423,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void exitEvent() {
         mMap.setOnMyLocationChangeListener(null);
-        if(checkInternetConnection()){
+        if (checkInternetConnection()) {
 
-        userExit();}else{
+            userExit();
+        } else {
             Alerter.create(this)
                     .setText("Oops! No internet connection...")
                     .setOnClickListener(new View.OnClickListener() {
@@ -1567,7 +1576,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    void updateStatus(){
+    void updateStatus() {
         Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
         updateLastKnowStatus.keepSynced(true);
         Map<String, Object> lastSeenMap = new HashMap<>();
@@ -1971,6 +1980,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return false;
     }
 
+    void showHelpDialog() {
+        TextView eventIDTextView;
+        Button doneHelpButton;
+        final Dialog helpDialog = new Dialog(this, R.style.event_info_dialog_style);
+        helpDialog.setContentView(R.layout.dialog_event_help_layout);
+
+        eventIDTextView = (TextView) helpDialog.findViewById(R.id.help_event_id_text_view);
+        doneHelpButton = (Button) helpDialog.findViewById(R.id.done_help_button);
+
+        eventIDTextView.setText(Constants.currentEventId);
+        doneHelpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog.dismiss();
+            }
+        });
+        FloatingTextButton sendIDButton = (FloatingTextButton) helpDialog.findViewById(R.id.send_id_fab_button);
+        sendIDButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendID();
+            }
+        });
+
+        Window window = helpDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        window.setGravity(Gravity.CENTER);
+        helpDialog.setCanceledOnTouchOutside(true);
+        helpDialog.show();
+    }
+
+    void sendID() {
+        String message = new String("Join my Tisy event! Use this event ID " + Constants.currentEventId + ". Download the app here:");
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sendIntent.setType("text/plain");
+        MapsActivity.this.startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+
+    }
 
     public class EventMemberViewRecyclerViewAdapter extends RecyclerView.Adapter<EventMemberViewRecyclerViewAdapter.EventMembersViewRecyclerViewHolder> {
         List<String> memberList;
@@ -1988,6 +2037,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             init();
 
         }
+
 
         void init() {
             Firebase initMembersFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members");
@@ -2068,6 +2118,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
-
 
 }
