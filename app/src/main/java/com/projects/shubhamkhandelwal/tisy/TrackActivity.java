@@ -227,7 +227,7 @@ boolean fabOptionsClicked;
         helpDialog.setContentView(R.layout.dialog_track_activity_help_dialog);
 
 
-        doneHelpButton = (Button) helpDialog.findViewById(R.id.done_help_button);
+        doneHelpButton = (Button) helpDialog.findViewById(R.id.done_track_help_button);
 
 
         doneHelpButton.setOnClickListener(new View.OnClickListener() {

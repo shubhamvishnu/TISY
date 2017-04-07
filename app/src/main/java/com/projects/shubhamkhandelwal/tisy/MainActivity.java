@@ -53,9 +53,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // FAB sub-action button tags; to identify which sub-action button was clicked.
 
     public final static String CREATE_EVENT_TAG = "Create event";
-    public final static String ALL_EVENTS_TAG = "All events";
     public final static String SENT_REQUESTS_TAG = "Join an event";
-    public final static String RECEIVED_REQUESTS_TAG = "Invites";
     public final static String MY_ACCOUNT_TAG = "My account";
     public final static String PLACES_TAG = "My places";
     public final static String SHARE_APP_TAG = "Share Tisy";
@@ -230,12 +228,9 @@ void initMain(){
 
         if (label.equals(CREATE_EVENT_TAG)) {
             toCreateEvent();
-
         }
         if (label.equals(PLACES_TAG)) {
-
             toTrackActivity();
-            //checkAdDisplayStatus();
         }
         if (label.equals(SENT_REQUESTS_TAG)) {
            toJoinEventActivity();
@@ -244,7 +239,6 @@ void initMain(){
            showUserInfo();
         }
         if(label.equals(SHARE_APP_TAG)){
-           // shareAppDialogOption();
             shareApp("Download tisy from play store using this link:");
         }
     }

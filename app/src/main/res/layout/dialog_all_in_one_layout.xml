@@ -86,64 +86,8 @@
                         android:textColor="@android:color/white"
                         android:textSize="16dp" />
                 </LinearLayout>
-                <LinearLayout
-                    android:visibility="gone"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:orientation="vertical"
-                    android:padding="16dp">
 
 
-                    <android.support.v7.widget.AppCompatImageButton
-                        android:id="@+id/dialog_chat_icon"
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:layout_gravity="center"
-                        android:adjustViewBounds="true"
-                        android:background="@android:color/transparent"
-                        android:elevation="20dp"
-                        android:padding="8dp"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/chat_image_icon" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="Conversations "
-                        android:textColor="@android:color/white"
-                        android:textSize="16dp" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="150dp"
-                    android:visibility="gone"
-                    android:layout_height="150dp"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <android.support.v7.widget.AppCompatImageButton
-                        android:id="@+id/dialog_zoom_fit_icon"
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:layout_gravity="center"
-                        android:adjustViewBounds="true"
-                        android:background="@android:color/transparent"
-                        android:elevation="20dp"
-                        android:padding="8dp"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/zoomfit_image_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="Zoom-Fit "
-                        android:textColor="@android:color/white"
-                        android:textSize="16dp" />
-                </LinearLayout>
                 <LinearLayout
                     android:layout_width="150dp"
                     android:layout_height="150dp"
@@ -161,7 +105,7 @@
                         android:elevation="20dp"
                         android:padding="8dp"
                         android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/map_mode_image_icon" />
+                        app:srcCompat="@drawable/worldmap" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -261,67 +205,9 @@
                         android:textColor="@android:color/white"
                         android:textSize="16dp" />
                 </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/send_request_option_layout"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:padding="16dp">
 
-                    <android.support.v7.widget.AppCompatImageButton
-                        android:id="@+id/dialog_add_new_member"
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:layout_gravity="center"
-                        android:adjustViewBounds="true"
-                        android:background="@android:color/transparent"
-                        android:elevation="20dp"
-                        android:padding="8dp"
-                        android:scaleType="fitCenter"
-                        android:textSize="16dp"
-                        app:srcCompat="@drawable/send_invite_image_icon" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="Send Invite     "
-                        android:textColor="@android:color/white"
-                        android:textSize="16dp" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/requests_option_layout"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:padding="16dp">
-
-                    <android.support.v7.widget.AppCompatImageButton
-                        android:id="@+id/dialog_request_icon"
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:layout_gravity="center"
-                        android:adjustViewBounds="true"
-                        android:background="@android:color/transparent"
-                        android:elevation="20dp"
-                        android:padding="8dp"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/received_request_image_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="Requests    "
-                        android:textColor="@android:color/white"
-                        android:textSize="16dp" />
-                </LinearLayout>
 
             </GridLayout>
 

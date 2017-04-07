@@ -75,11 +75,6 @@ public class LocationListenerService extends Service {
         Constants.LOCATION_NOTIFICATION_SERVICE_STATUS =  false;
     }
 
-    void updateLocationLog(LocationLog locationLog, String dateMonthYear) {
-        Firebase userLocationLogFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/locationLog/" + dateMonthYear + "/");
-        userLocationLogFirebase.keepSynced(true);
-        userLocationLogFirebase.push().setValue(locationLog);
-    }
 
     void updateEventPosition(final Location location) {
         Firebase getUserActiveEvents = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username + "/activeEvent/");
@@ -145,46 +140,20 @@ public class LocationListenerService extends Service {
     }
 
     class MyLocationListener implements LocationListener {
-
         @Override
         public void onLocationChanged(Location location) {
             if (location.getAccuracy() >= 10 && location.getAccuracy() != 0.0) {
                 updateEventPosition(location);
-                String dateMonthYear = TimeStamp.getRawTime();
-                String hourAndMinute = TimeStamp.getHourAndMinute();
-
-                LocationLog locationLog = new LocationLog();
-                locationLog.setLatitude(String.valueOf(location.getLatitude()));
-                locationLog.setLongitude(String.valueOf(location.getLongitude()));
-
-                locationLog.setCustomColor(customColor);
-                locationLog.setHourAndMinute(hourAndMinute);
-
-                //updateLocationLog(locationLog, dateMonthYear);
-
             }
         }
 
         @Override
         public void onStatusChanged(String s, int i, Bundle bundle) {
-//            Toast.makeText(getBaseContext(), "onStatusChanged"+ s, Toast.LENGTH_SHORT).show();
-//            String dateMonthYear = TimeStamp.getRawTime();
-//            String hourAndMinute = TimeStamp.getHourAndMinute();
-//
-//            LocationLog locationLog = new LocationLog();
-//            locationLog.setLatitude(String.valueOf(0));
-//            locationLog.setLongitude(String.valueOf(0));
-//            locationLog.setHourAndMinute(hourAndMinute);
-//
-//            updateLocationLog(locationLog, dateMonthYear);
-
         }
 
 
         @Override
         public void onProviderEnabled(String s) {
-
-
             Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
             updateLastKnowStatus.keepSynced(true);
             Map<String, Object> lastSeenMap = new HashMap<>();
@@ -196,7 +165,6 @@ public class LocationListenerService extends Service {
 
         @Override
         public void onProviderDisabled(String s) {
-
             Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
             updateLastKnowStatus.keepSynced(true);
             Map<String, Object> lastSeenMap = new HashMap<>();

@@ -269,7 +269,7 @@
                     android:scaleType="fitCenter"
                     android:layout_gravity="center"
                     android:padding="6dp"
-                    app:srcCompat="@drawable/map_mode_image_icon" />
+                    app:srcCompat="@drawable/worldmap" />
 
 
                 <TextView

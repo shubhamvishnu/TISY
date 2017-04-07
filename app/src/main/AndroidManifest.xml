@@ -58,11 +58,9 @@
         <activity
             android:name=".Login"
             android:screenOrientation="portrait" />
-        <activity android:name=".StreetViewActivity" />
         <activity
             android:name=".TrackActivity"
             android:theme="@style/MapTheme" />
-        <activity android:name=".StreetViewForLocationActivity" />
         <activity
             android:name=".EventInfoActivity"
             android:screenOrientation="portrait" />

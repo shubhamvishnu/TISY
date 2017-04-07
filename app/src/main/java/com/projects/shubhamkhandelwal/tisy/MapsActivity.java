@@ -31,7 +31,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -83,10 +82,7 @@ import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
-import com.projects.shubhamkhandelwal.tisy.Classes.RequestsRecyclerAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
-import com.projects.shubhamkhandelwal.tisy.Classes.SearchResultsRecyclerViewAdapter;
-import com.projects.shubhamkhandelwal.tisy.Classes.SentEventJoinRequestRecyclerViewAdapter;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 import com.tapadoo.alerter.Alerter;
@@ -130,10 +126,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // checkpoint variables
     Map<String, Note> checkPointCoordinateMap; // contains all the checkpoints in the map; id and it's position (LatLng)
     List<String> checkPointsReached; // checkpoints crossed (reached) by the user
-    Dialog requestsDialog; //  received requests dialog object
+
     List<RequestsDetails> joinRequests; // received requests; username list
-    RecyclerView eventRequestRecyclerView; // received requests recyclerview
-    RequestsRecyclerAdapter requestsRecyclerAdapter; // received requests recyclerview adapter
 
     boolean fabOptionsClicked = false;
     int emoticon = 0;
@@ -149,8 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // search variables
     String nameSearch; // name/username/eventID searched for by the user
-    RecyclerView searchOptionChoiceRecyclerView; // search option recyclerview
-    SearchResultsRecyclerViewAdapter searchResultsRecyclerViewAdapter; // search option recyclerview adapter
+
 
     ProgressDialog progressDialog;
 
@@ -539,23 +532,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final Dialog allInOneDialog = new Dialog(this, R.style.event_info_dialog_style);
         allInOneDialog.setContentView(R.layout.dialog_all_in_one_layout);
 
-        ImageButton requestIconImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_request_icon);
-        ImageButton chatIconImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_chat_icon);
-        ImageButton zoomFitImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_zoom_fit_icon);
-        ImageButton addNewMemberImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_member);
+
+
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
         ImageButton changeMapStyleImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_change_mode_icon);
         ImageButton mapTypeImageButton = (ImageButton) allInOneDialog.findViewById(R.id.map_type_option_icon);
         ImageButton infoImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_event_info);
         ImageButton leaveEventImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_leave_event_image_button);
         ImageButton suggestionImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_suggestion_image_button);
-        requestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.requests_option_layout);
-        sendRequestsLayout = (LinearLayout) allInOneDialog.findViewById(R.id.send_request_option_layout);
 
-        if (!Constants.eventAdmin) {
-            requestsLayout.setVisibility(View.GONE);
-            sendRequestsLayout.setVisibility(View.GONE);
-        }
+
         suggestionImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -584,28 +570,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 showMapTypeOptionDialog();
             }
         });
-        requestIconImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                allInOneDialog.dismiss();
-                showEventRequestDialog();
-            }
-        });
-        chatIconImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                allInOneDialog.dismiss();
-                showChatsDialog();
-            }
-        });
-        zoomFitImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                allInOneDialog.dismiss();
-                zoomFitMembers();
 
-            }
-        });
 
         addNewCheckPointImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1260,59 +1225,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    void showEventRequestDialog() {
 
-//        List<RequestsDetails> request = joinRequests;
-        // TODO: remove all the requests for that event from the requests database
-        requestsDialog = new Dialog(this, R.style.dialog_sent_request_detail);
-        requestsDialog.setContentView(R.layout.recycler_view_requests_layout);
-
-        final LinearLayout noRequestsLinearLayout = (LinearLayout) requestsDialog.findViewById(R.id.no_requests_linear_layout);
-
-        final Button closeEventRequestDialogButton = (Button) requestsDialog.findViewById(R.id.close_event_requests_dialog_button);
-        eventRequestRecyclerView = (RecyclerView) requestsDialog.findViewById(R.id.event_requests_recycler_view);
-        eventRequestRecyclerView.setHasFixedSize(true);
-
-        if (joinRequests.size() == 0) {
-            eventRequestRecyclerView.setVisibility(View.GONE);
-            noRequestsLinearLayout.setVisibility(View.VISIBLE);
-
-        } else {
-            noRequestsLinearLayout.setVisibility(View.INVISIBLE);
-            eventRequestRecyclerView.setVisibility(View.VISIBLE);
-
-            requestsRecyclerAdapter = new RequestsRecyclerAdapter(this, joinRequests);
-            eventRequestRecyclerView.setAdapter(requestsRecyclerAdapter);
-            eventRequestRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        }
-
-        closeEventRequestDialogButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        closeEventRequestDialogButton.setBackgroundColor(Color.parseColor("#1AFFFFFF"));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        closeEventRequestDialogButton.setBackgroundColor(Color.parseColor("#0DFFFFFF"));
-                        break;
-                }
-                return false;
-            }
-        });
-        closeEventRequestDialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestsDialog.dismiss();
-            }
-        });
-
-        Window window = requestsDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
-        window.setGravity(Gravity.CENTER);
-        requestsDialog.setCanceledOnTouchOutside(true);
-        requestsDialog.show();
-    }
 
     void exitEvent() {
         mMap.setOnMyLocationChangeListener(null);

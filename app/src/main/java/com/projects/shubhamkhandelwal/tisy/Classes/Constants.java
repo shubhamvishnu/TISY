@@ -12,17 +12,8 @@ public class Constants {
 
     public static String currentEventId = ""; // holds reference to the eventID of the currently active event
     public static boolean eventAdmin = false; // holds reference to the eventID of the currently active event
-    public static List<String> colors = new ArrayList<>();
-
 
     public static int dIconResourceId = -1;
-
-
-    public static int TYPE_ALL_EVENTS = 1000;
-    public static int TYPE_DELETE_MEMBERS = 1001;
-    public static int TYPE_RECEIVED_REQUESTS = 1002;
-    public static int TYPE_SENT_REQUESTS = 1003;
-
 
 
     public static String START_LOCATION_TAG = "start_location_marker";
