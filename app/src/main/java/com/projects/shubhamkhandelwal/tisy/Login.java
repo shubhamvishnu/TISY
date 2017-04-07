@@ -298,7 +298,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
 
         if (type.equals(Constants.LOGIN_TYPE_FACEBOOK)) {
-            username = tempUsername.split("@")[0] + "-fb";
+            username = tempUsername.split("@")[0] + "-tisy";
         } else if (type.equals(Constants.LOGIN_TYPE_GOOGLE)) {
             username = tempUsername.split("@")[0];
         }
