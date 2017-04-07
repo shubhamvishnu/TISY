@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/join_event_background"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="What you can do?"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="14dp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center"
+                    android:padding="6dp"
+                    app:srcCompat="@drawable/shutter_fab_image_icon" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="8dp"
+                    android:text="Take a screenshot of your saved places"
+                    android:textColor="@android:color/black"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center"
+                    android:padding="6dp"
+                    app:srcCompat="@drawable/create_event_intro_icon" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="8dp"
+                    android:text="Found an interesting location? Add it to you places with a note! "
+                    android:textColor="@android:color/black"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center"
+                    android:padding="6dp"
+                    app:srcCompat="@drawable/create_new_event_icon" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="8dp"
+                    android:text="See a list of all your notes"
+                    android:textColor="@android:color/black"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <android.support.v7.widget.AppCompatImageButton
+
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center"
+                    android:padding="6dp"
+                    app:srcCompat="@drawable/binoculars_fab_image_icon" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_margin="8dp"
+                    android:text="Zoom-Fit to see all your notes on the map"
+                    android:textColor="@android:color/black"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/done_intro_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/join_event_background"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="Done"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

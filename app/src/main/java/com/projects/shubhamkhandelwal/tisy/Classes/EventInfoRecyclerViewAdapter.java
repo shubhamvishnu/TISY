@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.projects.shubhamkhandelwal.tisy.R;
 import com.projects.shubhamkhandelwal.tisy.TrackActivity;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -53,11 +55,24 @@ public class EventInfoRecyclerViewAdapter extends RecyclerView.Adapter<EventInfo
     }
 
     @Override
-    public void onBindViewHolder(EventInfoRecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(final EventInfoRecyclerViewHolder holder,final int position) {
         holder.memberTextView.setText(memberList.get(position));
         holder.coordinateSnapShotTextView.setText(memberCoordinate.get(position));
         holder.nameTextView.setText(memberProfileName.get(position));
-        Picasso.with(context).load(Uri.parse(memberProfileImageUrl.get(position))).error(R.drawable.default_profile_image_icon).into(holder.profileImage);
+        Picasso.with(context).load(Uri.parse(memberProfileImageUrl.get(position))).networkPolicy(NetworkPolicy.OFFLINE).into(holder.profileImage, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+
+                Picasso.with(context).load(Uri.parse(memberProfileImageUrl.get(position))).error(R.drawable.default_profile_image_icon).into(holder.profileImage);
+            }
+        });
+
+
         holder.lastSeenTextView.setText(lastSeen.get(position));
     }
 

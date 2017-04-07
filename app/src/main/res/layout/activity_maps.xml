@@ -40,9 +40,8 @@
                 android:adjustViewBounds="true"
                 android:background="@android:color/transparent"
                 android:elevation="6dp"
-                android:padding="6dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/info_icon" />
+                android:src="@drawable/info_image_icon" />
             </LinearLayout>
             <!--<android.support.v7.widget.AppCompatImageButton-->
                 <!--android:id="@+id/maps_chat_icon"-->

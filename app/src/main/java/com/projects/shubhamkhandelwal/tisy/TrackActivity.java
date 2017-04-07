@@ -81,6 +81,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import client.yalantis.com.foldingtabbar.FoldingTabBar;
+import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
 public class TrackActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
@@ -95,7 +96,7 @@ public class TrackActivity extends FragmentActivity implements OnMapReadyCallbac
     Boolean fromDialog;
     Map<Integer, Note> tagNoteMap;
 
-
+    ImageButton helpImageButton;
     LatLngBounds.Builder builder;
     ProgressDialog progressDialog;
 boolean fabOptionsClicked;
@@ -103,6 +104,7 @@ boolean fabOptionsClicked;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track);
+        checkForFirstTime();
         fromDialog = false;
 
         tagNoteMap = new HashMap<>();
@@ -122,28 +124,15 @@ boolean fabOptionsClicked;
 
 
         initServices();
-
-//        addNoteImageButton = (ImageButton) findViewById(R.id.track_activity_add_note);
-//        addNoteImageButton.setVisibility(View.INVISIBLE);
-//
-//        trackCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.trackCoordinatorLayout);
-//        addNoteImageButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                placePickerDialog();
-//            }
-//        });
-//
-//        trackActivityZoomFit = (ImageButton) findViewById(R.id.track_activity_zoom_fit_icon);
-//        trackActivityZoomFit.setVisibility(View.INVISIBLE);
-//        trackActivityZoomFit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                zoomFit();
-//            }
-//        });
-
         initProgressDialog();
+
+        helpImageButton = (ImageButton) findViewById(R.id.track_help_option_image_button);
+        helpImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showHelpDialog();
+            }
+        });
 
         FoldingTabBar tabBar = (FoldingTabBar) findViewById(R.id.folding_tab_bar_track_activity);
         tabBar.setOnFoldingItemClickListener(new FoldingTabBar.OnFoldingItemSelectedListener() {
@@ -220,7 +209,40 @@ boolean fabOptionsClicked;
 
 
     }
+    void checkForFirstTime(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
+        if (sharedPreferences.contains("track_navigation_help")) {
 
+        } else {
+            showHelpDialog();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("track_navigation_help", "done");
+            editor.apply();
+        }
+    }
+    void showHelpDialog() {
+
+        Button doneHelpButton;
+        final Dialog helpDialog = new Dialog(this, R.style.event_info_dialog_style);
+        helpDialog.setContentView(R.layout.dialog_track_activity_help_dialog);
+
+
+        doneHelpButton = (Button) helpDialog.findViewById(R.id.done_help_button);
+
+
+        doneHelpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog.dismiss();
+            }
+        });
+
+        Window window = helpDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        helpDialog.setCanceledOnTouchOutside(true);
+        helpDialog.show();
+    }
     void showPermissionAlert(){
         Alerter.create(this)
                 .setTitle("Enable location permission")

@@ -39,6 +39,8 @@ import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -120,10 +122,21 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
         TextView createdEventsCountTextView = (TextView) findViewById(R.id.created_events_count_text_view);
         TextView joinedEventsCountTextView = (TextView) findViewById(R.id.joined_events_count_text_view);
         Button aboutUsButton = (Button) findViewById(R.id.about_us_button);
-        CircleImageView profileImageView = (CircleImageView) findViewById(R.id.profile_image_circle_image_view);
+        final CircleImageView profileImageView = (CircleImageView) findViewById(R.id.profile_image_circle_image_view);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
+        Picasso.with(this).load(Uri.parse(userPhotoUri)).networkPolicy(NetworkPolicy.OFFLINE).into(profileImageView, new Callback() {
+            @Override
+            public void onSuccess() {
 
-        Picasso.with(this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
+            }
+
+            @Override
+            public void onError() {
+
+                Picasso.with(UserInfoActivity.this).load(Uri.parse(userPhotoUri)).error(R.drawable.default_profile_image_icon).into(profileImageView);
+            }
+        });
+
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
         nameEditText.setText(userInfoPreference.getString("name", null));
         userIdEditText.setText(userInfoPreference.getString("username", null));
