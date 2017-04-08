@@ -108,7 +108,7 @@ public class CreateEvent extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644~7949777217");
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644/4000158413");
         // Firebase context
         Firebase.setAndroidContext(this);
 

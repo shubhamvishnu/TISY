@@ -155,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644~7949777217");
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644/6953624816");
         initServices();
 
         // initialize the GoogleMaps with the activity's context. To create custom icons for the markers.

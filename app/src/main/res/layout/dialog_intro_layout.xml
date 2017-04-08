@@ -235,7 +235,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="6dp"
+
                 android:background="@drawable/join_event_background"
                 android:gravity="center"
                 android:padding="16dp"
