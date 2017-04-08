@@ -20,6 +20,7 @@
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/back_icon" />
 
+
     <TextView
         android:id="@+id/chatsEventIdTextView"
         android:layout_width="0dp"
