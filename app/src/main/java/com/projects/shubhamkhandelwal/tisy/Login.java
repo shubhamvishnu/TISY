@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -29,6 +30,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -70,6 +72,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     CallbackManager callbackManager;
     LoginButton fbloginButton;
     ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +206,9 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
                 signIn();
             }
         });
+
+
+
 
     }
 
