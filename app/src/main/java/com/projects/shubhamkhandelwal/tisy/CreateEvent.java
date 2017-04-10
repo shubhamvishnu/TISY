@@ -108,7 +108,7 @@ public class CreateEvent extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644/4000158413");
+
         // Firebase context
         Firebase.setAndroidContext(this);
 
@@ -154,7 +154,7 @@ public class CreateEvent extends Activity {
         // generate the eventId; calls the generate() function
         generateEventId();
         initProgressDialog();
-        initAdd();
+        initAd();
 
         initServices();
 
@@ -294,7 +294,7 @@ public class CreateEvent extends Activity {
             startService(new Intent(getBaseContext(), RequestNotificationService.class));
         }
     }
-void initAdd(){
+void initAd(){
     mInterstitialAd = new InterstitialAd(this);
     mInterstitialAd.setAdUnitId("ca-app-pub-2840079713824644/4000158413");
 

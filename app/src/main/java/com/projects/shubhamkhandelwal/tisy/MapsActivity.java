@@ -155,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-2840079713824644/6953624816");
+
         initServices();
 
         // initialize the GoogleMaps with the activity's context. To create custom icons for the markers.
@@ -257,7 +257,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         init();
-        initAdd();
+        initAd();
         initProgressDialog();
     }
 
@@ -345,7 +345,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    void initAdd() {
+    void initAd() {
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-2840079713824644/6953624816");
 
@@ -1249,16 +1249,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void userExit() {
         if (Constants.eventAdmin) {
             Firebase eventMembers = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId);
+            eventMembers.keepSynced(true);
             eventMembers.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
                         Firebase removeMember = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + snapshot.getKey() + "/activeEvent/" + Constants.currentEventId);
+                        removeMember.keepSynced(true);
                         removeMember.removeValue();
                     }
                     if (dataSnapshot.child("requested").exists()) {
                         for (DataSnapshot snapshot : dataSnapshot.child("requested").getChildren()) {
                             Firebase removeRequest = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + snapshot.getKey() + Constants.currentEventId);
+                            removeRequest.keepSynced(true);
                             removeRequest.removeValue();
                         }
                     }
@@ -1273,14 +1276,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
         } else {
             Firebase removeMember = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId + "/members/" + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null));
+            removeMember.keepSynced(true);
             removeMember.removeValue(new Firebase.CompletionListener() {
                 @Override
                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                     Firebase removeCurrentUser = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null) + "/activeEvent/" + Constants.currentEventId);
+                    removeCurrentUser.keepSynced(true);
                     removeCurrentUser.removeValue(new Firebase.CompletionListener() {
                         @Override
                         public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                            exitMapEvent();
+                            checkCount();
                         }
                     });
                 }
@@ -1292,6 +1297,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void deleteEvent() {
         Firebase deleteEvent = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + Constants.currentEventId);
+        deleteEvent.keepSynced(true);
         deleteEvent.removeValue(new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
