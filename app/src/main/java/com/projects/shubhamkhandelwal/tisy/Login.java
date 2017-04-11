@@ -94,7 +94,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         mAppName = (TextView) findViewById(R.id.app_name);
 
         //adding Typeface
-        Typeface typeface = Typeface.createFromAsset(getApplicationContext().getResources().getAssets(), "Pacifico-Regular.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "tisy_logo_font.ttf");
         mAppName.setTypeface(typeface);
 
 
@@ -309,9 +309,12 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     void actionOnSucess(String email, Uri photoUrl, String name, String type) {
         progressDialog.show();
         String[] dotSplit = email.split("\\.");
+
         String tempUsername = dotSplit[0] + "-" + dotSplit[1];
-        username = tempUsername.split("@")[0];
-        serviceName = tempUsername.split("@")[1];
+        String[] splitAt = tempUsername.split("@");
+        username = splitAt[0];
+        serviceName = splitAt[1];
+
         this.type = type;
         saveLoginType(type);
 
@@ -359,8 +362,6 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
                     } else {
                         save();
                     }
-
-
                 } else {
                     // TODO: ask for creation of new user; pop-up confirmation
                     save();
