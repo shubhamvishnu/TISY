@@ -15,10 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -32,7 +29,6 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -55,6 +51,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Login extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -62,18 +59,21 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     // view elements
 
     String username;
+    String serviceName;
     String name;
     // firebase reference object
     Firebase firebase;
     Intent intent;
     Uri userPhotoUrl;
     boolean noPhoto;
+    String type;
+    String email;
     GoogleApiClient mGoogleApiClient;
     SignInButton signInButton;
     CallbackManager callbackManager;
     LoginButton fbloginButton;
     ProgressDialog progressDialog;
-    TextView mAppName,mAppMotto;
+    TextView mAppName;
 
 
     @Override
@@ -91,17 +91,13 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
 
 
+        mAppName = (TextView) findViewById(R.id.app_name);
 
-
-    mAppName = (TextView) findViewById(R.id.app_name);
-    mAppMotto = (TextView) findViewById(R.id.app_motto);
         //adding Typeface
+        Typeface typeface = Typeface.createFromAsset(getApplicationContext().getResources().getAssets(), "Pacifico-Regular.ttf");
+        mAppName.setTypeface(typeface);
 
-        Typeface face = Typeface.createFromAsset(getResources().getAssets(),
-                "Pacifico-Regular.ttf");
 
-        mAppName.setTypeface(face);
-mAppMotto.setTypeface(face);
         callbackManager = CallbackManager.Factory.create();
         fbloginButton = (LoginButton) findViewById(R.id.login_button);
         fbloginButton.setReadPermissions(Arrays.asList("email"));
@@ -198,7 +194,7 @@ mAppMotto.setTypeface(face);
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
-        setGooglePlusButtonText(signInButton,"Sign In with Google");
+
         signInButton.setScopes(gso.getScopeArray());
 
         signInButton.setOnTouchListener(new View.OnTouchListener() {
@@ -221,8 +217,6 @@ mAppMotto.setTypeface(face);
                 signIn();
             }
         });
-
-
 
 
     }
@@ -316,16 +310,12 @@ mAppMotto.setTypeface(face);
         progressDialog.show();
         String[] dotSplit = email.split("\\.");
         String tempUsername = dotSplit[0] + "-" + dotSplit[1];
-
-
-        if (type.equals(Constants.LOGIN_TYPE_FACEBOOK)) {
-            username = tempUsername.split("@")[0] + "-tisy";
-        } else if (type.equals(Constants.LOGIN_TYPE_GOOGLE)) {
-            username = tempUsername.split("@")[0];
-        }
-
+        username = tempUsername.split("@")[0];
+        serviceName = tempUsername.split("@")[1];
+        this.type = type;
         saveLoginType(type);
 
+        this.email = email;
         if (name != null) {
             this.name = name;
         }
@@ -340,6 +330,7 @@ mAppMotto.setTypeface(face);
     }
 
     void saveLoginType(String type) {
+
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("login_type", type);
@@ -362,7 +353,13 @@ mAppMotto.setTypeface(face);
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // checks if the firebase reference (FIREBASE_USER_DETAILS) has the entered username in database
                 if (dataSnapshot.hasChild(username)) {
-                    updateUserProfilePhotoInfo();
+                    String tempEmailID = dataSnapshot.child(username).child("email").getValue().toString();
+                    if (Objects.equals(tempEmailID, email)) {
+                        updateUserProfilePhotoInfo();
+                    } else {
+                        save();
+                    }
+
 
                 } else {
                     // TODO: ask for creation of new user; pop-up confirmation
@@ -399,6 +396,9 @@ mAppMotto.setTypeface(face);
 
     // creates a new user in firebase
     public void save() {
+        username = username + "-" + serviceName;
+
+
         // has the password and the count (No. of events created)
         Map<String, Object> details = new HashMap<>();
         details.put("eventCount", 0);
@@ -453,19 +453,6 @@ mAppMotto.setTypeface(face);
 
     }
 
-    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
-        // Search all the views inside SignInButton for TextView
-        for (int i = 0; i < signInButton.getChildCount(); i++) {
-            View v = signInButton.getChildAt(i);
-
-            // if the view is instance of TextView then change the text SignInButton
-            if (v instanceof TextView) {
-                TextView tv = (TextView) v;
-                tv.setText(buttonText);
-                return;
-            }
-        }
-    }
 
     @Override
     public void onBackPressed() {
