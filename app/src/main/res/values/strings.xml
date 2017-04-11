@@ -15,5 +15,6 @@
     <string name="send_to">Share</string>
     <string name="title_activity_event_info">EventInfoActivity</string>
     <string name="facebook_app_id">1826596187666719</string>
+    <string name="tisy">Tisy</string>
 
 </resources>

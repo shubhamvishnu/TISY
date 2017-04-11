@@ -5,27 +5,70 @@
     android:id="@+id/coordinatorLayoutLoginActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-
+    android:background="@drawable/login_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Login">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:alpha="0.5"/>
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
-
         android:padding="16dp"
-        android:background="@drawable/login_activity_background"
+        android:layout_gravity="center"
         tools:context=".Login">
 
 
+    <LinearLayout
 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="15dp"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        >
+      <TextView
+          android:id="@+id/app_name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/tisy"
+          android:textSize="90sp"
+          android:textColor="#fff"
+          android:textStyle="bold"
+          android:gravity="center_horizontal"
+          />
+        <TextView
+            android:layout_below="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="#fff"
+            android:textStyle="italic"
+            android:gravity="center_horizontal"
+            android:id="@+id/app_motto"
+            android:text=""/>
+    </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:padding="16dp"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LOGIN"
+                android:textSize="16sp"
+                android:layout_marginLeft="5dp"
+                android:textColor="@android:color/white"/>
 
 
             <com.google.android.gms.common.SignInButton
@@ -34,7 +77,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/common_signin_button_text_long"
                 android:textAlignment="center" />
             <RelativeLayout
                 android:layout_width="fill_parent"

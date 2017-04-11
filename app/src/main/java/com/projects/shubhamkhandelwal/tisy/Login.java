@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -58,9 +60,8 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
     private static final int RC_SIGN_IN = 9001;
     // view elements
-    Button loginButton;
-    EditText usernameEditText, passwordEditText;
-    String username, password;
+
+    String username;
     String name;
     // firebase reference object
     Firebase firebase;
@@ -72,6 +73,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     CallbackManager callbackManager;
     LoginButton fbloginButton;
     ProgressDialog progressDialog;
+    TextView mAppName,mAppMotto;
 
 
     @Override
@@ -83,11 +85,23 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         FacebookSdk.sdkInitialize(getApplicationContext());
         // Firebase context
         Firebase.setAndroidContext(this);
-
         initProgressDialog();
 
         noPhoto = false;
 
+
+
+
+
+    mAppName = (TextView) findViewById(R.id.app_name);
+    mAppMotto = (TextView) findViewById(R.id.app_motto);
+        //adding Typeface
+
+        Typeface face = Typeface.createFromAsset(getResources().getAssets(),
+                "Pacifico-Regular.ttf");
+
+        mAppName.setTypeface(face);
+mAppMotto.setTypeface(face);
         callbackManager = CallbackManager.Factory.create();
         fbloginButton = (LoginButton) findViewById(R.id.login_button);
         fbloginButton.setReadPermissions(Arrays.asList("email"));
@@ -184,6 +198,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
+        setGooglePlusButtonText(signInButton,"Sign In with Google");
         signInButton.setScopes(gso.getScopeArray());
 
         signInButton.setOnTouchListener(new View.OnTouchListener() {
@@ -436,6 +451,20 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
         startActivity(intent);
         finish();
 
+    }
+
+    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        // Search all the views inside SignInButton for TextView
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            // if the view is instance of TextView then change the text SignInButton
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(buttonText);
+                return;
+            }
+        }
     }
 
     @Override
