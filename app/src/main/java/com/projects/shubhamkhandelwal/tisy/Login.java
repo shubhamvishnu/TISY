@@ -370,7 +370,6 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
             }
         });
     }

@@ -16,5 +16,15 @@
     <string name="title_activity_event_info">EventInfoActivity</string>
     <string name="facebook_app_id">1826596187666719</string>
     <string name="tisy">Tisy</string>
+    <string name="enter_a_title">Enter a title</string>
+    <string name="event_id">Event-ID:</string>
+    <string name="generating_event_id">Generating event-ID...</string>
+    <string name="select_a_destination_location">Select a destination location:</string>
+    <string name="give_a_place_name">Give a place name</string>
+    <string name="select_a_destination_marker">select a destination marker:</string>
+    <string name="edit">Edit</string>
+    <string name="description">Description:</string>
+    <string name="write_something_about_the_event">Write something about the event...</string>
+    <string name="create_event">CREATE EVENT</string>
 
 </resources>

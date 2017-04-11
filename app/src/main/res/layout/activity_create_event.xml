@@ -40,7 +40,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:hint="Enter a title"
+                        android:hint="@string/enter_a_title"
                         android:padding="16dp"
                         android:textColor="@android:color/white"
                         android:textColorHint="#bcbcbc"
@@ -69,7 +69,7 @@
                             android:background="@drawable/create_event_item_desc_background"
                             android:gravity="center"
                             android:padding="6dp"
-                            android:text="Event-ID:"
+                            android:text="@string/event_id"
                             android:textColor="#2f4f4f"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -84,7 +84,7 @@
                             android:background="@drawable/created_time_background"
                             android:gravity="center"
                             android:padding="6dp"
-                            android:text="Generating event-ID..."
+                            android:text="@string/generating_event_id"
                             android:textColor="@android:color/white"
                             android:textSize="12dp"
                             android:textStyle="bold" />
@@ -99,7 +99,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="8dp"
                         android:gravity="center"
-                        android:text="Select a destination location:"
+                        android:text="@string/select_a_destination_location"
                         android:textColor="#d3d3d3"
                         android:textSize="12dp"
                         android:padding="6dp"
@@ -121,7 +121,7 @@
                             android:layout_width="0dp"
                             android:layout_height="38dp"
                             android:layout_weight="1"
-                            android:hint="Give a place name"
+                            android:hint="@string/give_a_place_name"
                             android:scrollbarAlwaysDrawVerticalTrack="true"
                             android:scrollbars="vertical"
                             android:textColor="@android:color/white"
@@ -200,7 +200,7 @@
 
                         android:layout_centerHorizontal="true"
                         android:layout_below="@id/dLocationLinearLayout"
-                        android:text="select a destination marker:"
+                        android:text="@string/select_a_destination_marker"
                         android:textColor="#d3d3d3"
                         android:textSize="12dp"
                         android:padding="6dp"
@@ -236,7 +236,7 @@
                             android:layout_gravity="center"
                             android:background="@android:color/transparent"
                             android:gravity="center"
-                            android:text="Edit"
+                            android:text="@string/edit"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="8dp"
@@ -267,9 +267,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dLocationIconLinearLayout"
                         android:layout_marginBottom="8dp"
-
                         android:layout_centerHorizontal="true"
-                        android:text="Description:"
+                        android:text="@string/description"
                         android:textColor="#d3d3d3"
                         android:textSize="12dp"
                         android:padding="6dp"
@@ -281,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/descriptionTextView"
                         android:layout_marginBottom="24dp"
-                        android:hint="Write something about the event..."
+                        android:hint="@string/write_something_about_the_event"
                         android:textColor="@android:color/white"
                         android:textColorHint="#bcbcbc" />
 
@@ -304,10 +303,9 @@
                         android:layout_gravity="center"
                         android:background="@drawable/created_time_background"
                         android:elevation="20dp"
-
                         android:gravity="center"
                         android:padding="8dp"
-                        android:text="CREATE EVENT"
+                        android:text="@string/create_event"
                         android:textColor="@android:color/white"
                         android:textStyle="bold" />
                 </LinearLayout>
