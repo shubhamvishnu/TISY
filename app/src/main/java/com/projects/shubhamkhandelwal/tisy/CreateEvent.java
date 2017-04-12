@@ -323,8 +323,8 @@ void initAd(){
     void initProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        progressDialog.setTitle("making changes...");
-        progressDialog.setMessage("Working on it!");
+        progressDialog.setTitle("Creating your event");
+        progressDialog.setMessage("Working on it");
         progressDialog.setCancelable(false);
         progressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -1150,8 +1150,15 @@ void initAd(){
                 if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                     // toast the reason why we need the permission
                     Alerter.create(CreateEvent.this)
+                            .setTitle("Enable location permission")
                             .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
                             .setBackgroundColor(R.color.colorAccent)
+                            .setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    openSettings();
+                                }
+                            })
                             .show();
                 }
                 requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);

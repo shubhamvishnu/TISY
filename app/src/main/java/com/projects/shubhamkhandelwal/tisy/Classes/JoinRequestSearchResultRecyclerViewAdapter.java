@@ -16,6 +16,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.projects.shubhamkhandelwal.tisy.R;
+import com.projects.shubhamkhandelwal.tisy.SearchEventActivity;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,12 +78,14 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         eventIdList = new ArrayList<>();
         usernameList = new ArrayList<>();
         final List<String> activeEventList = new ArrayList<>();
+
         Firebase searchResultFirebase = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS);
+        searchResultFirebase.keepSynced(true);
 
         final Firebase requestsFirebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_REQUESTS + username);
         requestsFirebase.keepSynced(true);
 
-        searchResultFirebase.keepSynced(true);
+
         searchResultFirebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -113,7 +117,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
                                                 if (dataSnapshot.exists()) {
                                                     int count = 0;
 
-                                                    // checking if the invite from that event isn't received
+                                                    // checking if the join request has not been sent already for that event
                                                     for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                                                         if (Objects.equals(eventSnapshot.getKey(), snapshot1.getKey())) {
                                                             count++;
