@@ -309,11 +309,9 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
     void actionOnSucess(String email, Uri photoUrl, String name, String type) {
         progressDialog.show();
         String[] dotSplit = email.split("\\.");
-
         String tempUsername = dotSplit[0] + "-" + dotSplit[1];
-        String[] splitAt = tempUsername.split("@");
-        username = splitAt[0];
-        serviceName = splitAt[1];
+        username = tempUsername.split("@")[0];
+        serviceName = tempUsername.split("@")[1];
 
         this.type = type;
         saveLoginType(type);
@@ -360,6 +358,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
                     if (Objects.equals(tempEmailID, email)) {
                         updateUserProfilePhotoInfo();
                     } else {
+                        username = username + "-" + serviceName.split("-")[0];
                         save();
                     }
                 } else {
@@ -396,7 +395,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
     // creates a new user in firebase
     public void save() {
-        username = username + "-" + serviceName;
+
 
 
         // has the password and the count (No. of events created)

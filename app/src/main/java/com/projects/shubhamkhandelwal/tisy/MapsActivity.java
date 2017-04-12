@@ -1372,14 +1372,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                 @Override
                 public void onMyLocationChange(Location location) {
-                    if (location.getAccuracy() <= 10 && location.getAccuracy() != 0.0) {
+
 
                         checkNearCheckPoint(location);
                         updateUserCurrentLocation(location);
-                    } else {
-                        updateStatus();
-                        updateMyLocation(location);
-                    }
+
                 }
             });
             changeInLocation();
