@@ -205,7 +205,50 @@
             </LinearLayout>
 
 
+            <Button
 
+                android:id="@+id/rate_us_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="left|bottom"
+                android:padding="8dp"
+                android:textStyle="normal"
+                android:text="Rate us"
+                android:textAllCaps="false"
+                android:layout_marginBottom="6dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14dp" />
+            <Button
+
+                android:id="@+id/about_us_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="left|bottom"
+                android:padding="8dp"
+                android:textStyle="normal"
+                android:text="Know more about Tisy"
+                android:textAllCaps="false"
+                android:layout_marginBottom="6dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/logout_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/join_event_background"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textStyle="normal"
+                android:text="Logout"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="14dp" />
 
 
 
@@ -217,34 +260,7 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
-                <Button
 
-                    android:id="@+id/about_us_button"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:gravity="left|bottom"
-                    android:padding="8dp"
-                    android:textStyle="normal"
-                    android:text="know about Tisy family"
-                    android:textAllCaps="false"
-                    android:layout_marginBottom="6dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14dp" />
-                <Button
-                    android:id="@+id/logout_button"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/join_event_background"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textStyle="normal"
-                    android:text="Logout"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="14dp" />
             </LinearLayout>
 
         </RelativeLayout>
