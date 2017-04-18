@@ -12,8 +12,20 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/join_event_background"
             android:orientation="horizontal">
 
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/back_search_image_button"
+                android:layout_width="36dp"
+                android:layout_gravity="center"
+                android:layout_margin="6dp"
+                android:layout_height="36dp"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+
+                app:srcCompat="@drawable/back_icon" />
             <EditText
                 android:id="@+id/join_request_dialog_search_edit_text"
                 android:layout_width="0dp"
@@ -25,6 +37,9 @@
                 android:hint="Search using event ID"
                 android:textSize="16dp"
                 android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:textColorHint="#bcbcbc"
+                android:textCursorDrawable="@drawable/edit_text_curson_color_style"
                 android:padding="16dp"
                 />
             <android.support.v7.widget.AppCompatImageButton
@@ -37,7 +52,7 @@
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
 
-                app:srcCompat="@drawable/search_events_option_image_icon" />
+                app:srcCompat="@drawable/send_message_icon" />
         </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/join_request_dialog_recycler_view"

@@ -1,22 +1,18 @@
 package com.projects.shubhamkhandelwal.tisy;
 
-import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -45,13 +41,12 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserInfoActivity extends FragmentActivity implements  GoogleApiClient.OnConnectionFailedListener{
+public class UserInfoActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener {
     long activeEventCount; // number of active event of the user.
     long createdEventCount; // number of events created; count of no. of events the user is the admin of.
     long joinedEventCount; // number of events user has joined.
     GoogleApiClient mGoogleApiClient;
     String userPhotoUri; // user profile photo url.
-
 
 
     ProgressDialog progressDialog;
@@ -137,6 +132,10 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
             }
         });
 
+        //adding Typeface
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), "tisy_logo_font.ttf");
+//        aboutUsButton.setTypeface(typeface);
+
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
         nameEditText.setText(userInfoPreference.getString("name", null));
         userIdEditText.setText(userInfoPreference.getString("username", null));
@@ -161,11 +160,12 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
         });
 
     }
-    void showConfirmationDialog(){
+
+    void showConfirmationDialog() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         progressDialog.show();
                         logout();
@@ -182,19 +182,19 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
-    void toAboutUs(){
+    void toAboutUs() {
         Intent intent = new Intent(UserInfoActivity.this, AboutUsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
+
     void logout() {
 
 
-
         String type = getSharedPreferences(SharedPreferencesName.LOGIN_STATUS, MODE_PRIVATE).getString("login_type", null);
-        if(type != null){
-            if(type.equals(Constants.LOGIN_TYPE_GOOGLE)){
+        if (type != null) {
+            if (type.equals(Constants.LOGIN_TYPE_GOOGLE)) {
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                         new ResultCallback<Status>() {
                             @Override
@@ -202,18 +202,16 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
                                 loggedout();
                             }
                         });
-            }else if(type.equals(Constants.LOGIN_TYPE_FACEBOOK)){
+            } else if (type.equals(Constants.LOGIN_TYPE_FACEBOOK)) {
                 LoginManager.getInstance().logOut();
                 loggedout();
             }
         }
 
 
-
-
-
     }
-    void initLogout(){
+
+    void initLogout() {
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -223,6 +221,7 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
                 .build();
         mGoogleApiClient.connect();
     }
+
     void loggedout() {
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -249,6 +248,7 @@ public class UserInfoActivity extends FragmentActivity implements  GoogleApiClie
         startActivity(intent);
         finish();
     }
+
     void initProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);

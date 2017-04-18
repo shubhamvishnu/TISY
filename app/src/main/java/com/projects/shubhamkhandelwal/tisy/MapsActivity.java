@@ -19,6 +19,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -91,9 +92,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +106,7 @@ import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-
+    public static final int REQUEST_ACCESS_FINE_LOCATION = 0;
     public static final int REQUEST_ACCESS_WRITE_STORAGE = 2;
     public static final int REQUEST_PERMISSION_SETTINGS = 1; // used for the permission setting intent
     public static final int PLACE_PICKER_REQUEST = 1; // used for the place picker intent
@@ -115,9 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     EventInfo eventInfo; // EventInfo class Object; All the basic event information
     GoogleMap mMap; // GoogleMap Object
     Firebase firebase; // Firebase Object
-    // chat variables
-    RecyclerView eventChatsRecyclerView; // chats view recyclerview
-    ChatsRecyclerViewAdpater chatsRecyclerViewAdapter; // chats view recyclerview adapter
+
     // map event variables
     Map<String, Object> members; // members (usernames) in the event
     List<String> namesList; // names of members in the event
@@ -135,6 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // View Objects
     CoordinatorLayout coordinatorLayout;
     ImageButton helpOptionImageButton;
+    ImageButton addMemberHelpImageButton;
 
     // event infomation variables
     List<String> memberProfileImageUrls; // profile Image URL of every member in the event
@@ -146,6 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     ProgressDialog progressDialog;
+    ProgressDialog leaveEventProgressDialog;
 
     InterstitialAd mInterstitialAd;
     boolean editDestinationLocation;
@@ -165,17 +168,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // initalizing view objects
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
         helpOptionImageButton = (ImageButton) findViewById(R.id.help_option_image_button);
+        addMemberHelpImageButton = (ImageButton) findViewById(R.id.add_new_member_maps_image_button);
         helpOptionImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showHelpDialog();
             }
         });
-
+        addMemberHelpImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {showAddMemberHelp();
+            }
+        });
         // initializing variable
         //initializing String variables
         username = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null);
-        nameSearch = new String();
 
         editDestinationLocation = false;
 
@@ -213,7 +220,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         break;
                     }
                     case R.id.ftb_chat: {
-                        showChatsDialog();
+                        toChatActivity();
                         break;
                     }
                     case R.id.ftb_more: {
@@ -259,6 +266,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         init();
         initAd();
         initProgressDialog();
+        initLeaveEventProgressDailog();
+    }
+    void toChatActivity(){
+        Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     void checkForFirstTime() {
@@ -284,6 +297,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    void initLeaveEventProgressDailog(){
+        leaveEventProgressDialog = new ProgressDialog(this);
+        leaveEventProgressDialog.setIndeterminate(true);
+        leaveEventProgressDialog.setTitle("Leaving Event");
+        leaveEventProgressDialog.setMessage("Working on it...");
+        leaveEventProgressDialog.setCancelable(false);
+        leaveEventProgressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        leaveEventProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+
+            }
+        });
+
+    }
     void initProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -339,10 +372,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 showWritePermissionAlert();
             }
+        }else if (requestCode == REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                showPermissionAlert();
+
+            }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         }
+
     }
 
     void initAd() {
@@ -360,27 +400,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         requestNewInterstitial();
     }
 
-    public void openShareImageDialog(String filePath) {
-        File file = this.getFileStreamPath(filePath);
 
-        if (!filePath.equals("")) {
-            final ContentValues values = new ContentValues(2);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-            final Uri contentUriFile = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-            intent.setType("image/jpeg");
-            intent.putExtra(android.content.Intent.EXTRA_STREAM, contentUriFile);
-            startActivity(Intent.createChooser(intent, "Share Image"));
-        } else {
-            Toast.makeText(getApplicationContext(), "share failed", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     public void captureScreen() {
         GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
@@ -390,30 +410,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSnapshotReady(Bitmap snapshot) {
                 bitmap = snapshot;
 
-                OutputStream fout = null;
-
-                String filePath = System.currentTimeMillis() + ".jpeg";
+                Date now = new Date();
+                android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
                 try {
-                    fout = openFileOutput(filePath,
-                            MODE_WORLD_READABLE);
+                    // image naming and path  to include sd card  appending name you choose for file
+                    String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
 
-                    // Write the string to the file
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fout);
-                    fout.flush();
-                    fout.close();
-                } catch (FileNotFoundException e) {
+                    File imageFile = new File(mPath);
 
-                } catch (IOException e) {
-
+                    FileOutputStream outputStream = new FileOutputStream(imageFile);
+                    int quality = 100;
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                    outputStream.flush();
+                    outputStream.close();
+                    progressDialog.dismiss();
+                    openScreenshot(imageFile);
+                } catch (Throwable e) {
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                    Toast.makeText(MapsActivity.this, "There was some problem", Toast.LENGTH_SHORT).show();
                 }
-
-                openShareImageDialog(filePath);
-
             }
         };
 
         mMap.snapshot(callback);
+    }
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
     }
 
     void initServices() {
@@ -429,8 +458,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     void checkCount() {
+
         if (mInterstitialAd.isLoaded()) {
+            if(leaveEventProgressDialog.isShowing()){
+                leaveEventProgressDialog.dismiss();
+            }
             mInterstitialAd.show();
+
         } else {
             exitMapEvent();
         }
@@ -438,7 +472,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
                 .build();
 
         mInterstitialAd.loadAd(adRequest);
@@ -553,6 +586,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 allInOneDialog.dismiss();
+                leaveEventProgressDialog.show();
                 exitEvent();
             }
         });
@@ -969,7 +1003,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-
+/*
     void showChatsDialog() {
 
         ImageButton backArrowImageView;
@@ -1074,7 +1108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         chatMessage.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), message);
         firebase.push().setValue(chat);
     }
-
+*/
 
     /**
      * Manipulates the map once available.
@@ -1233,6 +1267,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             userExit();
         } else {
+            if(leaveEventProgressDialog.isShowing()){
+                leaveEventProgressDialog.dismiss();
+            }
             Alerter.create(this)
                     .setText("Oops! No internet connection...")
                     .setOnClickListener(new View.OnClickListener() {
@@ -1324,7 +1361,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.leave_event_menu_item) {
-            exitEvent();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -1362,10 +1399,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void userlocationAction() {
 
         // enable user location
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            showPermissionAlert();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            checkLocationPermissions();
         } else {
             mMap.setMyLocationEnabled(true);
             // listener for change in location of the user
@@ -1376,6 +1411,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         checkNearCheckPoint(location);
                         updateUserCurrentLocation(location);
+                    updateStatus();
 
                 }
             });
@@ -1384,7 +1420,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+    void checkLocationPermissions() {
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    // toast the reason why we need the permission
+                    Alerter.create(MapsActivity.this)
+                            .setTitle("Enable location permission")
+                            .setText("TISY uses GPS to locate and track users. It required permission to use your GPS.")
+                            .setBackgroundColor(R.color.colorAccent)
+                            .setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    openSettings();
+                                }
+                            })
+                            .show();
+                }
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ACCESS_FINE_LOCATION);
+            }
+        }
+
+    }
     void updateStatus() {
         Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
         updateLastKnowStatus.keepSynced(true);
@@ -1820,9 +1879,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         helpDialog.setCanceledOnTouchOutside(true);
         helpDialog.show();
     }
+    void showAddMemberHelp(){
+
+        TextView eventIDTextView;
+        Button doneHelpButton;
+        final Dialog helpDialog = new Dialog(this, R.style.event_info_dialog_style);
+        helpDialog.setContentView(R.layout.dialog_event_help_layout);
+        LinearLayout linearLayout = (LinearLayout) helpDialog.findViewById(R.id.other_half_help_linear_layout);
+        linearLayout.setVisibility(View.GONE);
+        eventIDTextView = (TextView) helpDialog.findViewById(R.id.help_event_id_text_view);
+        doneHelpButton = (Button) helpDialog.findViewById(R.id.done_help_button);
+
+        eventIDTextView.setText(Constants.currentEventId);
+        doneHelpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog.dismiss();
+            }
+        });
+        FloatingTextButton sendIDButton = (FloatingTextButton) helpDialog.findViewById(R.id.send_id_fab_button);
+        sendIDButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog.dismiss();
+                sendID();
+            }
+        });
+
+        Window window = helpDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        helpDialog.setCanceledOnTouchOutside(true);
+        helpDialog.show();
+    }
 
     void sendID() {
-        String message = new String("Join my Tisy event! Use this event ID " + Constants.currentEventId + ". Download the app here:");
+        String message = new String("Join my Tisy event!\nUse this event ID: " + Constants.currentEventId + ".\n Download the app here: " + "http://play.google.com/store/apps/details?id=com.projects.shubhamkhandelwal.tisy");
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, message);

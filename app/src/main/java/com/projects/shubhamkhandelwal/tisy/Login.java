@@ -92,11 +92,12 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
 
 
         mAppName = (TextView) findViewById(R.id.app_name);
+        TextView mAppMotto = (TextView) findViewById(R.id.app_motto);
 
         //adding Typeface
         Typeface typeface = Typeface.createFromAsset(getAssets(), "tisy_logo_font.ttf");
         mAppName.setTypeface(typeface);
-
+        mAppMotto.setTypeface(typeface);
 
         callbackManager = CallbackManager.Factory.create();
         fbloginButton = (LoginButton) findViewById(R.id.login_button);

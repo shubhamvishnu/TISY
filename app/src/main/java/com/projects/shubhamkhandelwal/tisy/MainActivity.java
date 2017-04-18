@@ -239,7 +239,7 @@ void initMain(){
            showUserInfo();
         }
         if(label.equals(SHARE_APP_TAG)){
-            shareApp("Download tisy from play store using this link:");
+            shareApp("Download Tisy from play store using this link:\n"+ "http://play.google.com/store/apps/details?id=com.projects.shubhamkhandelwal.tisy");
         }
     }
     void showUserInfo(){

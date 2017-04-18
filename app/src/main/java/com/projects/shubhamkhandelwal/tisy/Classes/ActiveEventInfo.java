@@ -21,11 +21,6 @@ public class ActiveEventInfo {
         this.title = title;
         this.eventId = eventId;
         this.eventInfo = eventInfo;
-//        if (Integer.parseInt(requests) == 0) {
-//            this.requests = "No pending requests";
-//        } else {
-//            this.requests = requests + " pending requests";
-//        }
         this.timeCreated = timeCreated;
         this.memberList = memberList;
     }
@@ -34,26 +29,9 @@ public class ActiveEventInfo {
         return memberList;
     }
 
-    public void setMemberList(List<String> memberList) {
-        this.memberList = memberList;
-    }
-
     public String getAssociation() {
         return association;
     }
-
-    public void setAssociation(String association) {
-        this.association = association;
-    }
-
-    public String getTimeCreated() {
-        return timeCreated;
-    }
-
-    public void setTimeCreated(String timeCreated) {
-        this.timeCreated = timeCreated;
-    }
-
 
     public String getTitle() {
         return title;
@@ -71,7 +49,6 @@ public class ActiveEventInfo {
         this.dIconResourceId = dIconResourceId;
     }
 
-
     public String getAdmin() {
         return admin;
     }
@@ -84,15 +61,11 @@ public class ActiveEventInfo {
         return eventInfo;
     }
 
-    public void setEventInfo(EventInfo eventInfo) {
-        this.eventInfo = eventInfo;
-    }
+
 
     public String getEventId() {
         return eventId;
     }
 
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
-    }
+
 }

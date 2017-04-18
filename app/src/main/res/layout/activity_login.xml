@@ -43,16 +43,16 @@
           android:textStyle="bold"
           android:gravity="center_horizontal"
           />
-        <!--<TextView-->
-            <!--android:layout_below="@+id/app_name"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="25sp"-->
-            <!--android:textColor="#fff"-->
-            <!--android:textStyle="italic"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:id="@+id/app_motto"-->
-            <!--android:text=""/>-->
+        <TextView
+            android:layout_below="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="#fff"
+            android:textStyle="italic"
+            android:gravity="center_horizontal"
+            android:id="@+id/app_motto"
+            android:text="There I see you!"/>
     </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"

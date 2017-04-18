@@ -13,6 +13,20 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
+            <TextView
+                android:id="@+id/sent_requests_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="Join event requests"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textSize="14dp"
+                android:padding="16dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/join_event_background" />
             <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/no_request_layout"
@@ -49,6 +63,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
+                android:layout_below="@+id/sent_requests_text_view"
                 >
                 <!--<Button-->
                     <!--android:id="@+id/dialog_join_request_button"-->
@@ -64,22 +79,10 @@
                     <!--android:background="@drawable/join_event_background"-->
                     <!--/>-->
 
-                <TextView
-                    android:id="@+id/sent_requests_text_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:text="Sent requests:"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    android:textSize="14dp"
-                    android:padding="16dp"
-                    android:gravity="left"
-                    android:textColor="@android:color/white"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/join_event_background" />
+
 
                 <android.support.v7.widget.RecyclerView
+
                     android:id="@+id/dialog_sent_requests_recycler_view"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"

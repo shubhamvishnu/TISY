@@ -63,6 +63,11 @@
                 app:floating_title="Send event ID"
                 app:floating_title_color="@android:color/white"/>
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/other_half_help_linear_layout"
+                android:orientation="vertical">
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -422,7 +427,7 @@
                     android:text="Accuracy of the user's locations are subject to variation"
                     android:textColor="@android:color/black"
                     android:textSize="16dp" />
-
+            </LinearLayout>
             </LinearLayout>
             <Button
                 android:id="@+id/done_help_button"

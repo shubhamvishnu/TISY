@@ -3,6 +3,7 @@ package com.projects.shubhamkhandelwal.tisy;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,11 +30,12 @@ public class SearchEventActivity extends FragmentActivity {
     void initSearchOption() {
 
         final EditText searchEditText;
-        final ImageButton searchButton;
+        final ImageButton searchButton, backImageButton;
         //searchOptionDialog.setContentView(R.layout.dialog_join_request_layout);
         final RecyclerView joinRequestSearchResultRecyclerView = (RecyclerView) findViewById(R.id.join_request_dialog_recycler_view);
         searchEditText = (EditText) findViewById(R.id.join_request_dialog_search_edit_text);
         searchButton = (ImageButton) findViewById(R.id.join_request_dialog_search_image_button);
+        backImageButton = (ImageButton) findViewById(R.id.back_search_image_button);
 
         joinRequestSearchResultRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SearchEventActivity.this);
@@ -65,13 +67,22 @@ public class SearchEventActivity extends FragmentActivity {
             }
         });
 
+        backImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SearchEventActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(SearchEventActivity.this, JoinEventActvity.class);
+        Intent intent = new Intent(SearchEventActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -75,8 +76,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -712,81 +715,48 @@ boolean fabOptionsClicked;
             }
         }
     }
-    public void openShareImageDialog(String filePath) {
-        File file = this.getFileStreamPath(filePath);
-
-        if (!filePath.equals("")) {
-            final ContentValues values = new ContentValues(2);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-            final Uri contentUriFile = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-            intent.setType("image/jpeg");
-            intent.putExtra(android.content.Intent.EXTRA_STREAM, contentUriFile);
-            startActivity(Intent.createChooser(intent, "Share Image"));
-        } else {
-            Toast.makeText(getApplicationContext(), "share failed", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void captureScreen() {
         GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             Bitmap bitmap;
 
             @Override
             public void onSnapshotReady(Bitmap snapshot) {
-                // TODO Auto-generated method stub
-//                bitmap = snapshot;
-//                String filePath = Environment.getExternalStorageDirectory().toString() + "/" + System.currentTimeMillis() + ".jpg";
-//                try {
-//
-//                    File imageFile = new File(filePath);
-//
-//                    FileOutputStream outputStream = new FileOutputStream(imageFile);
-//                    int quality = 100;
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-//                    outputStream.flush();
-//                    outputStream.close();
-//
-//                   openShareImageDialog(fi);
-//
-//                } catch (Throwable e) {
-//                    // Several error may come out with file handling or OOM
-//                    e.printStackTrace();
-//                }
-
-
                 bitmap = snapshot;
 
-                OutputStream fout = null;
-
-                String filePath = System.currentTimeMillis() + ".jpeg";
+                Date now = new Date();
+                android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
                 try {
-                    fout = openFileOutput(filePath,
-                            MODE_WORLD_READABLE);
+                    // image naming and path  to include sd card  appending name you choose for file
+                    String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
 
-                    // Write the string to the file
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fout);
-                    fout.flush();
-                    fout.close();
-                } catch (FileNotFoundException e) {
+                    File imageFile = new File(mPath);
 
-                } catch (IOException e) {
-
+                    FileOutputStream outputStream = new FileOutputStream(imageFile);
+                    int quality = 100;
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                    outputStream.flush();
+                    outputStream.close();
+                    progressDialog.dismiss();
+                    openScreenshot(imageFile);
+                } catch (Throwable e) {
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                    Toast.makeText(TrackActivity.this, "There was some problem", Toast.LENGTH_SHORT).show();
                 }
-
-                openShareImageDialog(filePath);
 
             }
         };
 
         mMap.snapshot(callback);
+    }
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
     }
     void showWritePermissionAlert() {
         Alerter.create(TrackActivity.this)

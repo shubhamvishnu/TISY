@@ -59,10 +59,9 @@ import java.util.Map;
 
 
 public class CreateEvent extends Activity {
-
     public static final int REQUEST_ACCESS_FINE_LOCATION = 0;
     public static final int REQUEST_PERMISSION_SETTINGS = 1;
-    public static String CREATE_EVENT_TAG = "CreateEvent";
+
     // firebase reference object
     Firebase firebase;
     // temporary eventId
@@ -73,13 +72,12 @@ public class CreateEvent extends Activity {
     Button createEventButton;
     ImageButton dIconButton;
     Button editDestinationIconButton;
-    //EditText sLocationDescEditText;
+
     EditText dLocationDescEditText;
     EditText descriptionEditText;
     EditText titleEditText;
 
     TextView userIdTextView;
-    //ImageButton sLocationEditImageButton;
     ImageButton dLocationEditImageButton;
     ImageButton dLocationIconImageButton;
     Intent intent;
@@ -99,7 +97,7 @@ public class CreateEvent extends Activity {
     int locationPreference = 0;
     PlacePicker.IntentBuilder builder;
     int iconResourceId;
-   // LinearLayout sLocationLinearLayout;
+
     LinearLayout dLocationLinearLayout;
     LinearLayout dLocationIconLinearLayout;
     InterstitialAd mInterstitialAd;
@@ -121,7 +119,6 @@ public class CreateEvent extends Activity {
         members = new HashMap<>();
 
         // intializing the view elements
-
         dLocation = (ImageButton) findViewById(R.id.dlocation);
         createEventButton = (Button) findViewById(R.id.createEventButton);
         dIconButton = (ImageButton) findViewById(R.id.dIconButton);
@@ -148,14 +145,21 @@ public class CreateEvent extends Activity {
 
         // inaitalizing eventId
         eventId = new String();
+
+        //initializing destination icon ID
         iconResourceId = -1;
 
 
         // generate the eventId; calls the generate() function
         generateEventId();
+
+        // initializing progress dialog
         initProgressDialog();
+
+        // initializing add
         initAd();
 
+        // initializing all the services
         initServices();
 
 
@@ -229,7 +233,7 @@ public class CreateEvent extends Activity {
 
                                 if (!checkInternetConnection()) {
                                     Alerter.create(CreateEvent.this)
-                                            .setText("Oops! no internet connection...")
+                                            .setText("Oops! No internet connection...")
                                             .setBackgroundColor(R.color.colorAccent)
                                             .setOnClickListener(new View.OnClickListener() {
                                                 @Override
@@ -263,7 +267,7 @@ public class CreateEvent extends Activity {
 
                     } else {
                         Alerter.create(CreateEvent.this)
-                                .setText("Oops! no internet connection...")
+                                .setText("Oops! No internet connection...")
                                 .setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {

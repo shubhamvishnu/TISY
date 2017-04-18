@@ -19,7 +19,19 @@
             android:layout_height="wrap_content"
             tools:context="com.projects.shubhamkhandelwal.tisy.MapsActivity">
         </fragment>
+        <ImageButton
+            android:id="@+id/add_new_member_maps_image_button"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:elevation="6dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/send_request_from_event_icon" />
         <android.support.v7.widget.RecyclerView
+            android:layout_toRightOf="@+id/add_new_member_maps_image_button"
             android:id="@+id/active_event_member_recycler_view_maps"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
