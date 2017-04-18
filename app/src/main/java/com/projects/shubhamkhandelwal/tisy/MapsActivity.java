@@ -1,15 +1,12 @@
 package com.projects.shubhamkhandelwal.tisy;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -24,11 +21,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +33,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -57,19 +51,8 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
@@ -86,9 +69,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
-import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
-import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventInfo;
 import com.projects.shubhamkhandelwal.tisy.Classes.FirebaseReferences;
 import com.projects.shubhamkhandelwal.tisy.Classes.InitIcon;
@@ -96,7 +77,6 @@ import com.projects.shubhamkhandelwal.tisy.Classes.LocationListenerService;
 import com.projects.shubhamkhandelwal.tisy.Classes.Note;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.RequestsDetails;
-import com.projects.shubhamkhandelwal.tisy.Classes.SQLiteDatabaseConnection;
 import com.projects.shubhamkhandelwal.tisy.Classes.SharedPreferencesName;
 import com.projects.shubhamkhandelwal.tisy.Classes.TimeStamp;
 import com.tapadoo.alerter.Alerter;
@@ -104,10 +84,7 @@ import com.tapadoo.alerter.Alerter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -190,7 +167,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         addMemberHelpImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {showAddMemberHelp();
+            public void onClick(View view) {
+                showAddMemberHelp();
             }
         });
         // initializing variable
@@ -281,7 +259,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initProgressDialog();
         initLeaveEventProgressDailog();
     }
-    void toChatActivity(){
+
+    void toChatActivity() {
         if (Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
             Constants.CHAT_NOTIFICATION_SERVICE_STATUS = false;
             stopService(new Intent(getBaseContext(), ChatNotificationService.class));
@@ -316,7 +295,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    void initLeaveEventProgressDailog(){
+    void initLeaveEventProgressDailog() {
         leaveEventProgressDialog = new ProgressDialog(this);
         leaveEventProgressDialog.setIndeterminate(true);
         leaveEventProgressDialog.setTitle("Leaving Event");
@@ -336,6 +315,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
     }
+
     void initProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -391,7 +371,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 showWritePermissionAlert();
             }
-        }else if (requestCode == REQUEST_ACCESS_FINE_LOCATION) {
+        } else if (requestCode == REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 
                 showPermissionAlert();
@@ -411,14 +391,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                requestNewInterstitial();
-                checkCount();
+               exitMapEvent();
             }
         });
 
         requestNewInterstitial();
     }
-
 
 
     public void captureScreen() {
@@ -446,7 +424,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     progressDialog.dismiss();
                     openScreenshot(imageFile);
                 } catch (Throwable e) {
-                    if(progressDialog.isShowing()){
+                    if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
                     Toast.makeText(MapsActivity.this, "There was some problem", Toast.LENGTH_SHORT).show();
@@ -456,6 +434,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.snapshot(callback);
     }
+
     private void openScreenshot(File imageFile) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -477,15 +456,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     void checkCount() {
-
-        if (mInterstitialAd.isLoaded()) {
-            if(leaveEventProgressDialog.isShowing()){
-                leaveEventProgressDialog.dismiss();
-            }
-            mInterstitialAd.show();
-
-        } else {
+        if (leaveEventProgressDialog.isShowing()) {
+            leaveEventProgressDialog.dismiss();
+        }
+        if (mInterstitialAd.isLoading()) {
             exitMapEvent();
+        } else {
+            if (mInterstitialAd.isLoaded()) {
+
+                mInterstitialAd.show();
+
+            } else {
+                exitMapEvent();
+            }
         }
     }
 
@@ -583,7 +566,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LinearLayout sendRequestsLayout;
         final Dialog allInOneDialog = new Dialog(this, R.style.event_info_dialog_style);
         allInOneDialog.setContentView(R.layout.dialog_all_in_one_layout);
-
 
 
         ImageButton addNewCheckPointImageButton = (ImageButton) allInOneDialog.findViewById(R.id.dialog_add_new_checkpoint);
@@ -899,8 +881,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
     void toEventInfoActivity() {
         Intent intent = new Intent(MapsActivity.this, EventInfoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1176,8 +1156,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
     void showGPSAlert() {
         Alerter.create(this)
                 .setTitle("Turn on GPS")
@@ -1283,14 +1261,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     void exitEvent() {
         mMap.setOnMyLocationChangeListener(null);
         if (checkInternetConnection()) {
 
             userExit();
         } else {
-            if(leaveEventProgressDialog.isShowing()){
+            if (leaveEventProgressDialog.isShowing()) {
                 leaveEventProgressDialog.dismiss();
             }
             Alerter.create(this)
@@ -1432,8 +1409,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onMyLocationChange(Location location) {
 
 
-                        checkNearCheckPoint(location);
-                        updateUserCurrentLocation(location);
+                    checkNearCheckPoint(location);
+                    updateUserCurrentLocation(location);
                     updateStatus();
 
                 }
@@ -1443,6 +1420,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
     void checkLocationPermissions() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1467,6 +1445,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+
     void updateStatus() {
         Firebase updateLastKnowStatus = new Firebase(FirebaseReferences.FIREBASE_USER_DETAILS + username);
         updateLastKnowStatus.keepSynced(true);
@@ -1902,7 +1881,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         helpDialog.setCanceledOnTouchOutside(true);
         helpDialog.show();
     }
-    void showAddMemberHelp(){
+
+    void showAddMemberHelp() {
 
         TextView eventIDTextView;
         Button doneHelpButton;

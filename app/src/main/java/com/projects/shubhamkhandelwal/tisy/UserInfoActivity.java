@@ -133,8 +133,8 @@ public class UserInfoActivity extends FragmentActivity implements GoogleApiClien
         });
 
         //adding Typeface
-//        Typeface typeface = Typeface.createFromAsset(getAssets(), "tisy_logo_font.ttf");
-//        aboutUsButton.setTypeface(typeface);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "tisy_logo_font.ttf");
+        aboutUsButton.setTypeface(typeface);
 
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
         nameEditText.setText(userInfoPreference.getString("name", null));

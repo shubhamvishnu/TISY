@@ -305,8 +305,7 @@ void initAd(){
     mInterstitialAd.setAdListener(new AdListener() {
         @Override
         public void onAdClosed() {
-            requestNewInterstitial();
-            checkForCount();
+           next();
         }
     });
     requestNewInterstitial();
