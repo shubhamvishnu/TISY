@@ -54,7 +54,9 @@ public class RequestNotificationService extends Service {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 activeEventList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    activeEventList.add(snapshot.getKey());
+                    if (snapshot.getValue().toString().equals("created")) {
+                        activeEventList.add(snapshot.getKey());
+                    }
                 }
                 checkForNotification();
             }
@@ -95,15 +97,17 @@ public class RequestNotificationService extends Service {
             });
         }
     }
-    void checkForRequests(){
-        if(requestedUserList.size()>0){
+
+    void checkForRequests() {
+        if (requestedUserList.size() > 0) {
             showRequestNotification();
         }
     }
+
     void showRequestNotification() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.no_event_joined_icon);
-        mBuilder.setLargeIcon(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.no_event_joined_icon, 300,300));
+        mBuilder.setLargeIcon(InitIcon.getCustomBitmapFromVectorDrawable(this, R.drawable.no_event_joined_icon, 300, 300));
         mBuilder.setAutoCancel(true);
         mBuilder.setContentTitle("Tisy");
         mBuilder.setContentText("Your events have join requests");
@@ -113,8 +117,8 @@ public class RequestNotificationService extends Service {
         inboxStyle.setBigContentTitle("join requests for events");
 
 
-        for(int i = 0; i < requestedUserList.size(); i++){
-            inboxStyle.addLine(requestedUserList.get(i).getRequestedUsernameList().size() + " for "+requestedUserList.get(i).getEventID() + ".\n");
+        for (int i = 0; i < requestedUserList.size(); i++) {
+            inboxStyle.addLine(requestedUserList.get(i).getRequestedUsernameList().size() + " for " + requestedUserList.get(i).getEventID() + ".\n");
         }
         mBuilder.setStyle(inboxStyle);
 
@@ -132,6 +136,7 @@ public class RequestNotificationService extends Service {
         // notificationID allows you to update the notification later on.
         mNotificationManager.notify(0, mBuilder.build());
     }
+
     @Override
     public void onDestroy() {
         Constants.REQUEST_NOTIFICATION_SERVICE_STATUS = false;

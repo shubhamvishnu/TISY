@@ -183,45 +183,7 @@ public class JoinRequestSearchResultRecyclerViewAdapter extends RecyclerView.Ada
         return eventIdList.size();
     }
 
-    /*
-    void sendRequest(final String eventID) {
-        final Dialog dialog = new Dialog(context, R.style.event_dialogs);
-        dialog.setContentView(R.layout.dialog_join_event_layout);
-        TextView joinRequestIDTextView = (TextView) dialog.findViewById(R.id.join_request_event_id);
-        final EditText joinRequestDescEditText = (EditText) dialog.findViewById(R.id.join_request_desc_edit_text);
-        ImageButton sendRequestImageButton, cancelRequestImageButton;
 
-
-        sendRequestImageButton = (ImageButton)  dialog.findViewById(R.id.send_request_image_button);
-        cancelRequestImageButton = (ImageButton) dialog.findViewById(R.id.cancel_request_image_button);
-
-        sendRequestImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String desc = joinRequestDescEditText.getText().toString();
-                if (!desc.isEmpty()) {
-                    dialog.dismiss();
-                    sendJoinRequest(eventID, desc);
-                } else {
-                    Toast.makeText(context, "Write Something!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        cancelRequestImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        joinRequestIDTextView.setText(eventID);
-
-
-        Window window = dialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.show();
-    }
-*/
     // sends the request to join an event
     void sendJoinRequest(final String requestEventId, final String requestEventDesc, final int position) {
         Firebase firebase = new Firebase(FirebaseReferences.FIREBASE_ALL_EVENT_DETAILS + requestEventId);
