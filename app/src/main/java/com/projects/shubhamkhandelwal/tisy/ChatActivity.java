@@ -15,6 +15,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.projects.shubhamkhandelwal.tisy.Classes.ChatNotificationService;
 import com.projects.shubhamkhandelwal.tisy.Classes.ChatsRecyclerViewAdpater;
 import com.projects.shubhamkhandelwal.tisy.Classes.Constants;
 import com.projects.shubhamkhandelwal.tisy.Classes.EventChat;
@@ -122,6 +123,7 @@ public class ChatActivity extends FragmentActivity {
         Map<String, Object> chatMessage = new HashMap<>();
         chatMessage.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), message);
         firebase.push().setValue(chat);
+        updateChatsReadCount();
     }
 
     @Override
@@ -131,9 +133,13 @@ public class ChatActivity extends FragmentActivity {
     }
 
     void toMaps() {
+
         Intent intent = new Intent(ChatActivity.this, MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        if (!Constants.CHAT_NOTIFICATION_SERVICE_STATUS) {
+            startService(new Intent(getBaseContext(), ChatNotificationService.class));
+        }
         finish();
     }
 }

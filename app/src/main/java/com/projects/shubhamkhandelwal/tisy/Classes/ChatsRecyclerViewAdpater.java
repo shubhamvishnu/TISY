@@ -24,7 +24,7 @@ import java.util.List;
  * Created by Shubham Khandelwal on 8/30/2016.
  */
 public class ChatsRecyclerViewAdpater extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static int currentPosition;
+
     public static int VIEW_TYPE_USER_MESSAGE = 1;
     public static int VIEW_TYPE_OTHER_MESSAGE = 2;
     public List<EventChat> eventChatList = new ArrayList<>();

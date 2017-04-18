@@ -63,20 +63,27 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".TrackActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MapTheme" />
         <activity
             android:name=".EventInfoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".JoinEventActvity" />
-        <activity android:name=".SearchEventActivity" />
-        <activity android:name=".UserInfoActivity" />
-        <activity android:name=".AboutUsActivity" />
+        <activity android:name=".JoinEventActvity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".SearchEventActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AboutUsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ChatActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@style/com_facebook_activity_theme" />
-        <activity android:name=".ChatActivity"></activity>
+
     </application>
 
 </manifest>
