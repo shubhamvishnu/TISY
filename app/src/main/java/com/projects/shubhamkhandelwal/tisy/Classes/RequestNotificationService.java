@@ -129,12 +129,13 @@ public class RequestNotificationService extends Service {
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-// notificationID allows you to update the notification later on.
+        // notificationID allows you to update the notification later on.
         mNotificationManager.notify(0, mBuilder.build());
     }
     @Override
     public void onDestroy() {
         Constants.REQUEST_NOTIFICATION_SERVICE_STATUS = false;
+        requestedUserList = new ArrayList<>();
         super.onDestroy();
     }
 

@@ -9,7 +9,22 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Choose a map type"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="14dp" />
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -142,5 +157,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </GridLayout>
+    </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="16dp"
-                android:text="Add Checkpoint:"
+                android:text="Add checkpoint:"
                 android:textColor="@android:color/white"
                 android:textSize="24dp"
                 android:textStyle="normal" />

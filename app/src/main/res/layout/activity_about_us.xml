@@ -19,11 +19,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="6dp"
+
                 android:background="@drawable/join_event_background"
                 android:gravity="center"
                 android:padding="16dp"
-                android:text="Creators"
+                android:text="Creator"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="14dp" />
@@ -31,7 +31,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
+
                 android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:padding="6dp">
@@ -72,48 +72,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:padding="6dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/mervin_image_button"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Mervin Monfort"
-                        android:textColor="@android:color/black"
-                        android:textSize="14dp" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="Logo Design"
-                        android:textSize="12dp" />
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="mervinin97@gmail.com"
-                        android:textSize="12dp" />
-                </LinearLayout>
-            </LinearLayout>
 
             <!--<TextView-->
             <!--android:layout_width="fill_parent"-->
@@ -171,7 +130,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="6dp"
                 android:background="@drawable/join_event_background"
                 android:gravity="center"
                 android:padding="16dp"
@@ -218,7 +176,42 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="6dp">
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/mervin_image_button"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="Mervin Monfort"
+                        android:textColor="@android:color/black"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="mervinin97@gmail.com"
+                        android:textSize="12dp" />
+                </LinearLayout>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -251,7 +244,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="email: shubhamvishnu@gmail.com"
+                        android:text="shrirambalaji1996@gmail.com"
                         android:textSize="12dp" />
                 </LinearLayout>
             </LinearLayout>
@@ -362,7 +355,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="email: shubhamvishnu@gmail.com"
+                        android:text="jitenderp05@gmail.com"
                         android:textSize="12dp" />
                 </LinearLayout>
 
@@ -400,7 +393,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:padding="4dp"
-                        android:text="email: shubhamvishnu@gmail.com"
+                        android:text="sradhu8@gmail.com"
                         android:textSize="12dp" />
                 </LinearLayout>
             </LinearLayout>

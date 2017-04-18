@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -116,9 +117,13 @@ public class UserInfoActivity extends FragmentActivity implements GoogleApiClien
         TextView activeEventscountTextView = (TextView) findViewById(R.id.active_events_count_text_view);
         TextView createdEventsCountTextView = (TextView) findViewById(R.id.created_events_count_text_view);
         TextView joinedEventsCountTextView = (TextView) findViewById(R.id.joined_events_count_text_view);
-        Button aboutUsButton = (Button) findViewById(R.id.about_us_button);
+        Button appVersionInfoTextView = (Button) findViewById(R.id.app_version_info_details);
+
+
+        Button rateUsButton = (Button) findViewById(R.id.rate_us_button);
         final CircleImageView profileImageView = (CircleImageView) findViewById(R.id.profile_image_circle_image_view);
         Button logoutButton = (Button) findViewById(R.id.logout_button);
+
         Picasso.with(this).load(Uri.parse(userPhotoUri)).networkPolicy(NetworkPolicy.OFFLINE).into(profileImageView, new Callback() {
             @Override
             public void onSuccess() {
@@ -134,7 +139,26 @@ public class UserInfoActivity extends FragmentActivity implements GoogleApiClien
 
         //adding Typeface
         Typeface typeface = Typeface.createFromAsset(getAssets(), "tisy_logo_font.ttf");
-        aboutUsButton.setTypeface(typeface);
+        appVersionInfoTextView.setTypeface(typeface);
+        appVersionInfoTextView.setText("Version: "+ BuildConfig.VERSION_NAME);
+        appVersionInfoTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toAboutUs();
+            }
+        });
+
+        rateUsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
+        });
 
         SharedPreferences userInfoPreference = getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE);
         nameEditText.setText(userInfoPreference.getString("name", null));
@@ -144,12 +168,7 @@ public class UserInfoActivity extends FragmentActivity implements GoogleApiClien
         createdEventsCountTextView.setText(String.valueOf(createdEventCount));
         joinedEventsCountTextView.setText(String.valueOf(joinedEventCount));
 
-        aboutUsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toAboutUs();
-            }
-        });
+
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

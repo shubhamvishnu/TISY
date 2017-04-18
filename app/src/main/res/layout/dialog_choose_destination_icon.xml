@@ -8,21 +8,23 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+      >
+
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
             android:gravity="center"
             android:padding="16dp"
-            android:text="Choose an icon:"
+            android:text="Choose a destination icon"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textSize="16dp"  />
+
 
         <!--activities-->
         <TextView
@@ -265,11 +267,17 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
             android:padding="16dp"
             android:text="Entertainment"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp"  />
+
 
         <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -505,11 +513,17 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
             android:padding="16dp"
             android:text="Food"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp"  />
+
 
         <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -623,11 +637,17 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
             android:padding="16dp"
             android:text="General"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp"  />
+
 
         <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -887,11 +907,16 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
             android:padding="16dp"
             android:text="Health"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp"  />
 
         <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -977,11 +1002,17 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
             android:padding="16dp"
             android:text="Religion"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp"  />
+
 
         <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -1018,11 +1049,17 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
             android:padding="16dp"
-            android:text="Store"
+            android:text="Stores"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp"  />
+
 
         <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -1209,11 +1246,17 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/join_event_background"
+            android:gravity="center"
             android:padding="16dp"
             android:text="Transport"
+            android:textStyle="bold"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="20dp"
-            android:textStyle="bold|italic" />
+            android:textSize="16dp"  />
+
 
         <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -1371,19 +1414,21 @@
                     android:textColor="@android:color/white" />
             </LinearLayout>
         </org.apmem.tools.layouts.FlowLayout>
-
         <Button
+
             android:id="@+id/close_destination_icon_dialog_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="#1AFFFFFF"
-            android:elevation="20dp"
+            android:layout_gravity="center"
+
+            android:background="@drawable/join_event_background"
             android:gravity="center"
-            android:text="CLOSE"
-            android:textAllCaps="true"
+            android:padding="16dp"
+            android:text="Done"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textSize="14dp" />
+
     </LinearLayout>
 
 </ScrollView>

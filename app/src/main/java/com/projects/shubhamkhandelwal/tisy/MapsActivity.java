@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -623,7 +624,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         Window window = allInOneDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         allInOneDialog.setCanceledOnTouchOutside(true);
         allInOneDialog.show();
@@ -674,7 +675,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
         Window window = mapTypeDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         mapTypeDialog.setCanceledOnTouchOutside(true);
         mapTypeDialog.show();
@@ -743,7 +744,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Window window = mapStyleDialog.getWindow();
-        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        window.setLayout(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         window.setGravity(Gravity.CENTER);
         mapStyleDialog.setCanceledOnTouchOutside(true);
         mapStyleDialog.show();
@@ -1264,8 +1265,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void exitEvent() {
         mMap.setOnMyLocationChangeListener(null);
         if (checkInternetConnection()) {
+            showUserExitConfirmationDialog();
 
-            userExit();
         } else {
             if (leaveEventProgressDialog.isShowing()) {
                 leaveEventProgressDialog.dismiss();
@@ -1281,6 +1282,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .setBackgroundColor(R.color.colorAccent)
                     .show();
         }
+    }
+    void showUserExitConfirmationDialog(){
+
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            userExit();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            progressDialog.dismiss();
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to leave the event?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+
     }
 
     void userExit() {

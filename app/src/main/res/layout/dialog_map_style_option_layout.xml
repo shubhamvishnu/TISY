@@ -13,7 +13,22 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:fillViewport="true">-->
-
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/join_event_background"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="Customize map"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="14dp" />
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +64,7 @@
                     android:text="Default"
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                />
             </LinearLayout>
 
             <LinearLayout
@@ -80,7 +95,7 @@
 
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                  />
             </LinearLayout>
 
             <LinearLayout
@@ -111,7 +126,7 @@
 
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                   />
             </LinearLayout>
 
             <LinearLayout
@@ -142,7 +157,7 @@
 
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                  />
             </LinearLayout>
 
             <LinearLayout
@@ -173,7 +188,7 @@
 
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -205,10 +220,19 @@
 
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
-                    android:textStyle="bold" />
+                    />
+
             </LinearLayout>
 
         </GridLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="Make sure map type is set to default"
+        android:textSize="12dp" />
+</LinearLayout>
     </ScrollView>
 
 </LinearLayout>
