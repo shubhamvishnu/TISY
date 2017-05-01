@@ -188,7 +188,7 @@ public class CreateEvent extends Activity {
                 showDestinationIconDialog();
             }
         });
-        // TODO: change the locationPreference value intialization using switch case (optional)
+
 
         dLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,11 +199,6 @@ public class CreateEvent extends Activity {
             }
         });
 
-        /*
-         *TODO: add members dynamically; by the host (optional)
-         *TODO: or let users join the created event
-         *TODO: or let users join the created event
-         */
         members.put(getSharedPreferences(SharedPreferencesName.USER_DETAILS, MODE_PRIVATE).getString("username", null), "0.0,0.0");
 
 
@@ -1224,7 +1219,7 @@ void initAd(){
                         // to set if the current user is the event admin
                         Constants.eventAdmin = true;
                         Constants.dIconResourceId = iconResourceId;
-                        // TODO: include a completion listener and update the eventCount for the user
+
 
                         storeMapConfig();
                     }

@@ -191,10 +191,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkPointsReached = new ArrayList<>();
         memberLocationMarkers = new HashMap<>();
 
-        // TODO: change the service functions later; and optimize their usage
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used
-        // callback is triggered when the map is ready to be used
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -1407,6 +1403,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
+        updateStatus();
         Intent intent = new Intent(MapsActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

@@ -363,7 +363,7 @@ public class Login extends FragmentActivity implements GoogleApiClient.OnConnect
                         save();
                     }
                 } else {
-                    // TODO: ask for creation of new user; pop-up confirmation
+
                     save();
                 }
             }
